@@ -1,20 +1,73 @@
 schema: spec-driven
 
-# Project context (optional)
-# This is shown to AI when creating artifacts.
-# Add your tech stack, conventions, style guides, domain knowledge, etc.
-# Example:
-#   context: |
-#     Tech stack: TypeScript, React, Node.js
-#     We use conventional commits
-#     Domain: e-commerce platform
+# Project context
+# Shown to AI when creating artifacts.
+context: |
+  ## Tech Stack
+  - Backend: Python 3.11+, FastAPI 0.111+, SQLModel 0.0.19+, PostgreSQL 15+, Alembic 1.13+
+  - Frontend: React 18+, TypeScript 5.x, Vite 5.x, Tailwind CSS 3.x
+  - State: Zustand 4.x (client), TanStack Query 5.x (server)
+  - Auth: JWT (HS256), bcrypt (cost 12)
+  - Payments: MercadoPago SDK Python 2.3.0+
+  - Rate limit: slowapi 0.1.9+
 
-# Per-artifact rules (optional)
-# Add custom rules for specific artifacts.
-# Example:
-#   rules:
-#     proposal:
-#       - Keep proposals under 500 words
-#       - Always include a "Non-goals" section
-#     tasks:
-#       - Break tasks into chunks of max 2 hours
+  ## Architecture
+  - Backend: Router → Service → UoW → Repository → Model (capas Clean Architecture)
+  - Frontend: Feature-Sliced Design → Pages → Features → Entities → Shared
+  - Patrones: Unit of Work (context manager), BaseRepository[T] genérico, Snapshot Pattern
+
+  ## Conventions
+  - Python: snake_case, Pydantic v2 schemas (Create/Update/Read separados)
+  - TypeScript: camelCase, strict: true, no any
+  - Commits: conventional commits (feat:, fix:, chore:, docs:)
+  - Nomenclatura: módulo/ (backend feature), feature/ (frontend feature)
+
+  ## Domain Rules (No negociables)
+  - RN-FS02: Transición PENDIENTE→CONFIRMADO SOLO automática (pago aprobado)
+  - RN-DA05: HistorialEstadoPedido es append-only (solo INSERT)
+  - RN-PE01: Creación de pedido ATÓMICA (UoW)
+  - RN-AU09: Datos de tarjeta NUNCA tocan nuestro servidor (PCI SAQ-A)
+
+  ## Estructura de módulos
+  backend/        # Feature-first
+  ├── core/          # Config, database, security, uow
+  ├── modules/
+  │   ├── auth/           # Register, login, refresh, logout
+  │   ├── usuarios/       # CRUD users + RBAC
+  │   ├── direcciones/    # Delivery addresses
+  │   ├── categorias/    # Hierarchical categories
+  │   ├── productos/     # Products + stock
+  │   ├── ingredientes/  # Ingredients + allergens
+  │   ├── pedidos/      # Orders + FSM
+  │   ├── pagos/        # MercadoPago integration
+  │   └── admin/         # Dashboard + metrics
+
+  frontend/       # Feature-Sliced Design
+  ├── app/           # Providers + routing
+  ├── pages/         # Route definitions
+  ├── features/     # User interactions (auth, cart, orders, admin)
+  ├── entities/     # Domain models + API clients
+  └── shared/       # UI components + utils
+
+# Per-artifact rules
+rules:
+  proposal:
+    - Keep proposals under 600 words
+    - Always include: Objective, Scope, Non-goals, Risks
+    - List exact US-IDs covered
+  design:
+    - Include: ERD excerpt, API contract (method + path + response)
+    - Show dependencies diagram
+    - Reference patterns from previous archived changes
+  tasks:
+    - Atomic tasks (max 2 hours each)
+    - Group by layer: Model → Repository → Service → Router → Frontend
+    - Include validation task in each layer
+
+# Dependencies management
+dependencies:
+  locked:
+    - backend-patterns (before any module)
+    - auth-backend (before any authenticated endpoint)
+    - products-module (before cart or orders)
+    - orders-fsm (before payments integration)

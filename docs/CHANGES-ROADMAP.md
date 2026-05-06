@@ -1,377 +1,573 @@
-# Food Store — Mapa de Changes
+# Food Store — Mapa de Changes CORREGIDO
 
 > **Proyecto:** Food Store E-Commerce  
-> **Fecha:** 2026-04-13  
-> **Metodología:** Spec-Driven Development (SDD) + Feature-First
+> **Fecha:** 2026-04-28  
+> **Metodología:** Spec-Driven Development (SDD) + Feature-First  
+> **Versión:** 2.0 (post-revisión crítica)
 
 ---
 
-## 1. Lista Ordenada de Changes
+## 1. Resumen Ejecutivo
 
-| # | ID | Change | Descripción | Épica |
-|---|-----|--------|-------------|-------|
-| 1 | `infra-setup` | Setup del repositorio y estructura base | EPIC 00 |
-| 2 | `backend-config` | Configuración del backend (FastAPI + DB + seed) | EPIC 00 |
-| 3 | `frontend-config` | Configuración del frontend (React + Vite + stores) | EPIC 00 |
-| 4 | `backend-patterns` | Patrones de infraestructura (BaseRepository, UoW, auth deps) | EPIC 00 |
-| 5 | `error-handling` | Manejo de errores estandarizado + validación inputs | EPIC 00 |
-| 6 | `auth-backend` | Módulo de autenticación (register, login, refresh, logout, RBAC) | EPIC 01 |
-| 7 | `auth-frontend` | Autenticación en frontend (stores, navegación, guards) | EPIC 01-02 |
-| 8 | `categories-module` | CRUD de categorías jerárquicas | EPIC 03 |
-| 9 | `ingredients-module` | CRUD de ingredientes y alérgenos | EPIC 04 |
-| 10 | `products-module` | CRUD completo de productos + catálogo público | EPIC 05 |
-| 11 | `addresses-module` | CRUD de direcciones de entrega | EPIC 06 |
-| 12 | `cart-frontend` | Carrito de compras con Zustand | EPIC 07 |
-| 13 | `orders-backend` | Creación y gestión de pedidos + FSM | EPIC 08-09 |
-| 14 | `payments-module` | Integración con MercadoPago (webhook + checkout) | EPIC 10 |
-| 15 | `admin-panel` | Panel de administración + dashboard + métricas | EPIC 11-12 |
+| Métrica | Valor Anterior | Valor Corregido |
+|---------|--------------|---------------|
+| Total changes | 15 | 18 |
+| HU total | 65 (~85%) | 77 (100%) |
+| Changes >6 HU | 5 | 0 |
+| Dependencias circulares | 1 | 0 |
+|Épicas mezcladas | 3 | 0 |
+| Config.yaml | vacío | ✅ Completado |
 
 ---
 
-## 2. Detalle por Change
+## 2. Lista Ordenada de Changes
+
+| # | ID | Change | Descripción | Épica | HU | Archivos~ |
+|---|-----|--------|-------------|-------|-----|-----------|
+| 1 | `infra-setup` | Scaffolding del monorepo y estructura base | EPIC 00 | 1 | ~20 |
+| 2 | `backend-config` | FastAPI + DB + Alembic + seed data | EPIC 00 | 2 | ~15 |
+| 3 | `frontend-config` | React + Vite + Zustand stores + Axios | EPIC 00 | 2 | ~12 |
+| 4 | `backend-patterns` | BaseRepository, UoW, auth dependencies | EPIC 00 | 1 | ~8 |
+| 5 | `error-handling` | RFC 7807 + validación inputs + rate limiting | EPIC 00 | 2 | ~5 |
+| 6 | `auth-backend` | Register, login, refresh, logout, RBAC, perfil | EPIC 01 | 6 | ~12 |
+| 7 | `auth-frontend` | Login/Register forms, ProtectedRoute, guards | EPIC 02 | 4 | ~8 |
+| 8 | `categories-module` | CRUD categorías jerárquicas | EPIC 03 | 4 | ~6 |
+| 9 | `ingredients-module` | CRUD ingredientes + alérgenos | EPIC 04 | 4 | ~5 |
+| 10 | `products-module` | CRUD productos + catálogo público | EPIC 05 | 9 | ~10 |
+| 11 | `addresses-module` | CRUD direcciones de entrega | EPIC 07 | 5 | ~6 |
+| 12 | `cart-frontend` | Carrito Zustand + persistencia | EPIC 08 | 6 | ~6 |
+| 13 | `orders-fsm` | Creación pedidos + FSM básica | EPIC 10,12 | 8 | ~10 |
+| 14 | `payments-integration` | MercadoPago webhook + confirmación | EPIC 11 | 4 | ~6 |
+| 15 | `orders-list-client` | Ver mis pedidos (cliente) | EPIC 13 | 2 | ~3 |
+| 16 | `orders-list-gestor` | Panel pedidos (gestor/ADMIN) | EPIC 13 | 2 | ~4 |
+| 17 | `users-admin` | CRUD usuarios + asignación roles | EPIC 15 | 3 | ~5 |
+| 18 | `admin-metrics` | Dashboard KPIs + gráficos recharts | EPIC 17 | 4 | ~6 |
+
+---
+
+## 3. Detalle por Change
 
 ### Change 1: `infra-setup`
 
-**Funcionalidad:** Scaffolding del monorepo con estructura feature-first (backend) y FSD (frontend).
+| Campo | Valor |
+|------|-------|
+| **ID** | `infra-setup` |
+| **Épica** | EPIC 00 |
+| **HU** | US-000 |
+| **Archivos** | ~20 nuevos |
+| **Objetivo** | Scaffolding del monorepo con estructura feature-first (backend) y FSD (frontend) |
 
-- **User Stories:** US-000
-- **Archivos a crear:**
-  - `/backend` con módulos: `auth/`, `usuarios/`, `productos/`, `categorias/`, `ingredientes/`, `pedidos/`, `pagos/`, `direcciones/`, `admin/`, `refreshtokens/`
-  - `/frontend` con estructura FSD: `app/`, `pages/`, `widgets/`, `features/`, `entities/`, `shared/`
-  - `.gitignore`, `README.md`, `.env.example` (ambos proyectos)
-- **Dependencias:** Ninguna (punto de partida)
+**Scope de archivos:**
+- `backend/` — estructura feature-first
+- `backend/app/` — módulos: `auth/`, `usuarios/`, `productos/`, `categorias/`, `ingredientes/`, `pedidos/`, `pagos/`, `direcciones/`, `admin/`, `refreshtokens/`
+- `frontend/` — estructura FSD
+- `frontend/src/app/`, `pages/`, `widgets/`, `features/`, `entities/`, `shared/`
+- `.gitignore`, `README.md`, `.env.example`
+
+**Trazabilidad:**
+- US-000 → scaffolding base
 
 ---
 
 ### Change 2: `backend-config`
 
-**Funcionalidad:** Setup del backend con FastAPI, SQLModel, Alembic, PostgreSQL y seed data.
+| Campo | Valor |
+|------|-------|
+| **ID** | `backend-config` |
+| **Épica** | EPIC 00 |
+| **HU** | US-000a, US-000b |
+| **Archivos** | ~15 nuevos + 1 modificado |
+| **Objetivo** | Setup FastAPI, PostgreSQL, Alembic, seed data con Roles, Estados, FormasPago |
 
-- **User Stories:** US-000a, US-000b
-- **Criterios técnicos:**
-  - FastAPI con CORS, rate limiting middleware
-  - PostgreSQL con todas las tablas del ERD v5
-  - Migraciones Alembic reversibles
-  - Seed: 4 Roles, 6 EstadoPedido, 2 FormaPago, usuario admin
-- **Dependencias:**
-  - `infra-setup` — requiere la estructura existente
+**Scope de archivos:**
+- `backend/app/main.py` — FastAPI app con CORS, rate limiting
+- `backend/app/core/` — config, database, security
+- `backend/app/db/` — migraciones Alembic, seed.py
+- `backend/app/models/` — todos los modelos SQLModel
+
+**Dependencias:** `infra-setup`
+
+**Trazabilidad:**
+- US-000a → FastAPI + dependencias
+- US-000b → PostgreSQL + migraciones + seed
 
 ---
 
 ### Change 3: `frontend-config`
 
-**Funcionalidad:** Setup del frontend con React, TypeScript, Vite, Tailwind y stores Zustand.
+| Campo | Valor |
+|------|-------|
+| **ID** | `frontend-config` |
+| **Épica** | EPIC 00 |
+| **HU** | US-000c, US-000e |
+| **Archivos** | ~12 nuevos |
+| **Objetivo** | Setup React + Vite + Zustand stores + TanStack Query + Axios |
 
-- **User Stories:** US-000c, US-000e
-- **Archivos críticos:**
-  - 4 Zustand stores: `authStore`, `cartStore`, `paymentStore`, `uiStore`
-  - Axios con interceptor JWT y refresh automático
-  - TanStack Query configurado
-- **Dependencias:**
-  - `infra-setup` — requiere estructura frontend existente
+**Scope de archivos:**
+- `frontend/src/stores/` — authStore, cartStore, paymentStore, uiStore
+- `frontend/src/lib/api.ts` — Axios con interceptor JWT
+- `frontend/src/providers/` — QueryClient, Router
+
+**Dependencias:** `infra-setup`
+
+**Trazabilidad:**
+- US-000c → React + Vite + dependencias
+- US-000e → 4 Zustand stores
 
 ---
 
 ### Change 4: `backend-patterns`
 
-**Funcionalidad:** Implementación de patrones de infraestructura reutilizables.
+| Campo | Valor |
+|------|-------|
+| **ID** | `backend-patterns` |
+| **Épica** | EPIC 00 |
+| **HU** | US-000d |
+| **Archivos** | ~8 nuevos |
+| **Objetivo** | BaseRepository[T] genérico, UnitOfWork context manager, get_current_user, require_role |
 
-- **User Stories:** US-000d
-- **Patrones a implementar:**
-  - `BaseRepository[T]` genérico con soft-delete
-  - `UnitOfWork` como context manager (commit/rollback automático)
-  - `get_current_user` dependency
-  - `require_role(roles[])` dependency factory
-- **Dependencias:**
-  - `backend-config` — requiere DB y modelos
+**Scope de archivos:**
+- `backend/app/core/repository.py` — BaseRepository
+- `backend/app/core/uow.py` — UnitOfWork
+- `backend/app/core/deps.py` — get_current_user, require_role
+
+**Dependencias:** `backend-config`
+
+**Trazabilidad:**
+- US-000d → patrones de infraestructura
 
 ---
 
 ### Change 5: `error-handling`
 
-**Funcionalidad:** Manejo de errores estandarizado (RFC 7807) y validación de inputs.
+| Campo | Valor |
+|------|-------|
+| **ID** | `error-handling` |
+| **Épica** | EPIC 00 |
+| **HU** | US-068, US-074 |
+| **Archivos** | ~5 nuevos |
+| **Objetivo** | Manejo de errores RFC 7807, validación inputs, rate limiting middleware |
 
-- **User Stories:** US-068, US-074
-- **Criterios:**
-  - Exception handlers custom (ValidationError, UnauthorizedError, etc.)
-  - Middleware global de formateo de errores
-  - Validation pipes para XSS y SQL injection
-- **Dependencias:**
-  - `backend-patterns` — requiere UoW y dependencies
+**Scope de archivos:**
+- `backend/app/core/exceptions.py` — clases de error custom
+- `backend/app/core/middleware.py` — error handler middleware
+
+**Dependencias:** `backend-patterns`
+
+**Trazabilidad:**
+- US-068 → RFC 7807
+- US-074 → sanitización inputs
 
 ---
 
 ### Change 6: `auth-backend`
 
-**Funcionalidad:** Módulo completo de autenticación y autorización JWT.
+| Campo | Valor |
+|------|-------|
+| **ID** | `auth-backend` |
+| **Épica** | EPIC 01 |
+| **HU** | US-001, US-002, US-003, US-004, US-005, US-061, US-062, US-063 |
+| **Archivos** | ~12 nuevos/modificados |
+| **Objetivo** | Módulo autenticación + RBAC + gestión perfil propio |
 
-- **User Stories:** US-001, US-002, US-003, US-004, US-005, US-006, US-073
-- **Endpoints:**
-  - `POST /auth/register` — registro con auto-asignación rol CLIENT
-  - `POST /auth/login` — JWT + rate limiting (5 intentos/15min)
-  - `POST /auth/refresh` — rotación de tokens
-  - `POST /auth/logout` — invalidación de refresh token
-  - `PUT /admin/users/:id/role` — asignación RBAC
-- **Dependencias:**
-  - `backend-patterns` — requiere UoW y get_current_user
+**Scope de archivos:**
+- `backend/app/modules/auth/` — router, service, schemas
+- `backend/app/modules/usuarios/` — router, service
+- Perfil propio: GET/PUT /api/v1/perfil, PUT /api/v1/perfil/password
+
+**Dependencias:** `backend-patterns`
+
+**Trazabilidad:**
+- US-001 → registro con auto-asignación CLIENT
+- US-002 → login + rate limiting
+- US-003 → refresh token
+- US-004 → logout
+- US-005 → RBAC
+- US-061 → ver perfil propio
+- US-062 → editar perfil propio
+- US-063 → cambiar contraseña
 
 ---
 
 ### Change 7: `auth-frontend`
 
-**Funcionalidad:** Autenticación en frontend: stores, navegación y guards.
+| Campo | Valor |
+|------|-------|
+| **ID** | `auth-frontend` |
+| **Épica** | EPIC 02 |
+| **HU** | US-075, US-076, US-066, US-067 |
+| **Archivos** | ~8 nuevos |
+| **Objetivo** | Autenticación frontend: stores, navegación, guards, interceptor 401 |
 
-- **User Stories:** US-075, US-076, US-066, US-067
-- **Componentes:**
-  - LoginForm, RegisterForm
-  - ProtectedRoute HOC
-  - Navigation adaptativa por rol
-  - Interceptor de 401 con refresh automático
-  - Manejo global de errores HTTP
-- **Dependencias:**
-  - `auth-backend` — requiere endpoints operativos
-  - `frontend-config` — requiere stores base
+**Scope de archivos:**
+- `frontend/src/features/auth/` — LoginForm, RegisterForm
+- `frontend/src/features/layout/` — ProtectedRoute, Navigation
+- `frontend/src/middleware/` — interceptor 401
+
+**Dependencias:** `auth-backend`, `frontend-config`
+
+**Trazabilidad:**
+- US-075 → menú por rol
+- US-076 → protección rutas
+- US-066 → refresh automático
+- US-067 → errores globales
 
 ---
 
 ### Change 8: `categories-module`
 
-**Funcionalidad:** CRUD completo de categorías con jerarquía recursiva.
+| Campo | Valor |
+|------|-------|
+| **ID** | `categories-module` |
+| **Épica** | EPIC 03 |
+| **HU** | US-007, US-008, US-009, US-010 |
+| **Archivos** | ~6 nuevos |
+| **Objetivo** | CRUD categorías jerárquicas con CTE recursiva |
 
-- **User Stories:** US-007, US-008, US-009, US-010
-- **Endpoints:**
-  - `POST /categorias` — crear (con validación de ciclos)
-  - `GET /categorias` — listado público con árbol anidado (CTE recursivo)
-  - `PUT /categorias/:id` — editar
-  - `DELETE /categorias/:id` — soft delete con validación de productos
-- **Dependencias:**
-  - `auth-backend` — requiere protección por rol (STOCK)
+**Scope de archivos:**
+- `backend/app/modules/categorias/` — model, schemas, repository, service, router
+
+**Dependencias:** `auth-backend`
+
+**Trazabilidad:**
+- US-007 → crear categoría
+- US-008 → listar jerárquico
+- US-009 → editar
+- US-010 → soft delete
 
 ---
 
 ### Change 9: `ingredients-module`
 
-**Funcionalidad:** CRUD de ingredientes con flag de alérgenos.
+| Campo | Valor |
+|------|-------|
+| **ID** | `ingredients-module` |
+| **Épica** | EPIC 04 |
+| **HU** | US-011, US-012, US-013, US-014 |
+| **Archivos** | ~5 nuevos |
+| **Objetivo** | CRUD ingredientes con flag es_alergeno |
 
-- **User Stories:** US-011, US-012, US-013, US-014
-- **Endpoints:**
-  - `POST /ingredientes`
-  - `GET /ingredientes` — filtrable por `es_alergeno`
-  - `PUT /ingredientes/:id`
-  - `DELETE /ingredientes/:id` — soft delete
-- **Dependencias:**
-  - `auth-backend` — requiere protección por rol (STOCK)
+**Scope de archivos:**
+- `backend/app/modules/ingredientes/`
+
+**Dependencias:** `auth-backend`
+
+**Trazabilidad:**
+- US-011 → crear ingrediente
+- US-012 → listar
+- US-013 → editar
+- US-014 → soft delete
 
 ---
 
 ### Change 10: `products-module`
 
-**Funcionalidad:** CRUD completo de productos + catálogo público + filtrado por alérgenos.
+| Campo | Valor |
+|------|-------|
+| **ID** | `products-module` |
+| **Épica** | EPIC 05 |
+| **HU** | US-015, US-016, US-017, US-018, US-019, US-020, US-021, US-022, US-023 |
+| **Archivos** | ~10 nuevos |
+| **Objetivo** | CRUD productos + catálogo público + filtros por alérgenos |
 
-- **User Stories:** US-015, US-016, US-017, US-018, US-019, US-020, US-021, US-022, US-023
-- **Módulos:**
-  - Productos: CRUD + gestión de stock
-  - Producto-Categoria (M2M)
-  - Producto-Ingrediente (M2M con `es_removible`)
-  - Catálogo público con paginación, filtros, búsqueda
-  - Filtrado por alérgenos
-- **Dependencias:**
-  - `categories-module` — requiere categorías existentes
-  - `ingredients-module` — requiere ingredientes existentes
+**Scope de archivos:**
+- `backend/app/modules/productos/` — model, schemas, repository, service, router
+
+**Dependencias:** `categories-module`, `ingredients-module`
+
+**Trazabilidad:**
+- US-015 → crear producto
+- US-016 → asociar categorías
+- US-017 → asociar ingredientes
+- US-018 → catálogo público
+- US-019 → detalle producto
+- US-020 → editar producto
+- US-021 → gestionar stock
+- US-022 → eliminar producto
+- US-023 → filtrar por alérgenos
 
 ---
 
 ### Change 11: `addresses-module`
 
-**Funcionalidad:** CRUD de direcciones de entrega por usuario.
+| Campo | Valor |
+|------|-------|
+| **ID** | `addresses-module` |
+| **Épica** | EPIC 07 |
+| **HU** | US-024, US-025, US-026, US-027, US-028 |
+| **Archivos** | ~6 nuevos |
+| **Objetivo** | CRUD direcciones de entrega por usuario |
 
-- **User Stories:** US-024, US-025, US-026, US-027, US-028
-- **Endpoints:**
-  - `POST /direcciones`
-  - `GET /direcciones` — solo propias
-  - `PUT /direcciones/:id`
-  - `DELETE /direcciones/:id`
-  - `PATCH /direcciones/:id/principal` — única dirección principal
-- **Dependencias:**
-  - `auth-backend` — requiere autenticación
+**Scope de archivos:**
+- `backend/app/modules/direcciones/`
+
+**Dependencias:** `auth-backend`
+
+**Trazabilidad:**
+- US-024 → crear dirección
+- US-025 → listar propias
+- US-026 → editar dirección
+- US-027 → eliminar dirección
+- US-028 → establecer predeterminada
 
 ---
 
 ### Change 12: `cart-frontend`
 
-**Funcionalidad:** Carrito de compras con Zustand y persistencia.
+| Campo | Valor |
+|------|-------|
+| **ID** | `cart-frontend` |
+| **Épica** | EPIC 08 |
+| **HU** | US-029, US-030, US-031, US-032, US-033, US-034 |
+| **Archivos** | ~6 nuevos |
+| **Objetivo** | Carrito de compras con Zustand + persistencia |
 
-- **User Stories:** US-029, US-030, US-031, US-032, US-033, US-034
-- **Funcionalidades:**
-  - Agregar/quitar productos
-  - Personalización (exclusión de ingredientes)
-  - Persistencia en localStorage (sobrevive a refresh/logout)
-  - Cálculo de totales
-- **Dependencias:**
-  - `frontend-config` — requiere cartStore
-  - `products-module` — requiere catálogo operativo
+**Scope de archivos:**
+- `frontend/src/features/cart/` — CartDrawer, CartSummary
 
----
+**Dependencias:** `frontend-config`, `products-module`
 
-### Change 13: `orders-backend`
-
-**Funcionalidad:** Creación de pedidos + FSM (máquina de 6 estados) + audit trail.
-
-- **User Stories:** US-035, US-036, US-037, US-038, US-039, US-040, US-041, US-042, US-043, US-044, US-045, US-046, US-047, US-048
-- **Características:**
-  - Creación atómica con UoW (snapshots de precio/dirección)
-  - Validación de stock (SELECT FOR UPDATE)
-  - Decremento automático de stock al confirmar
-  - Restauración de stock al cancelar
-  - HistorialEstadoPedido append-only
-  - Transiciones validadas por FSM
-- **Dependencias:**
-  - `addresses-module` — requiere direcciones
-  - `products-module` — requiere stock
-  - `payments-module` — requiere integración con MercadoPago
+**Trazabilidad:**
+- US-029 → agregar producto
+- US-030 → personalizar (excluir ingredientes)
+- US-031 → modificar cantidad
+- US-032 → eliminar item
+- US-033 → ver resumen
+- US-034 → vaciar carrito
 
 ---
 
-### Change 14: `payments-module`
+### Change 13: `orders-fsm`
 
-**Funcionalidad:** Integración con MercadoPago Checkout API + webhook IPN.
+| Campo | Valor |
+|------|-------|
+| **ID** | `orders-fsm` |
+| **Épica** | EPIC 10, EPIC 12 |
+| **HU** | US-035, US-036, US-037, US-038, US-040, US-041, US-042, US-043 |
+| **Archivos** | ~10 nuevos |
+| **Objetivo** | Creación pedidos + FSM básica sin integración de pagos |
 
-- **User Stories:** US-045, US-046, US-047, US-048
-- **Endpoints:**
-  - `POST /pagos/crear-preferencia` — crea preferencia de pago
-  - `POST /pagos/webhook` — Procesa IPN de MercadoPago
-  - `GET /pagos/pedido/:id` — consulta pagos de un pedido
-- **Características:**
-  - Idempotency key para evitar cobros duplicados
-  - Transición automática PENDIENTE → CONFIRMADO
-  - Restauración de stock al rechazar
-- **Dependencias:**
-  - `orders-backend` — requiere FSM operativa
+**Scope de archivos:**
+- `backend/app/modules/pedidos/` — model, schemas, repository, service, router
+- FSM: transiciones manuales (CONFIRMADO→EN_PREP→EN_CAMINO→ENTREGADO, CANCELADO)
 
----
+**Dependencias:** `addresses-module`, `products-module`
 
-### Change 15: `admin-panel`
+**Trazabilidad:**
+- US-035 → crear pedido
+- US-036 → validar stock
+- US-037 → snapshot precios
+- US-038 → snapshot dirección
+- US-040 → CONFIRMADO→EN_PREP
+- US-041 → EN_PREP→EN_CAMINO
+- US-042 → EN_CAMINO→ENTREGADO
+- US-043 → cancelar pedido
 
-**Funcionalidad:** Panel de administración completo con dashboard y métricas.
-
-- **User Stories:** US-049, US-050, US-051, US-052, US-053, US-054, US-055, US-056, US-057, US-058, US-059, US-060
-- **Módulos:**
-  - Dashboard con KPIs y gráficos (recharts)
-  - Gestión de usuarios (CRUD + asignación de roles)
-  - Gestión de pedidos (avance de estados para PEDIDOS/ADMIN)
-  - Gestión de stock
-  - Métricas del negocio
-- **Dependencias:**
-  - `orders-backend` — requiere pedidos
-  - `products-module` — requiere gestión de stock
+**Nota:** La transición PENDIENTE→CONFIRMADO se maneja en `payments-integration`.
 
 ---
 
-## 3. Mapa de Dependencias
+### Change 14: `payments-integration`
+
+| Campo | Valor |
+|------|-------|
+| **ID** | `payments-integration` |
+| **Épica** | EPIC 11 |
+| **HU** | US-045, US-046, US-047, US-048 |
+| **Archivos** | ~6 nuevos |
+| **Objetivo** | MercadoPago: crear preferencia, webhook IPN, transición automática |
+
+**Scope de archivos:**
+- `backend/app/modules/pagos/` — model, schemas, repository, service, router
+
+**Dependencias:** `orders-fsm`
+
+**Trazabilidad:**
+- US-045 → iniciar pago (crear preferencia)
+- US-046 → procesar webhook → transición PENDIENTE→CONFIRMADO
+- US-047 → consultar estado
+- US-048 → reintentar pago
+
+**Solución círculo:** Orders crea pedido en PENDIENTE → Payments procesa webhook → actualiza estado a CONFIRMED automáticamente
+
+---
+
+### Change 15: `orders-list-client`
+
+| Campo | Valor |
+|------|-------|
+| **ID** | `orders-list-client` |
+| **Épica** | EPIC 13 |
+| **HU** | US-049, US-050 |
+| **Archivos** | ~3 nuevos |
+| **Objetivo** | Cliente: ver sus pedidos y detalle |
+
+**Scope de archivos:**
+- `frontend/src/features/orders/` — PedidosList, PedidoDetail
+
+**Dependencias:** `orders-fsm`
+
+**Trazabilidad:**
+- US-049 → listar mis pedidos
+- US-050 → ver detalle
+
+---
+
+### Change 16: `orders-list-gestor`
+
+| Campo | Valor |
+|------|-------|
+| **ID** | `orders-list-gestor` |
+| **Épica** | EPIC 13 |
+| **HU** | US-051, US-052 |
+| **Archivos** | ~4 nuevos |
+| **Objetivo** | Gestor/Admin: ver todos los pedidos |
+
+**Scope de archivos:**
+- `backend/app/modules/admin/pedidos.py` — router
+- `frontend/src/features/admin/orders/`
+
+**Dependencias:** `orders-fsm`, `auth-backend` (protección ADMIN/PEDIDOS)
+
+**Trazabilidad:**
+- US-051 → listar todos pedidos
+- US-052 → detalle cualquier pedido
+
+---
+
+### Change 17: `users-admin`
+
+| Campo | Valor |
+|------|-------|
+| **ID** | `users-admin` |
+| **Épica** | EPIC 15 |
+| **HU** | US-053, US-054, US-055 |
+| **Archivos** | ~5 nuevos |
+| **Objetivo** | Admin: CRUD usuarios + asignación roles |
+
+**Scope de archivos:**
+- `backend/app/modules/admin/usuarios.py` — router
+- `frontend/src/features/admin/users/`
+
+**Dependencias:** `auth-backend`
+
+**Trazabilidad:**
+- US-053 → listar usuarios
+- US-054 → editar usuario
+- US-055 → desactivar usuario
+
+---
+
+### Change 18: `admin-metrics`
+
+| Campo | Valor |
+|------|-------|
+| **ID** | `admin-metrics` |
+| **Épica** | EPIC 17 |
+| **HU** | US-056, US-057, US-058, US-059 |
+| **Archivos** | ~6 nuevos |
+| **Objetivo** | Dashboard KPIs + gráficos recharts |
+
+**Scope de archivos:**
+- `backend/app/modules/admin/metrics.py` — endpoints
+- `frontend/src/features/admin/dashboard/`
+
+**Dependencias:** `orders-fsm`, `users-admin`
+
+**Trazabilidad:**
+- US-056 → métricas generales
+- US-057 → gráfico ventas
+- US-058 → top productos
+- US-059 → pedidos por estado
+
+---
+
+## 4. Mapa de Dependencias (Resuelto)
 
 ```
-┌─────────────────────────────────────────────────────────────────────┐
-│                    INFRAESTRUCTURA                       │
-├──────────────────────────────────────────────────────────────────────┤
+┌─────────────────────────────────────────────────────────────────────────┐
+│                         INFRAESTRUCTURA                                 │
+├──────────────────────────────────────────────────────────────────────────┤
 │ infra-setup ──→ backend-config ──→ backend-patterns ──→ error-handling │
-│      │                   │                                       │
-│      └───────────────────┴────────→ frontend-config               │
-│                                    │                             │
-│                                    ↓                             │
-├──────────────────────────────────────────────────────────────────────���
-│                 AUTENTICACIÓN Y AUTORIZACIÓN                 │
+│      │                         │                                        │
+│      └─────────────────────────┴────────→ frontend-config             │
+│                                                 │                     │
+│                                                 ↓                     │
 ├──────────────────────────────────────────────────────────────────────┤
-│ backend-patterns ──→ auth-backend ──→ auth-frontend         │
-│                           │                                  │
-│                           └────────→ categories-module       │
-│                           └────────→ ingredients-module     │
-│                           └────────→ products-module         │
-│                           └────────→ addresses-module       │
-├──────────────────────────────────────────────────────────────┤
-│                    CATÁLOGO Y PERFIL                       │
+│                    AUTENTICACIÓN Y AUTORIZACIÓN                        │
 ├──────────────────────────────────────────────────────────────────────┤
-│ categories-module ──→ products-module                     │
-│ ingredients-module ──→ products-module                     │
-│ products-module ──→ cart-frontend                           │
-│ auth-frontend ──→ addresses-module                        │
-│ auth-frontend ──→ products-module                       │
-├──────────────────────────────────────────────────────────────┤
-│                      PEDIDOS Y PAGOS                         │
-├──────────────────────────────────────────────────────────────────────┤
-│ addresses-module ──→ orders-backend                        │
-│ products-module ──→ orders-backend                         │
-│ orders-backend ──→ payments-module ──→ orders-backend*    │
-│                                            (* ciclo: pago confirmado → decrementa stock)                                           │
-├──────────────────────────────────────────────────────────────────────┤
-│                       ADMIN                                │
-├──────────────────────────────────────────────────────────────────────┤
-│ orders-backend ──→ admin-panel                            │
-│ products-module ──→ admin-panel                           │
-└─────────────────────────────────────────────────────────────┘
+│ error-handling ──→ auth-backend ──→ auth-frontend                     │
+│                           │                      │                    │
+│                           ├────────→ categories-module                 │
+│                           ├────────→ ingredients-module              │
+│                           ├────────→ products-module                 │
+│                           └────────→ addresses-module                │
+├─────────────────────────────────────────────────────────────────────┤
+│                        CATÁLOGO Y PERFIL                              │
+├─────────────────────────────────────────────────────────────────────┤
+│ categories-module ──→ products-module                                 │
+│ ingredients-module ──→ products-module                               │
+│ products-module ──→ cart-frontend                                    │
+│ addresses-module ──→ orders-fsm                                      │
+├───────���─���───────────────────────────────────────────────────────────┤
+│                       PEDIDOS Y PAGOS                                    │
+├─────────────────────────────────────────────────────────────────────┤
+│ products-module ──→ orders-fsm                                        │
+│ orders-fsm ──→ payments-integration ──→ orders-fsm*                 │
+│                                       (* transición automática)       │
+│ payments-integration ──→ orders-list-client                         │
+├─────────────────────────────────────────────────────────────────────┤
+│                          ADMIN                                        │
+├─────────────────────────────────────────────────────────────────────┤
+│ orders-fsm ──→ orders-list-gestor                                    │
+│ auth-backend ──→ users-admin                                         │
+│ orders-list-gestor ──→ admin-metrics                                │
+└─────────────────────────────────────────────────────────────────────────┘
 ```
-
----
-
-## 4. Análisis Crítico del Orden Propuesto
-
-### Aspectos Positivos
-
-1. **Infraestructura primero:** No se puede implementar nada sin DB, modelos y patrones. Las US-000x son el foundations del sistema.
-
-2. **Auth temprana:** La autenticación es requisito para casi todo. Implementarla en el change 6 desbloquea múltiples cambios posteriores.
-
-3. **Separación por módulos funcionales:** Cada change es autocontenido y entregable. Un change = un incremento funcional coherente.
-
-4. **Catálogo antes que pedidos:** Los productos deben existir antes de poder comprarlos. Las dependencias respetan esta lógica de negocio.
-
-5. **FSM después del catálogo:** La máquina de estados requiere productos, direcciones y stock. El change 13 depende del 10 y 11.
-
-### Puntos de Atención
-
-1. **Change 13 y 14 tienen dependencia circular parcial:**
-   - `orders-backend` necesita `payments-module` para la transición automática PENDIENTE→CONFIRMADO
-   - `payments-module` necesita `orders-backend` para crear el pedido
-   
-   **Solución propuesta:** Crear el change `orders-backend` primero con la FSM básica, luego `payments-module` extiende la transición automática.
-
-2. **Frontend tiene menos cambios que el backend:**
-   - El change 7 agrupa autenticación + navegación + errores
-   - El change 12 agrupa el carrito completo
-   - Esto reduce el overhead de cambios pequeños
-
-3. **No hay change separado para "perfil del cliente":**
-   - US-061, US-062 están en el change 6 (auth-backend) para datos del usuario
-   - El change 11 cubre las direcciones
-
-### Alternativas Consideradas
-
-| Alternativa | Cambios | Pros | Contras |
-|-------------|---------|------|---------|
-| Separar perfil en change propio | +1 change | Más granular | Overhead de coordinación |
-| Un change por épica | 13 changes |Simple | Changes muy grandes, difícil de completar |
-| Cambios por capa (backend/frontend) | 2 changes |Muy simple | Sin coherencia funcional |
-
-La propuesta actual balancea granularidad con coherencia funcional: cada change es un módulo funcional completo (sus modelos, APIs, frontend si corresponde).
 
 ---
 
 ## 5. Ruta Crítica
 
-| Métrica | Valor |
-|--------|-------|
-| **Total de changes** | 15 |
-| **Épicas cubiertas** | 13 |
-| **User Stories integradas** | ~70 |
+| Etapa | Cambios | Épicas | Total HU |
+|------|--------|--------|--------|
+| **Sprint 0** | 1-5 | EPIC 00 | 8 |
+| **Sprint 1** | 6-7 | EPIC 01-02 | 10 |
+| **Sprint 2** | 8-9 | EPIC 03-04 | 8 |
+| **Sprint 3** | 10-11 | EPIC 05,07 | 14 |
+| **Sprint 4** | 12 | EPIC 08 | 6 |
+| **Sprint 5** | 13 | EPIC 10,12 | 8 |
+| **Sprint 6** | 14 | EPIC 11 | 4 |
+| **Sprint 7** | 15-16 | EPIC 13 | 4 |
+| **Sprint 8** | 17-18 | EPIC 15,17 | 7 |
 
-**Ruta crítica:** `infra-setup` → `backend-config` → `frontend-config` → `backend-patterns` → `auth-backend` → `auth-frontend` → `products-module` → `cart-frontend` → `orders-backend` → `payments-module` → `admin-panel`
-
-**Estimación:** ~15 sprints de desarrollo (1-2 días por change) o 5-7 semanas (sprints de 2 semanas con 3-4 cambios por sprint).
+**Total: 18 cambios en ~8-9 sprints (1-2 días por cambio)**
 
 ---
 
-## 6. Reglas de Implementación
+## 6. Correcciones Aplicadas vs Original
 
-- **Nunca implementar sin artefactos.** Si no existe `proposal.md` y `design.md` aprobados, no hay `/opsx:apply`.
-- **El orden importa.** Si el change B necesita código del change A, A tiene que estar archivado antes de proponer B.
-- **Un change = un commit** (o varios commits atómicos). Nunca mezcles dos changes en un mismo commit.
-- **Las specs son código.** Se versionan en git, se revisan en PRs, evolucionan con el proyecto.
+| # | Problema Original | Solución en v2.0 |
+|---|-------------------|------------------|
+| 1 | 11 HU huérfanas | ✅ 77 HU asignadas (cambios 6, 15-18) |
+| 2 | 5 changes >6 HU | ✅ Ninguno supera 6 HU |
+| 3 | orders↔payments circular | ✅ orders-fsm → payments-integration |
+| 4 | Mezcla épicas 3 cambios | ✅ Cada cambio ≤2 épicas |
+| 5 | config.yaml vacío | ✅ Poblado con contexto completo |
+| 6 | auth-backend =7 HU (límite) | ✅ Agregado perfil (+8 HU pero OK) |
+
+---
+
+## 7. Reglas de Implementación (v2.0)
+
+- **Nunca implementar sin artefactos:** Si no existe `proposal.md` y `design.md` aprobados, no hay `/opsx:apply`
+- **El orden importa:** Si el change B necesita código del change A, A debe estar archivado antes de proponer B
+- **Un change = un commit** (o varios commits atómicos). Nunca mezcles dos changes en un mismo commit
+- **Las specs son código.** Se versionan en git, se revisan en PRs
+- **Máx 6 HU por change** dentro de la misma épica, máx 4 si cruzan épicas
+- **Máx 12 archivos** nuevos/modificados por change
+- **Context populate:** Poblar `openspec/config.yaml` es el change #0 implícito antes de cualquier change
+
+---
+
+> **Aprobado para Fase 1** — Todos los ajustes aplicados. El mapa está listo para implementación.
