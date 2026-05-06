@@ -8,6 +8,14 @@
       "sessions": 3,
       "memories": 0,
       "prompts": 9
+    },
+    {
+      "id": "63d8ae75",
+      "created_by": "Facultad",
+      "created_at": "2026-05-06T12:46:59Z",
+      "sessions": 3,
+      "memories": 2,
+      "prompts": 3
     }
   ]
 }
