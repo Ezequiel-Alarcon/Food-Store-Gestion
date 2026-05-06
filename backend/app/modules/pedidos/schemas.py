@@ -1,0 +1,2 @@
+# pedidos module - schemas.py
+

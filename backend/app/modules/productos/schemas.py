@@ -1,0 +1,2 @@
+# productos module - schemas.py
+

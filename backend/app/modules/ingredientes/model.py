@@ -1,0 +1,2 @@
+# ingredientes module - model.py
+

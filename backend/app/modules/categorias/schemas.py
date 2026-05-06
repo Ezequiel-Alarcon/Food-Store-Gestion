@@ -1,0 +1,2 @@
+# categorias module - schemas.py
+

@@ -1,0 +1,2 @@
+# pedidos module - service.py
+

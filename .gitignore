@@ -1,38 +1,119 @@
-# Python
+# Byte-compiled / optimized / DLL files
 __pycache__/
 *.py[cod]
-*.pyo
-.venv/
-venv/
-env/
-*.egg-info/
+*$py.class
+*.so
+.Python
+build/
+develop-eggs/
 dist/
-.pytest_cache/
-.mypy_cache/
+downloads/
+eggs/
+.eggs/
+lib/
+lib64/
+parts/
+sdist/
+var/
+wheels/
+pip-wheel-metadata/
+share/python-wheels/
+*.egg-info/
+.installed.cfg
+*.egg
+MANIFEST
 
-# Variables de entorno — NUNCA subir al repo
+# Virtual environments
+.venv
+env/
+venv/
+ENV/
+env.bak/
+venv.bak/
+
+# PyCharm
+.idea/
+*.swp
+*.swo
+*~
+
+# VS Code
+.vscode/
+*.code-workspace
+
+# Pytest
+.pytest_cache/
+.coverage
+htmlcov/
+.tox/
+
+# mypy
+.mypy_cache/
+.dmypy.json
+dmypy.json
+
+# Black
+.black/
+
+# Node modules and related
+node_modules/
+npm-debug.log
+yarn-error.log
+yarn-debug.log
+.npm
+.eslintcache
+
+# Vite
+dist/
+.vite/
+
+# Next.js
+.next/
+
+# Environment variables
 .env
 .env.local
 .env.*.local
 
-# Node / Frontend
-node_modules/
-dist/
-build/
-.next/
-*.local
-
-# IDEs
-.vscode/
-.idea/
-*.swp
-*.swo
+# OS files
 .DS_Store
 Thumbs.db
-
-# Alembic
-*.pyc
-
-# Logs
 *.log
-logs/
+
+# Editor files
+*.swp
+*.swo
+*~
+.project
+.pydevproject
+.settings/
+
+# Database
+*.db
+*.sqlite
+*.sqlite3
+
+# Temporary files
+tmp/
+temp/
+*.tmp
+
+# IDE
+.idea/
+.vscode/
+*.sublime-project
+*.sublime-workspace
+
+# Build artifacts
+*.o
+*.a
+*.so
+
+# Package files
+*.tar.gz
+*.zip
+*.rar
+
+# Project specific
+.env
+.env.*.local
