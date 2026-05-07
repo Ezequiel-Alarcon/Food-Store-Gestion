@@ -5,20 +5,36 @@ Configuración: CORS, rate limiting, exception handlers, routers.
 from contextlib import asynccontextmanager
 from typing import Any
 
-from fastapi import FastAPI, HTTPException, Request
+from fastapi import FastAPI, HTTPException, Request, status
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.responses import JSONResponse
-from slowapi import Limiter
+from slowapi import Limiter, _rate_limit_exceeded_handler
 from slowapi.util import get_remote_address
 from slowapi.errors import RateLimitExceeded
 
 from app.core.config import get_settings
+from app.core.exceptions import (
+    AppError,
+    BadRequestError,
+    ConflictError,
+    ForbiddenError,
+    NotFoundError,
+    RateLimitError,
+    UnauthorizedError,
+    ValidationError,
+)
+from app.core.middleware import ErrorHandlerMiddleware
 
 settings = get_settings()
 
 
-# Rate limiter - 5 intentos cada 15 minutos por IP
-limiter = Limiter(key_func=get_remote_address)
+# Rate limiter - configurable por entorno
+def get_rate_limit_key() -> str:
+    """Por defecto limita por IP."""
+    return get_remote_address
+
+
+limiter = Limiter(key_func=get_rate_limit_key)
 
 
 @asynccontextmanager
@@ -39,6 +55,10 @@ app = FastAPI(
     lifespan=lifespan,
 )
 
+# Rate limiting state
+app.state.limiter = limiter
+app.add_exception_handler(RateLimitExceeded, _rate_limit_exceeded_handler)
+
 # CORS middleware
 app.add_middleware(
     CORSMiddleware,
@@ -48,10 +68,22 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
+# Error handling middleware (must be last to catch all exceptions)
+app.add_middleware(ErrorHandlerMiddleware)
+
 
 # Exception handlers RFC 7807
+@app.exception_handler(AppError)
+async def app_error_handler(request: Request, exc: AppError) -> JSONResponse:
+    """Maneja excepciones custom de la app con formato RFC 7807."""
+    instance = request.url.path
+    problem = exc.to_problem_detail(debug=settings.DEBUG)
+    problem["instance"] = instance
+    return JSONResponse(status_code=exc.status_code, content=problem)
+
+
 @app.exception_handler(HTTPException)
-async def http_exception_handler(request: Request, exc: HTTPException):
+async def http_exception_handler(request: Request, exc: HTTPException) -> JSONResponse:
     """Maneja HTTPException con formato RFC 7807."""
     return JSONResponse(
         status_code=exc.status_code,
@@ -60,12 +92,13 @@ async def http_exception_handler(request: Request, exc: HTTPException):
             "title": exc.detail,
             "status": exc.status_code,
             "detail": exc.detail,
+            "instance": request.url.path,
         }
     )
 
 
 @app.exception_handler(RateLimitExceeded)
-async def rate_limit_handler(request: Request, exc: RateLimitExceeded):
+async def rate_limit_handler(request: Request, exc: RateLimitExceeded) -> JSONResponse:
     """Maneja rate limit exceeded."""
     return JSONResponse(
         status_code=429,
@@ -73,28 +106,41 @@ async def rate_limit_handler(request: Request, exc: RateLimitExceeded):
             "type": "https://httpstatuses.com/429",
             "title": "Too Many Requests",
             "status": 429,
-            "detail": "Has superado el límite de intentos. Intenta más tarde.",
-            "retry_after": exc.detail,
+            "detail": "Has superado el límite de solicitudes. Intenta más tarde.",
+            "instance": request.url.path,
         },
         headers={"Retry-After": str(exc.detail)},
     )
 
 
 @app.exception_handler(Exception)
-async def general_exception_handler(request: Request, exc: Exception):
+async def general_exception_handler(request: Request, exc: Exception) -> JSONResponse:
     """Maneja excepciones generales con formato RFC 7807."""
+    import sys
+    import traceback
+
+    exc_info = "".join(traceback.format_exception(*sys.exc_info()))
+    print(f"[ERROR] Unhandled exception: {exc}", file=sys.stderr)
+    print(exc_info, file=sys.stderr)
+
+    if settings.DEBUG:
+        detail = exc_info
+    else:
+        detail = "Error interno del servidor"
+
     return JSONResponse(
         status_code=500,
         content={
             "type": "https://httpstatuses.com/500",
             "title": "Internal Server Error",
             "status": 500,
-            "detail": "Error interno del servidor",
+            "detail": detail,
+            "instance": request.url.path,
         }
     )
 
 
-# Health check
+# Health check (excluido de rate limiting)
 @app.get("/health")
 async def health_check() -> dict[str, str]:
     """Endpoint de salud de la aplicación."""
