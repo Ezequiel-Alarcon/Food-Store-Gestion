@@ -72,6 +72,20 @@ class Settings(BaseSettings):
         description="Modo debug"
     )
 
+    # Rate limiting
+    RATE_LIMIT_PUBLIC: int = Field(
+        default=60,
+        description="Requests por minuto para endpoints públicos"
+    )
+    RATE_LIMIT_AUTHENTICATED: int = Field(
+        default=100,
+        description="Requests por minuto para endpoints autenticados"
+    )
+    RATE_LIMIT_AUTH: int = Field(
+        default=5,
+        description="Requests por minuto para endpoints de auth por IP"
+    )
+
     @property
     def cors_origins_list(self) -> List[str]:
         """Parsea CORS_ORIGINS de string JSON a lista."""
