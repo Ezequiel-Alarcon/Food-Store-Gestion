@@ -8,8 +8,7 @@ from typing import Any
 from fastapi import FastAPI, HTTPException, Request, status
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.responses import JSONResponse
-from slowapi import Limiter, _rate_limit_exceeded_handler
-from slowapi.util import get_remote_address
+from slowapi import _rate_limit_exceeded_handler
 from slowapi.errors import RateLimitExceeded
 
 from app.core.config import get_settings
@@ -24,17 +23,9 @@ from app.core.exceptions import (
     ValidationError,
 )
 from app.core.middleware import ErrorHandlerMiddleware
+from app.core.limiter import limiter
 
 settings = get_settings()
-
-
-# Rate limiter - configurable por entorno
-def get_rate_limit_key() -> str:
-    """Por defecto limita por IP."""
-    return get_remote_address
-
-
-limiter = Limiter(key_func=get_rate_limit_key)
 
 
 @asynccontextmanager
@@ -148,9 +139,9 @@ async def health_check() -> dict[str, str]:
 
 
 # Routers de módulos (se importan cuando estén implementados)
-# Descomenta según se implementen los módulos:
-# from app.modules.auth.router import router as auth_router
-# from app.modules.usuarios.router import router as usuarios_router
+from app.modules.auth.router import router as auth_router
+from app.modules.usuarios.router import router as usuarios_router
+from app.modules.perfil.router import router as perfil_router
 # from app.modules.categorias.router import router as categorias_router
 # from app.modules.productos.router import router as productos_router
 # from app.modules.ingredientes.router import router as ingredientes_router
@@ -160,8 +151,9 @@ async def health_check() -> dict[str, str]:
 # from app.modules.admin.router import router as admin_router
 
 # Registro de routers con prefijo /api/v1
-# app.include_router(auth_router, prefix="/api/v1", tags=["auth"])
-# app.include_router(usuarios_router, prefix="/api/v1", tags=["usuarios"])
+app.include_router(auth_router, prefix="/api/v1/auth", tags=["auth"])
+app.include_router(usuarios_router, prefix="/api/v1", tags=["usuarios"])
+app.include_router(perfil_router, prefix="/api/v1", tags=["perfil"])
 # app.include_router(categorias_router, prefix="/api/v1", tags=["categorias"])
 # app.include_router(productos_router, prefix="/api/v1", tags=["productos"])
 # app.include_router(ingredientes_router, prefix="/api/v1", tags=["ingredientes"])

@@ -11,20 +11,17 @@ from app.core.config import get_settings
 from app.core.database import SQLModel
 
 # Importar todos los modelos para que Alembic los detecte
-# Se debe importar cada modelo de los módulos
-from app.modules.auth.model import Usuario, Rol, UsuarioRol  # noqa: F401
+# Los imports se van agregando a medida que se implementan los módulos
+from app.modules.auth.model import Usuario  # noqa: F401
 from app.modules.refreshtokens.model import RefreshToken  # noqa: F401
-from app.modules.direcciones.model import DireccionEntrega  # noqa: F401
-from app.modules.categorias.model import Categoria  # noqa: F401
-from app.modules.productos.model import Producto, ProductoCategoria  # noqa: F401
-from app.modules.ingredientes.model import Ingrediente, ProductoIngrediente  # noqa: F401
-from app.modules.pedidos.model import (
-    Pedido,
-    DetallePedido,
-    HistorialEstadoPedido,
-    EstadoPedido
-)  # noqa: F401
-from app.modules.pagos.model import Pago, FormaPago  # noqa: F401
+
+# Modelos pendientes — se activan cuando se implementen:
+# from app.modules.direcciones.model import DireccionEntrega  # noqa: F401
+# from app.modules.categorias.model import Categoria  # noqa: F401
+# from app.modules.productos.model import Producto, ProductoCategoria  # noqa: F401
+# from app.modules.ingredientes.model import Ingrediente, ProductoIngrediente  # noqa: F401
+# from app.modules.pedidos.model import Pedido, DetallePedido, HistorialEstadoPedido, EstadoPedido  # noqa: F401
+# from app.modules.pagos.model import Pago, FormaPago  # noqa: F401
 
 # this is the Alembic Config object, which provides
 # access to the values within the .ini file in use.

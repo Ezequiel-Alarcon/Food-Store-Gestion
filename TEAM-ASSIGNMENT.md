@@ -23,11 +23,11 @@
 │  3️⃣ LUCAS → frontend-config (📦 paralelo a 2, mismo padre)             │
 │            ↓ (LUCAS termina, lista Vite)                               │
 │                                                                           │
-│  4️⃣ EDGAR → backend-patterns                                            │
-│            ↓ (EDGAR termina, BaseRepository + UoW listos)              │
+│  4️⃣ LEANDRO → backend-patterns                                            │
+│            ↓ (LEANDRO termina, BaseRepository + UoW listos)              │
 │                                                                           │
-│  5️⃣ LEANDRO → error-handling                                            │
-│              ↓ (LEANDRO termina, middleware + exceptions listos)        │
+│  5️⃣ EDGAR → error-handling                                            │
+│              ↓ (EDGAR termina, middleware + exceptions listos)        │
 │                                                                           │
 ├──────────────────────────────────────────────────────────────────────────┤
 │                   AUTENTICACIÓN Y PERMISOS                               │
@@ -87,8 +87,8 @@
 | 1 | **1º** | Eze | `infra-setup` | — | ⏳ | 1 día |
 | 2 | **2º** | Mati | `backend-config` | 1 | ⏳ | 1 día |
 | 3 | **3º** | Lucas | `frontend-config` | 1 | 📦 | 1 día |
-| 4 | **4º** | Edgar | `backend-patterns` | 2 | ⏳ | 0.5 días |
-| 5 | **5º** | Leandro | `error-handling` | 4 | ⏳ | 0.5 días |
+| 4 | **4º** | Leandro | `backend-patterns` | 2 | ⏳ | 0.5 días |
+| 5 | **5º** | Edgar | `error-handling` | 4 | ⏳ | 0.5 días |
 | 6 | **6º** | Eze | `auth-backend` | 5 | ⏳ | 1.5 días |
 | 7 | **7º** | Mati | `auth-frontend` | 6,3 | 📦 | 1 día |
 | 8 | **7º** | Lucas | `categories-module` | 6 | 📦 | 1 día |

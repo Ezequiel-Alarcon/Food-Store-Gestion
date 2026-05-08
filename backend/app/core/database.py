@@ -39,11 +39,21 @@ SessionLocal = sessionmaker(
 def get_session() -> Generator[Session, None, None]:
     """
     Generador de sesión para inyección de dependencias.
+    
     Uso: Depends(get_session)
+    
+    Comportamiento transaccional:
+    - Si el request termina sin errores → commit
+    - Si ocurre una excepción → rollback
+    - Siempre → close
     """
     session = SessionLocal()
     try:
         yield session
+        session.commit()
+    except Exception:
+        session.rollback()
+        raise
     finally:
         session.close()
 
