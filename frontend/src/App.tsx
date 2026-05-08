@@ -1,12 +1,10 @@
 import { useAuthStore } from './stores/authStore'
-import { Navigation } from './features/layout/Navigation'
 
 function App() {
   const isAuthenticated = useAuthStore((state) => state.isAuthenticated)
 
   return (
     <>
-      <Navigation />
       <div className="min-h-screen bg-gray-50">
         {isAuthenticated ? (
           <div className="py-8 px-4">

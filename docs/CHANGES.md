@@ -93,3 +93,17 @@ Revisás la propuesta, la discutís, la ajustás si hace falta — y recién ent
 - **El orden importa.** Si el change B necesita código del change A, A tiene que estar archivado antes de proponer B.
 - **Un change = un commit** (o varios commits atómicos). Nunca mezcles dos changes en un mismo commit.
 - **Las specs son código.** Se versionan en git, se revisan en PRs, evolucionan con el proyecto.
+
+---
+
+## Frontend: convención FSD (Entities vs Features)
+
+Para mantener **Feature-Sliced Design** consistente:
+
+- `frontend/src/entities/<dominio>/` contiene lo **reusable de dominio**: types/model, API clients y hooks/queries (TanStack Query).
+- `frontend/src/features/<caso-de-uso>/` contiene la **UI/flujo** (componentes, páginas/feature screens) que consume entities.
+
+Ejemplo (direcciones):
+
+- `frontend/src/entities/addresses/` → `types.ts`, `api.ts`, `queries.ts`
+- `frontend/src/features/addresses/` → `MisDireccionesPage.tsx`, `PickupPointsPage.tsx`

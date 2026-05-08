@@ -124,6 +124,16 @@ shared (UI components, utilities)
 
 **Golden rule**: A feature NEVER imports from another feature or from layers above it. Pages never import from pages.
 
+### Entities vs Features (convención del repo)
+
+- `src/entities/<dominio>/`: **reusable de dominio** (types/model, API clients, y hooks/queries de TanStack Query).
+- `src/features/<caso-de-uso>/`: **UI/flujo** (componentes y pantallas de interacción) que consumen entities.
+
+Ejemplo (direcciones):
+
+- `src/entities/addresses/` → `types.ts`, `api.ts`, `queries.ts`
+- `src/features/addresses/` → pantallas como `MisDireccionesPage.tsx`, `PickupPointsPage.tsx`
+
 ## Import Examples
 
 ✅ **Correct**:
