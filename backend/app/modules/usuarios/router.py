@@ -4,7 +4,6 @@ app.modules.usuarios.router
 Router para gestión administrativa de usuarios.
 Solo accesible por ADMIN y GESTOR.
 """
-from __future__ import annotations
 
 from fastapi import APIRouter, Depends, Query
 from sqlmodel import Session

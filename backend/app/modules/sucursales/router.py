@@ -5,7 +5,6 @@ Router minimo: listado publico y CRUD admin (si se usa).
 No es requerido por addresses-module pero ayuda a operar sucursales.
 """
 
-from __future__ import annotations
 
 from fastapi import APIRouter, Depends, status
 from sqlmodel import Session

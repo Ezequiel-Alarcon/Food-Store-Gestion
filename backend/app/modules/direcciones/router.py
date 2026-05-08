@@ -5,7 +5,6 @@ Endpoints:
 - Branch pickup addresses (public list + admin management)
 """
 
-from __future__ import annotations
 
 from fastapi import APIRouter, Depends, status
 

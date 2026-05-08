@@ -1,0 +1,24 @@
+# Cross-platform line ending normalization
+# Garantiza que scripts, Dockerfiles y YAML usen LF en Windows y Linux
+* text=auto
+
+# Shell scripts — DEBEN ser LF para funcionar en contenedores Linux
+*.sh text eol=lf
+
+# Dockerfiles — DEBEN ser LF
+Dockerfile text eol=lf
+Dockerfile.* text eol=lf
+
+# Docker Compose — YAML
+docker-compose.yml text eol=lf
+docker-compose.*.yml text eol=lf
+*.yml text eol=lf
+
+# Python — LF recomendado
+*.py text eol=lf
+
+# TypeScript/JavaScript — auto (git decide)
+*.ts text=auto
+*.tsx text=auto
+*.js text=auto
+*.jsx text=auto

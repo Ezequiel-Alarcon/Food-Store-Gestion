@@ -1,6 +1,9 @@
 """
 Seed data - Datos iniciales obligatorios para el sistema.
 Ejecutar DESPUÉS de alembic upgrade head.
+
+Los imports son condicionales: si un modelo aún no está implementado
+(el proyecto está en desarrollo), esa parte del seed se omite.
 """
 from datetime import datetime, timezone
 from typing import Optional
@@ -9,9 +12,25 @@ from sqlmodel import Session, select
 
 from app.core.database import SessionLocal
 from app.core.security import hash_password
-from app.modules.auth.model import Rol, Usuario, UsuarioRol
-from app.modules.pedidos.model import EstadoPedido
-from app.modules.pagos.model import FormaPago
+
+# ── Imports condicionales (modelos pueden no existir aún en desarrollo) ──
+
+try:
+    from app.modules.auth.model import Rol, Usuario, UsuarioRol
+except ImportError:
+    Rol = None          # type: ignore
+    Usuario = None      # type: ignore
+    UsuarioRol = None   # type: ignore
+
+try:
+    from app.modules.pedidos.model import EstadoPedido
+except ImportError:
+    EstadoPedido = None  # type: ignore
+
+try:
+    from app.modules.pagos.model import FormaPago
+except ImportError:
+    FormaPago = None     # type: ignore
 
 
 def run_seed() -> None:
@@ -38,6 +57,10 @@ def run_seed() -> None:
 
 def seed_roles(session: Session) -> None:
     """Inserta los 4 roles del sistema RBAC."""
+    if Rol is None:
+        print("  ⚠ Seed roles omitido — modelo Rol no disponible aún")
+        return
+
     roles_data = [
         {"codigo": "ADMIN", "nombre": "Administrador", "descripcion": "Acceso total al sistema"},
         {"codigo": "STOCK", "nombre": "Gestor de Stock", "descripcion": "Gestión de inventario y catálogo"},
@@ -46,7 +69,6 @@ def seed_roles(session: Session) -> None:
     ]
 
     for role_data in roles_data:
-        # Upsert: verificar si existe antes de crear
         existing = session.get(Rol, role_data["codigo"])
         if not existing:
             rol = Rol(**role_data)
@@ -58,6 +80,10 @@ def seed_roles(session: Session) -> None:
 
 def seed_estados_pedido(session: Session) -> None:
     """Inserta los 6 estados de la máquina de estados del pedido."""
+    if EstadoPedido is None:
+        print("  ⚠ Seed estados omitido — modelo EstadoPedido no disponible aún")
+        return
+
     estados_data = [
         {"codigo": "PENDIENTE", "nombre": "Pendiente", "descripcion": "Pedido creado, esperando pago", "orden": 1, "es_terminal": False},
         {"codigo": "CONFIRMADO", "nombre": "Confirmado", "descripcion": "Pago aprobado", "orden": 2, "es_terminal": False},
@@ -79,6 +105,10 @@ def seed_estados_pedido(session: Session) -> None:
 
 def seed_formas_pago(session: Session) -> None:
     """Inserta las 3 formas de pago."""
+    if FormaPago is None:
+        print("  ⚠ Seed formas de pago omitido — modelo FormaPago no disponible aún")
+        return
+
     formas_data = [
         {"codigo": "MERCADOPAGO", "nombre": "MercadoPago", "descripcion": "Pago con MercadoPago", "habilitado": True},
         {"codigo": "EFECTIVO", "nombre": "Efectivo", "descripcion": "Pago en efectivo al recibir", "habilitado": True},
@@ -97,6 +127,10 @@ def seed_formas_pago(session: Session) -> None:
 
 def seed_usuario_admin(session: Session) -> None:
     """Crea el usuario administrador inicial."""
+    if Usuario is None or UsuarioRol is None:
+        print("  ⚠ Seed admin omitido — modelos Usuario/UsuarioRol no disponibles aún")
+        return
+
     admin_email = "admin@foodstore.com"
     admin_password = "Admin1234!"
 

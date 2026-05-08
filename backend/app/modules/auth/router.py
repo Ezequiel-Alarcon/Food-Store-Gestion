@@ -3,7 +3,6 @@ app.modules.auth.router
 
 Router para endpoints de autenticación.
 """
-from __future__ import annotations
 
 from fastapi import APIRouter, Depends, Request, status
 from sqlmodel import Session

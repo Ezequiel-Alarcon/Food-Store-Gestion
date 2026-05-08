@@ -3,7 +3,6 @@ app.modules.ingredientes.router
 
 Router para endpoints de ingredientes.
 """
-from __future__ import annotations
 
 from typing import Optional
 
@@ -32,7 +31,7 @@ router = APIRouter()
 def create_ingrediente(
     data: IngredienteCreate,
     session: Session = Depends(get_session),
-    current_user: dict = Depends(require_role(["ADMIN", "STOCK"])),
+    current_user: dict = Depends(require_role("ADMIN", "STOCK")),
 ) -> IngredienteResponse:
     """Crea un nuevo ingrediente."""
     service = IngredienteService(session)
@@ -110,7 +109,7 @@ def update_ingrediente(
     ingrediente_id: int,
     data: IngredienteUpdate,
     session: Session = Depends(get_session),
-    current_user: dict = Depends(require_role(["ADMIN", "STOCK"])),
+    current_user: dict = Depends(require_role("ADMIN", "STOCK")),
 ) -> IngredienteResponse:
     """Actualiza un ingrediente (PATCH - campos opcionales)."""
     service = IngredienteService(session)
@@ -134,7 +133,7 @@ def update_ingrediente(
 def delete_ingrediente(
     ingrediente_id: int,
     session: Session = Depends(get_session),
-    current_user: dict = Depends(require_role(["ADMIN", "STOCK"])),
+    current_user: dict = Depends(require_role("ADMIN", "STOCK")),
 ) -> None:
     """Elimina (soft-delete) un ingrediente."""
     service = IngredienteService(session)
