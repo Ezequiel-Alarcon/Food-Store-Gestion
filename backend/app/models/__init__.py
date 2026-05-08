@@ -21,6 +21,11 @@ try:
 except ImportError:
     pass
 
+try:
+    from app.modules.sucursales.model import Sucursal
+except ImportError:
+    pass
+
 # Dominio 2: Catálogo de Productos
 try:
     from app.modules.categorias.model import Categoria
@@ -56,6 +61,7 @@ __all__ = [
     "UsuarioRol",
     "RefreshToken",
     "DireccionEntrega",
+    "Sucursal",
     # Dominio 2
     "Categoria",
     "Ingrediente",

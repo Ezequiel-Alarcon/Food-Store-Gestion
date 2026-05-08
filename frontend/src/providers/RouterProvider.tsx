@@ -4,6 +4,8 @@ import { LoginForm } from '../features/auth/LoginForm'
 import { RegisterForm } from '../features/auth/RegisterForm'
 import { ProtectedRoute } from '../features/auth/ProtectedRoute'
 import { Navigation } from '../features/layout/Navigation'
+import { MisDireccionesPage } from '../features/addresses/MisDireccionesPage'
+import { PickupPointsPage } from '../features/addresses/PickupPointsPage'
 
 interface RouterProviderProps {
   children: ReactNode
@@ -31,6 +33,17 @@ export function RouterProvider({ children }: RouterProviderProps) {
             </ProtectedRoute>
           }
         />
+
+        <Route
+          path="/direcciones"
+          element={
+            <ProtectedRoute allowedRoles={['CLIENT']}>
+              <MisDireccionesPage />
+            </ProtectedRoute>
+          }
+        />
+
+        <Route path="/puntos-retiro" element={<PickupPointsPage />} />
 
         {/* Rutas protegidas - Admin */}
         <Route

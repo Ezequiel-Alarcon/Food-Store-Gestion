@@ -143,6 +143,8 @@ from app.modules.auth.router import router as auth_router
 from app.modules.usuarios.router import router as usuarios_router
 from app.modules.perfil.router import router as perfil_router
 from app.modules.categorias.router import router as categorias_router
+from app.modules.direcciones.router import router as direcciones_router
+from app.modules.sucursales.router import router as sucursales_router
 # from app.modules.productos.router import router as productos_router
 from app.modules.ingredientes.router import router as ingredientes_router
 # from app.modules.direcciones.router import router as direcciones_router
@@ -155,7 +157,12 @@ app.include_router(auth_router, prefix="/api/v1/auth", tags=["auth"])
 app.include_router(usuarios_router, prefix="/api/v1", tags=["usuarios"])
 app.include_router(perfil_router, prefix="/api/v1", tags=["perfil"])
 app.include_router(categorias_router, prefix="/api/v1", tags=["categorias"])
+
+app.include_router(direcciones_router, prefix="/api/v1", tags=["direcciones"])
+app.include_router(sucursales_router, prefix="/api/v1", tags=["branches"])
+
 app.include_router(ingredientes_router, prefix="/api/v1", tags=["ingredientes"])
+
 # app.include_router(productos_router, prefix="/api/v1", tags=["productos"])
 # app.include_router(direcciones_router, prefix="/api/v1", tags=["direcciones"])
 # app.include_router(pedidos_router, prefix="/api/v1", tags=["pedidos"])

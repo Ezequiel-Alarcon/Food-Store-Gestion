@@ -6,6 +6,8 @@ const MENU_BY_ROLE: Record<string, Array<{ label: string; href: string }>> = {
   CLIENT: [
     { label: 'Productos', href: '/productos' },
     { label: 'Mis Pedidos', href: '/pedidos' },
+    { label: 'Mis Direcciones', href: '/direcciones' },
+    { label: 'Puntos de Retiro', href: '/puntos-retiro' },
   ],
   GESTOR_STOCK: [
     { label: 'Productos', href: '/productos' },
@@ -18,6 +20,7 @@ const MENU_BY_ROLE: Record<string, Array<{ label: string; href: string }>> = {
   ADMIN: [
     { label: 'Dashboard', href: '/admin' },
     { label: 'Gestión de Usuarios', href: '/admin/usuarios' },
+    { label: 'Puntos de Retiro', href: '/puntos-retiro' },
   ],
 }
 
