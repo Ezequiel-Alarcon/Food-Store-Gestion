@@ -3,7 +3,6 @@ app.modules.categorias.router
 
 Router para endpoints de categorías.
 """
-from __future__ import annotations
 
 from typing import Optional
 

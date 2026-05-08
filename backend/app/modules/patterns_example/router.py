@@ -6,7 +6,6 @@ Sirve como referencia de uso para:
 - UnitOfWork + BaseRepository
 """
 
-from __future__ import annotations
 
 from fastapi import APIRouter, Depends
 

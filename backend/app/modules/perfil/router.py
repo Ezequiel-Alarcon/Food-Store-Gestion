@@ -3,7 +3,6 @@ app.modules.perfil.router
 
 Router para gestión del perfil propio del usuario autenticado.
 """
-from __future__ import annotations
 
 from fastapi import APIRouter, Depends
 from sqlmodel import Session

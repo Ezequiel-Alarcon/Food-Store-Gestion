@@ -96,6 +96,22 @@
       "sessions": 1,
       "memories": 1,
       "prompts": 2
+    },
+    {
+      "id": "095214c8",
+      "created_by": "Facultad",
+      "created_at": "2026-05-08T18:35:41Z",
+      "sessions": 1,
+      "memories": 3,
+      "prompts": 20
+    },
+    {
+      "id": "0afcfded",
+      "created_by": "Facultad",
+      "created_at": "2026-05-08T18:39:02Z",
+      "sessions": 0,
+      "memories": 0,
+      "prompts": 1
     }
   ]
 }

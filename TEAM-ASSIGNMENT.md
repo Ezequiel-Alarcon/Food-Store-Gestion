@@ -30,8 +30,11 @@
 │                FASE 2: DOCKER + BACKEND PURO (🔲 PENDIENTE)              │
 ├──────────────────────────────────────────────────────────────────────────┤
 │                                                                           │
-│  1️⃣1️⃣ EZE → docker-setup 🆕                                             │
+│  1️⃣1️⃣ EZE → docker-setup 🆕 ✅                                            │
 │            ↓ (Docker Compose listo: PostgreSQL + backend + frontend)     │
+│                                                                           │
+│  1️⃣1️⃣🅱️ EZE → fix-backend-startup 🆕 ✅                                    │
+│            ↓ (Fix: forward refs en routers + seed condicional)           │
 │                                                                           │
 │  1️⃣2️⃣ MATI → products-module (⏳ espera 8+9)                            │
 │            ↓ (CRUD productos + catálogo público)                         │
@@ -87,7 +90,8 @@
 
 | # | Orden | Integrante | Change | Depende de | Estado | ETA |
 |---|-------|-----------|--------|-----------|--------|-----|
-| 11 | **9º** | Eze | `docker-setup` 🆕 | 10 | ⏳ | 0.5 días |
+| 11 | **9º** | Eze | `docker-setup` 🆕 | 10 | ✅ | 0.5 días |
+| 11b | **9º** | Eze | `fix-backend-startup` 🆕 | 11 | ✅ | 0.25 días |
 | 12 | **10º** | Mati | `products-module` | 8,9 | ⏳ | 1.5 días |
 | 13 | **11º** | Leandro | `orders-fsm` | 10,12 | ⏳ | 1.5 días |
 | 14 | **12º** | Eze | `payments-integration` | 13 | ⏳ | 1 día |
@@ -165,7 +169,7 @@
 
 | Integrante | Changes | Total HU | Cambios nuevos | Rol |
 |-----------|---------|----------|---------------|-----|
-| **Eze** | 1, 6, 11, 14 | 12 + docker | `docker-setup` 🆕 | Infra + Auth + Docker + Pagos |
+| **Eze** | 1, 6, 11, 11b, 14 | 12 + docker | `docker-setup` 🆕, `fix-backend-startup` 🆕 | Infra + Auth + Docker + Pagos |
 | **Mati** | 2, 7, 12, 19, 21 | 21 | `users-admin-frontend` 🆕 | Backend + Auth-FE + Productos + Orders-client + Admin-FE |
 | **Lucas** | 3, 8, 18, 20, 22 | 10 | `orders-list-gestor-frontend` 🆕, `admin-metrics-frontend` 🆕 | Frontend + Categorías + Carrito + Admin-FE |
 | **Edgar** | 5, 9, 16, 17 | 16 | — | Errores + Ingredientes + Users-admin + Metrics |
@@ -176,5 +180,25 @@
 ---
 
 > **Fase actual:** Fase 2 — Backend Puro  
-> **Próximo change:** `docker-setup` (Eze)  
+> **Próximo change:** `products-module` (Mati)  
 > **Regla de oro:** Backend first, frontend after — siempre consultar antes de tocar frontend.
+
+---
+
+## 📝 Notas para el equipo (2026-05-08)
+
+### Cambios aplicados en `fix-backend-startup` (Eze)
+
+1. **`from __future__ import annotations` eliminado de TODOS los `router.py`** (8 archivos: auth, sucursales, ingredientes, direcciones, categorias, usuarios, perfil, patterns_example). Causaba que Pydantic v2 no resolviera los tipos al decorar rutas FastAPI → `NameError: name 'LoginRequest' is not defined`.
+
+2. **`db/seed.py` con imports condicionales.** Los modelos `Rol`, `UsuarioRol`, `EstadoPedido`, `FormaPago` se importan con `try/except ImportError`. Si el modelo no existe aún (changes futuros no implementados), el seed omite esa parte sin crashear.
+
+3. **`requirements.txt` corregido** (parte de docker-setup): eliminado `python-cors==1.3.5` (no existe en PyPI), actualizado `python-multipart==0.0.6` → `0.0.7` (requerido por FastAPI 0.111).
+
+4. **Migraciones corregidas** (parte de docker-setup): dos revisiones `003` duplicadas → una renumerada a `004`.
+
+### Para el próximo que implemente (`products-module` — Mati)
+
+- El backend arranca con `docker compose up`. Probar después de hacer `git pull`.
+- Los modelos `Usuario` y `UsuarioRol` YA existen en `app/modules/auth/model.py`. Al implementar `Rol`, el seed lo va a poblar automáticamente.
+- Si necesitás tocar `seed.py` para agregar productos de ejemplo, seguí el patrón de imports condicionales.
