@@ -1,47 +1,88 @@
 # Food Store — Mapa de Changes CORREGIDO
 
 > **Proyecto:** Food Store E-Commerce  
-> **Fecha:** 2026-04-28  
+> **Fecha:** 2026-05-08  
 > **Metodología:** Spec-Driven Development (SDD) + Feature-First  
-> **Versión:** 2.0 (post-revisión crítica)
+> **Versión:** 2.1 (reordenamiento backend-first)
+
+---
+
+## 0. Reordenamiento v2.1 — Backend-First (2026-05-08)
+
+> **Decisión:** A partir del change 10, se reordena el pipeline para priorizar backend puro.  
+> **Razón:** Eliminar el intercalado backend-frontend que generaba cambios bloqueantes innecesarios.  
+> **Cambios aplicados:**
+> - Agregado `docker-setup` como prerequisito de infraestructura (Docker Compose: PostgreSQL + backend + frontend)
+> - `cart-frontend` (12) movido a fase frontend (después de todo el backend)
+> - `orders-list-client` (15) movido a fase frontend
+> - `orders-list-gestor` (16), `users-admin` (17), `admin-metrics` (18) partidos en backend + frontend
+> - Regla: **nunca se toca frontend sin consultar al usuario primero** durante la fase backend
+
+**Total: 18 → 22 changes** (1 nuevo + 3 splits)
 
 ---
 
 ## 1. Resumen Ejecutivo
 
-| Métrica | Valor Anterior | Valor Corregido |
-|---------|--------------|---------------|
-| Total changes | 15 | 18 |
-| HU total | 65 (~85%) | 77 (100%) |
-| Changes >6 HU | 5 | 0 |
-| Dependencias circulares | 1 | 0 |
-|Épicas mezcladas | 3 | 0 |
-| Config.yaml | vacío | ✅ Completado |
+| Métrica | v1 (Original) | v2.0 (Corregido) | v2.1 (Backend-First) |
+|---------|--------------|---------------|-------------------|
+| Total changes | 15 | 18 | 22 |
+| HU total | 65 (~85%) | 77 (100%) | 77 (100%) |
+| Changes >6 HU | 5 | 0 | 0 |
+| Dependencias circulares | 1 | 0 | 0 |
+| Épicas mezcladas | 3 | 0 | 0 |
+| Config.yaml | vacío | ✅ | ✅ |
+| Docker | ❌ | ❌ | ✅ |
+| Backend-First | ❌ | ❌ | ✅ |
 
 ---
 
-## 2. Lista Ordenada de Changes
+## 2. Lista Ordenada de Changes (v2.1 Backend-First)
 
-| # | ID | Change | Descripción | Épica | HU | Archivos~ |
-|---|-----|--------|-------------|-------|-----|-----------|
-| 1 | `infra-setup` | Scaffolding del monorepo y estructura base | EPIC 00 | 1 | ~20 |
-| 2 | `backend-config` | FastAPI + DB + Alembic + seed data | EPIC 00 | 2 | ~15 |
-| 3 | `frontend-config` | React + Vite + Zustand stores + Axios | EPIC 00 | 2 | ~12 |
-| 4 | `backend-patterns` | BaseRepository, UoW, auth dependencies | EPIC 00 | 1 | ~8 |
-| 5 | `error-handling` | RFC 7807 + validación inputs + rate limiting | EPIC 00 | 2 | ~5 |
-| 6 | `auth-backend` | Register, login, refresh, logout, RBAC, perfil | EPIC 01 | 6 | ~12 |
-| 7 | `auth-frontend` | Login/Register forms, ProtectedRoute, guards | EPIC 02 | 4 | ~8 |
-| 8 | `categories-module` | CRUD categorías jerárquicas | EPIC 03 | 4 | ~6 |
-| 9 | `ingredients-module` | CRUD ingredientes + alérgenos | EPIC 04 | 4 | ~5 |
-| 10 | `products-module` | CRUD productos + catálogo público | EPIC 05 | 9 | ~10 |
-| 11 | `addresses-module` | CRUD direcciones de entrega | EPIC 07 | 5 | ~6 |
-| 12 | `cart-frontend` | Carrito Zustand + persistencia | EPIC 08 | 6 | ~6 |
-| 13 | `orders-fsm` | Creación pedidos + FSM básica | EPIC 10,12 | 8 | ~10 |
-| 14 | `payments-integration` | MercadoPago webhook + confirmación | EPIC 11 | 4 | ~6 |
-| 15 | `orders-list-client` | Ver mis pedidos (cliente) | EPIC 13 | 2 | ~3 |
-| 16 | `orders-list-gestor` | Panel pedidos (gestor/ADMIN) | EPIC 13 | 2 | ~4 |
-| 17 | `users-admin` | CRUD usuarios + asignación roles | EPIC 15 | 3 | ~5 |
-| 18 | `admin-metrics` | Dashboard KPIs + gráficos recharts | EPIC 17 | 4 | ~6 |
+### FASE 0 — Infraestructura Base (✅ COMPLETADA)
+
+| # | ID | Change | Descripción | Épica | HU | Archivos~ | Estado |
+|---|-----|--------|-------------|-------|-----|-----------|--------|
+| 1 | `infra-setup` | Scaffolding del monorepo y estructura base | EPIC 00 | 1 | ~20 | ✅ Archivado |
+| 2 | `backend-config` | FastAPI + DB + Alembic + seed data | EPIC 00 | 2 | ~15 | ✅ Archivado |
+| 3 | `frontend-config` | React + Vite + Zustand stores + Axios | EPIC 00 | 2 | ~12 | ✅ Archivado |
+| 4 | `backend-patterns` | BaseRepository, UoW, auth dependencies | EPIC 00 | 1 | ~8 | ✅ Archivado |
+| 5 | `error-handling` | RFC 7807 + validación inputs + rate limiting | EPIC 00 | 2 | ~5 | ✅ Archivado |
+
+### FASE 1 — Autenticación + Catálogo Base (✅ COMPLETADA)
+
+| # | ID | Change | Descripción | Épica | HU | Archivos~ | Estado |
+|---|-----|--------|-------------|-------|-----|-----------|--------|
+| 6 | `auth-backend` | Register, login, refresh, logout, RBAC, perfil | EPIC 01 | 8 | ~12 | ✅ Archivado |
+| 7 | `auth-frontend` | Login/Register forms, ProtectedRoute, guards | EPIC 02 | 4 | ~8 | ✅ Archivado |
+| 8 | `categories-module` | CRUD categorías jerárquicas | EPIC 03 | 4 | ~6 | ✅ Archivado |
+| 9 | `ingredients-module` | CRUD ingredientes + alérgenos | EPIC 04 | 4 | ~5 | ✅ Archivado |
+| 10 | `addresses-module` | CRUD direcciones de entrega | EPIC 07 | 5 | ~6 | ✅ Archivado |
+
+### FASE 2 — Docker + Backend Puro (🔲 PENDIENTE)
+
+| # | ID | Change | Descripción | Épica | HU | Archivos~ | Capa |
+|---|-----|--------|-------------|-------|-----|-----------|------|
+| 11 | `docker-setup` | 🆕 Docker Compose: PostgreSQL + backend + frontend | EPIC 00 | — | ~5 | Infra |
+| 12 | `products-module` | CRUD productos + catálogo público | EPIC 05 | 9 | ~10 | Backend |
+| 13 | `orders-fsm` | Creación pedidos + FSM básica | EPIC 10,12 | 8 | ~10 | Backend |
+| 14 | `payments-integration` | MercadoPago webhook + confirmación | EPIC 11 | 4 | ~6 | Backend |
+| 15 | `orders-list-gestor` | Panel pedidos (gestor/ADMIN) — solo backend | EPIC 13 | 2 | ~4 | Backend |
+| 16 | `users-admin` | CRUD usuarios + asignación roles — solo backend | EPIC 15 | 3 | ~5 | Backend |
+| 17 | `admin-metrics` | Dashboard KPIs endpoints — solo backend | EPIC 17 | 4 | ~6 | Backend |
+
+### FASE 3 — Frontend (🔒 CONSULTAR antes de cada uno)
+
+| # | ID | Change | Descripción | Épica | HU | Archivos~ | Capa |
+|---|-----|--------|-------------|-------|-----|-----------|------|
+| 18 | `cart-frontend` | Carrito Zustand + persistencia | EPIC 08 | 6 | ~6 | Frontend |
+| 19 | `orders-list-client` | Ver mis pedidos (cliente) | EPIC 13 | 2 | ~3 | Frontend |
+| 20 | `orders-list-gestor-frontend` | 🆕 Panel pedidos frontend (gestor/ADMIN) | EPIC 13 | — | ~3 | Frontend |
+| 21 | `users-admin-frontend` | 🆕 Panel admin usuarios frontend | EPIC 15 | — | ~3 | Frontend |
+| 22 | `admin-metrics-frontend` | 🆕 Dashboard KPIs frontend (recharts) | EPIC 17 | — | ~4 | Frontend |
+
+> **Regla FASE 3:** Cada change de frontend requiere consulta explícita al usuario.  
+> No se avanza automáticamente a ningún change de frontend sin aprobación.
 
 ---
 
@@ -260,7 +301,55 @@
 
 ---
 
-### Change 10: `products-module`
+### Change 10: `addresses-module` ✅ COMPLETADO
+
+| Campo | Valor |
+|------|-------|
+| **ID** | `addresses-module` |
+| **Épica** | EPIC 07 |
+| **HU** | US-024, US-025, US-026, US-027, US-028 |
+| **Archivos** | ~6 nuevos |
+| **Objetivo** | CRUD direcciones de entrega por usuario |
+| **Estado** | ✅ Archivado 2026-05-08 |
+
+**Scope de archivos:**
+- `backend/app/modules/direcciones/` — model, schemas, repository, service, router
+
+**Dependencias:** `auth-backend`
+
+**Trazabilidad:**
+- US-024 → crear dirección
+- US-025 → listar propias
+- US-026 → editar dirección
+- US-027 → eliminar dirección
+- US-028 → establecer predeterminada
+
+---
+
+### Change 11: `docker-setup` 🆕
+
+| Campo | Valor |
+|------|-------|
+| **ID** | `docker-setup` |
+| **Épica** | EPIC 00 |
+| **HU** | — (infraestructura) |
+| **Archivos** | ~5 nuevos |
+| **Objetivo** | Docker Compose para levantar PostgreSQL + backend + frontend en entorno dev |
+
+**Scope de archivos:**
+- `docker-compose.yml` — PostgreSQL 15 + backend (FastAPI) + frontend (Vite)
+- `backend/Dockerfile` — Imagen Python 3.11+ con dependencias
+- `frontend/Dockerfile` — Imagen Node 20+ con Vite dev server
+- `.env.docker` — Variables de entorno para Docker
+- `scripts/docker-up.ps1` / `scripts/docker-up.sh` — Scripts de arranque
+
+**Dependencias:** `addresses-module` (necesita la estructura actual del proyecto)
+
+**Nota:** Este change es opcional pero recomendado. Permite que cualquier integrante del equipo levante el entorno completo con `docker compose up`.
+
+---
+
+### Change 12: `products-module` (backend)
 
 | Campo | Valor |
 |------|-------|
@@ -268,7 +357,7 @@
 | **Épica** | EPIC 05 |
 | **HU** | US-015, US-016, US-017, US-018, US-019, US-020, US-021, US-022, US-023 |
 | **Archivos** | ~10 nuevos |
-| **Objetivo** | CRUD productos + catálogo público + filtros por alérgenos |
+| **Objetivo** | CRUD productos + catálogo público + filtros por alérgenos (solo backend) |
 
 **Scope de archivos:**
 - `backend/app/modules/productos/` — model, schemas, repository, service, router
@@ -288,56 +377,7 @@
 
 ---
 
-### Change 11: `addresses-module`
-
-| Campo | Valor |
-|------|-------|
-| **ID** | `addresses-module` |
-| **Épica** | EPIC 07 |
-| **HU** | US-024, US-025, US-026, US-027, US-028 |
-| **Archivos** | ~6 nuevos |
-| **Objetivo** | CRUD direcciones de entrega por usuario |
-
-**Scope de archivos:**
-- `backend/app/modules/direcciones/`
-
-**Dependencias:** `auth-backend`
-
-**Trazabilidad:**
-- US-024 → crear dirección
-- US-025 → listar propias
-- US-026 → editar dirección
-- US-027 → eliminar dirección
-- US-028 → establecer predeterminada
-
----
-
-### Change 12: `cart-frontend`
-
-| Campo | Valor |
-|------|-------|
-| **ID** | `cart-frontend` |
-| **Épica** | EPIC 08 |
-| **HU** | US-029, US-030, US-031, US-032, US-033, US-034 |
-| **Archivos** | ~6 nuevos |
-| **Objetivo** | Carrito de compras con Zustand + persistencia |
-
-**Scope de archivos:**
-- `frontend/src/features/cart/` — CartDrawer, CartSummary
-
-**Dependencias:** `frontend-config`, `products-module`
-
-**Trazabilidad:**
-- US-029 → agregar producto
-- US-030 → personalizar (excluir ingredientes)
-- US-031 → modificar cantidad
-- US-032 → eliminar item
-- US-033 → ver resumen
-- US-034 → vaciar carrito
-
----
-
-### Change 13: `orders-fsm`
+### Change 13: `orders-fsm` (backend)
 
 | Campo | Valor |
 |------|-------|
@@ -345,7 +385,7 @@
 | **Épica** | EPIC 10, EPIC 12 |
 | **HU** | US-035, US-036, US-037, US-038, US-040, US-041, US-042, US-043 |
 | **Archivos** | ~10 nuevos |
-| **Objetivo** | Creación pedidos + FSM básica sin integración de pagos |
+| **Objetivo** | Creación pedidos + FSM básica sin integración de pagos (solo backend) |
 
 **Scope de archivos:**
 - `backend/app/modules/pedidos/` — model, schemas, repository, service, router
@@ -367,7 +407,7 @@
 
 ---
 
-### Change 14: `payments-integration`
+### Change 14: `payments-integration` (backend)
 
 | Campo | Valor |
 |------|-------|
@@ -375,7 +415,7 @@
 | **Épica** | EPIC 11 |
 | **HU** | US-045, US-046, US-047, US-048 |
 | **Archivos** | ~6 nuevos |
-| **Objetivo** | MercadoPago: crear preferencia, webhook IPN, transición automática |
+| **Objetivo** | MercadoPago: crear preferencia, webhook IPN, transición automática (solo backend) |
 
 **Scope de archivos:**
 - `backend/app/modules/pagos/` — model, schemas, repository, service, router
@@ -392,7 +432,107 @@
 
 ---
 
-### Change 15: `orders-list-client`
+### Change 15: `orders-list-gestor` (backend) 🔀 SPLIT
+
+| Campo | Valor |
+|------|-------|
+| **ID** | `orders-list-gestor` |
+| **Épica** | EPIC 13 |
+| **HU** | US-051, US-052 |
+| **Archivos** | ~2 nuevos |
+| **Objetivo** | Gestor/Admin: ver todos los pedidos — **solo backend** (router admin) |
+
+**Scope de archivos:**
+- `backend/app/modules/admin/pedidos.py` — router con protección ADMIN/PEDIDOS
+
+**Dependencias:** `orders-fsm`, `auth-backend`
+
+**Trazabilidad:**
+- US-051 → listar todos pedidos (endpoint)
+- US-052 → detalle cualquier pedido (endpoint)
+
+**Nota:** El frontend de este change se implementa en `orders-list-gestor-frontend` (Fase 3).
+
+---
+
+### Change 16: `users-admin` (backend) 🔀 SPLIT
+
+| Campo | Valor |
+|------|-------|
+| **ID** | `users-admin` |
+| **Épica** | EPIC 15 |
+| **HU** | US-053, US-054, US-055 |
+| **Archivos** | ~3 nuevos |
+| **Objetivo** | Admin: CRUD usuarios + asignación roles — **solo backend** (router admin) |
+
+**Scope de archivos:**
+- `backend/app/modules/admin/usuarios.py` — router con protección ADMIN
+
+**Dependencias:** `auth-backend`
+
+**Trazabilidad:**
+- US-053 → listar usuarios (endpoint)
+- US-054 → editar usuario (endpoint)
+- US-055 → desactivar usuario (endpoint)
+
+**Nota:** El frontend de este change se implementa en `users-admin-frontend` (Fase 3).
+
+---
+
+### Change 17: `admin-metrics` (backend) 🔀 SPLIT
+
+| Campo | Valor |
+|------|-------|
+| **ID** | `admin-metrics` |
+| **Épica** | EPIC 17 |
+| **HU** | US-056, US-057, US-058, US-059 |
+| **Archivos** | ~4 nuevos |
+| **Objetivo** | Dashboard KPIs — **solo backend** (endpoints de métricas) |
+
+**Scope de archivos:**
+- `backend/app/modules/admin/metrics.py` — endpoints con protección ADMIN
+
+**Dependencias:** `orders-fsm`, `users-admin`
+
+**Trazabilidad:**
+- US-056 → métricas generales (endpoint)
+- US-057 → gráfico ventas (endpoint)
+- US-058 → top productos (endpoint)
+- US-059 → pedidos por estado (endpoint)
+
+**Nota:** El frontend de este change se implementa en `admin-metrics-frontend` (Fase 3).
+
+---
+
+### Change 18: `cart-frontend` 🔒 FRONTEND
+
+| Campo | Valor |
+|------|-------|
+| **ID** | `cart-frontend` |
+| **Épica** | EPIC 08 |
+| **HU** | US-029, US-030, US-031, US-032, US-033, US-034 |
+| **Archivos** | ~6 nuevos |
+| **Objetivo** | Carrito de compras con Zustand + persistencia (solo frontend) |
+
+**Scope de archivos:**
+- `frontend/src/features/cart/` — CartDrawer, CartSummary
+- `frontend/src/stores/cartStore.ts` — Zustand store con persistencia
+
+**Dependencias:** `frontend-config`, `products-module`
+
+**Trazabilidad:**
+- US-029 → agregar producto
+- US-030 → personalizar (excluir ingredientes)
+- US-031 → modificar cantidad
+- US-032 → eliminar item
+- US-033 → ver resumen
+- US-034 → vaciar carrito
+
+**⚠️ Consultar al usuario antes de implementar.**
+
+---
+
+### Change 19: `orders-list-client` 🔒 FRONTEND
 
 | Campo | Valor |
 |------|-------|
@@ -400,7 +540,7 @@
 | **Épica** | EPIC 13 |
 | **HU** | US-049, US-050 |
 | **Archivos** | ~3 nuevos |
-| **Objetivo** | Cliente: ver sus pedidos y detalle |
+| **Objetivo** | Cliente: ver sus pedidos y detalle (solo frontend) |
 
 **Scope de archivos:**
 - `frontend/src/features/orders/` — PedidosList, PedidoDetail
@@ -411,137 +551,134 @@
 - US-049 → listar mis pedidos
 - US-050 → ver detalle
 
+**⚠️ Consultar al usuario antes de implementar.**
+
 ---
 
-### Change 16: `orders-list-gestor`
+### Change 20: `orders-list-gestor-frontend` 🆕 🔒 FRONTEND
 
 | Campo | Valor |
 |------|-------|
-| **ID** | `orders-list-gestor` |
+| **ID** | `orders-list-gestor-frontend` |
 | **Épica** | EPIC 13 |
-| **HU** | US-051, US-052 |
-| **Archivos** | ~4 nuevos |
-| **Objetivo** | Gestor/Admin: ver todos los pedidos |
+| **HU** | — (frontend de US-051, US-052) |
+| **Archivos** | ~3 nuevos |
+| **Objetivo** | Panel de pedidos para gestor/admin (solo frontend) |
 
 **Scope de archivos:**
-- `backend/app/modules/admin/pedidos.py` — router
-- `frontend/src/features/admin/orders/`
+- `frontend/src/features/admin/orders/` — panel de gestión de pedidos
 
-**Dependencias:** `orders-fsm`, `auth-backend` (protección ADMIN/PEDIDOS)
+**Dependencias:** `orders-list-gestor` (backend), `auth-frontend`
 
-**Trazabilidad:**
-- US-051 → listar todos pedidos
-- US-052 → detalle cualquier pedido
+**⚠️ Consultar al usuario antes de implementar.**
 
 ---
 
-### Change 17: `users-admin`
+### Change 21: `users-admin-frontend` 🆕 🔒 FRONTEND
 
 | Campo | Valor |
 |------|-------|
-| **ID** | `users-admin` |
+| **ID** | `users-admin-frontend` |
 | **Épica** | EPIC 15 |
-| **HU** | US-053, US-054, US-055 |
-| **Archivos** | ~5 nuevos |
-| **Objetivo** | Admin: CRUD usuarios + asignación roles |
+| **HU** | — (frontend de US-053, US-054, US-055) |
+| **Archivos** | ~3 nuevos |
+| **Objetivo** | Panel de administración de usuarios (solo frontend) |
 
 **Scope de archivos:**
-- `backend/app/modules/admin/usuarios.py` — router
-- `frontend/src/features/admin/users/`
+- `frontend/src/features/admin/users/` — tabla usuarios, formulario edición
 
-**Dependencias:** `auth-backend`
+**Dependencias:** `users-admin` (backend), `auth-frontend`
 
-**Trazabilidad:**
-- US-053 → listar usuarios
-- US-054 → editar usuario
-- US-055 → desactivar usuario
+**⚠️ Consultar al usuario antes de implementar.**
 
 ---
 
-### Change 18: `admin-metrics`
+### Change 22: `admin-metrics-frontend` 🆕 🔒 FRONTEND
 
 | Campo | Valor |
 |------|-------|
-| **ID** | `admin-metrics` |
+| **ID** | `admin-metrics-frontend` |
 | **Épica** | EPIC 17 |
-| **HU** | US-056, US-057, US-058, US-059 |
-| **Archivos** | ~6 nuevos |
-| **Objetivo** | Dashboard KPIs + gráficos recharts |
+| **HU** | — (frontend de US-056, US-057, US-058, US-059) |
+| **Archivos** | ~4 nuevos |
+| **Objetivo** | Dashboard KPIs con gráficos recharts (solo frontend) |
 
 **Scope de archivos:**
-- `backend/app/modules/admin/metrics.py` — endpoints
-- `frontend/src/features/admin/dashboard/`
+- `frontend/src/features/admin/dashboard/` — gráficos, tarjetas KPIs
 
-**Dependencias:** `orders-fsm`, `users-admin`
+**Dependencias:** `admin-metrics` (backend), `auth-frontend`
 
-**Trazabilidad:**
-- US-056 → métricas generales
-- US-057 → gráfico ventas
-- US-058 → top productos
-- US-059 → pedidos por estado
+**⚠️ Consultar al usuario antes de implementar.**
 
 ---
 
-## 4. Mapa de Dependencias (Resuelto)
+## 4. Mapa de Dependencias (v2.1 Backend-First)
 
 ```
 ┌─────────────────────────────────────────────────────────────────────────┐
-│                         INFRAESTRUCTURA                                 │
+│                    INFRAESTRUCTURA (✅ COMPLETADA)                       │
 ├──────────────────────────────────────────────────────────────────────────┤
 │ infra-setup ──→ backend-config ──→ backend-patterns ──→ error-handling │
 │      │                         │                                        │
 │      └─────────────────────────┴────────→ frontend-config             │
 │                                                 │                     │
-│                                                 ↓                     │
 ├──────────────────────────────────────────────────────────────────────┤
-│                    AUTENTICACIÓN Y AUTORIZACIÓN                        │
+│               AUTENTICACIÓN + CATÁLOGO BASE (✅ COMPLETADA)              │
 ├──────────────────────────────────────────────────────────────────────┤
 │ error-handling ──→ auth-backend ──→ auth-frontend                     │
 │                           │                      │                    │
-│                           ├────────→ categories-module                 │
-│                           ├────────→ ingredients-module              │
-│                           ├────────→ products-module                 │
-│                           └────────→ addresses-module                │
+│                           ├────────→ categories-module ✅              │
+│                           ├────────→ ingredients-module ✅            │
+│                           ├────────→ addresses-module ✅              │
+│                           └────────→ users-admin (backend)            │
 ├─────────────────────────────────────────────────────────────────────┤
-│                        CATÁLOGO Y PERFIL                              │
+│                   FASE 2: DOCKER + BACKEND PURO                        │
 ├─────────────────────────────────────────────────────────────────────┤
+│ addresses-module ──→ docker-setup 🆕                                  │
+│                                                                        │
 │ categories-module ──→ products-module                                 │
-│ ingredients-module ──→ products-module                               │
-│ products-module ──→ cart-frontend                                    │
-│ addresses-module ──→ orders-fsm                                      │
-├───────���─���───────────────────────────────────────────────────────────┤
-│                       PEDIDOS Y PAGOS                                    │
-├─────────────────────────────────────────────────────────────────────┤
+│ ingredients-module ──→ products-module                                │
+│                                                                        │
 │ products-module ──→ orders-fsm                                        │
-│ orders-fsm ──→ payments-integration ──→ orders-fsm*                 │
-│                                       (* transición automática)       │
-│ payments-integration ──→ orders-list-client                         │
+│ addresses-module ──→ orders-fsm                                       │
+│                                                                        │
+│ orders-fsm ──→ payments-integration ──→ orders-fsm*                  │
+│                                    (* transición automática)           │
+│                                                                        │
+│ auth-backend ──→ users-admin                                          │
+│ orders-fsm ──→ orders-list-gestor                                     │
+│                                                                        │
+│ orders-fsm ──→ admin-metrics                                          │
+│ users-admin ──→ admin-metrics                                         │
 ├─────────────────────────────────────────────────────────────────────┤
-│                          ADMIN                                        │
+│                   FASE 3: FRONTEND (🔒 CONSULTAR)                      │
 ├─────────────────────────────────────────────────────────────────────┤
-│ orders-fsm ──→ orders-list-gestor                                    │
-│ auth-backend ──→ users-admin                                         │
-│ orders-list-gestor ──→ admin-metrics                                │
+│ products-module ──→ cart-frontend 🔒                                  │
+│ orders-fsm ──→ orders-list-client 🔒                                 │
+│ orders-list-gestor ──→ orders-list-gestor-frontend 🔒               │
+│ users-admin ──→ users-admin-frontend 🔒                              │
+│ admin-metrics ──→ admin-metrics-frontend 🔒                          │
 └─────────────────────────────────────────────────────────────────────────┘
 ```
 
 ---
 
-## 5. Ruta Crítica
+## 5. Ruta Crítica (v2.1 Backend-First)
 
-| Etapa | Cambios | Épicas | Total HU |
-|------|--------|--------|--------|
-| **Sprint 0** | 1-5 | EPIC 00 | 8 |
-| **Sprint 1** | 6-7 | EPIC 01-02 | 10 |
-| **Sprint 2** | 8-9 | EPIC 03-04 | 8 |
-| **Sprint 3** | 10-11 | EPIC 05,07 | 14 |
-| **Sprint 4** | 12 | EPIC 08 | 6 |
-| **Sprint 5** | 13 | EPIC 10,12 | 8 |
-| **Sprint 6** | 14 | EPIC 11 | 4 |
-| **Sprint 7** | 15-16 | EPIC 13 | 4 |
-| **Sprint 8** | 17-18 | EPIC 15,17 | 7 |
+| Etapa | Cambios | Épicas | Total HU | Estado |
+|------|--------|--------|--------|--------|
+| **Sprint 0** | 1-5 | EPIC 00 | 8 | ✅ Completado |
+| **Sprint 1** | 6-7 | EPIC 01-02 | 12 | ✅ Completado |
+| **Sprint 2** | 8-10 | EPIC 03-04,07 | 13 | ✅ Completado |
+| **Sprint 3** | 11 (`docker-setup`) | EPIC 00 | — | 🔲 Docker |
+| **Sprint 4** | 12 (`products-module`) | EPIC 05 | 9 | 🔲 Backend |
+| **Sprint 5** | 13 (`orders-fsm`) | EPIC 10,12 | 8 | 🔲 Backend |
+| **Sprint 6** | 14 (`payments-integration`) | EPIC 11 | 4 | 🔲 Backend |
+| **Sprint 7** | 15-17 (admin backend) | EPIC 13,15,17 | 9 | 🔲 Backend |
+| **Sprint 8** | 18 (`cart-frontend`) 🔒 | EPIC 08 | 6 | 🔒 Frontend |
+| **Sprint 9** | 19-22 (resto frontend) 🔒 | EPIC 13,15,17 | — | 🔒 Frontend |
 
-**Total: 18 cambios en ~8-9 sprints (1-2 días por cambio)**
+**Total: 22 cambios en ~9-10 sprints. Fase backend puro: sprints 3-7 (5 sprints).**
 
 ---
 
@@ -558,7 +695,7 @@
 
 ---
 
-## 7. Reglas de Implementación (v2.0)
+## 7. Reglas de Implementación (v2.1 Backend-First)
 
 - **Nunca implementar sin artefactos:** Si no existe `proposal.md` y `design.md` aprobados, no hay `/opsx:apply`
 - **El orden importa:** Si el change B necesita código del change A, A debe estar archivado antes de proponer B
@@ -567,7 +704,11 @@
 - **Máx 6 HU por change** dentro de la misma épica, máx 4 si cruzan épicas
 - **Máx 12 archivos** nuevos/modificados por change
 - **Context populate:** Poblar `openspec/config.yaml` es el change #0 implícito antes de cualquier change
+- 🆕 **Backend-First:** A partir del change 11, todos los cambios son backend puro. Cualquier cambio de frontend requiere consulta explícita al usuario
+- 🆕 **Docker recomendado:** El change `docker-setup` (11) es opcional pero recomendado para estandarizar el entorno de desarrollo
+- 🆕 **Cambios partidos:** `orders-list-gestor`, `users-admin` y `admin-metrics` se implementan en dos fases: backend primero, frontend después (previa consulta)
 
 ---
 
-> **Aprobado para Fase 1** — Todos los ajustes aplicados. El mapa está listo para implementación.
+> **Aprobado para Fase 2 (Backend-First)** — 22 cambios. Backend puro: cambios 11-17. Frontend: cambios 18-22 (previa consulta).  
+> **Próximo change a implementar:** `docker-setup` (11).

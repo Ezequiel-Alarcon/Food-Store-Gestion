@@ -1,79 +1,65 @@
-# Food Store — Asignación por Team (Pipeline Secuencial)
+# Food Store — Asignación por Team (Pipeline Backend-First)
 
 > **Proyecto:** Food Store E-Commerce  
-> **Fecha:** 2026-05-06  
-> **Distribución:** 18 changes entre 5 integrantes  
-> **Método:** Secuencial — cada persona espera a que la anterior termine
+> **Fecha:** 2026-05-08  
+> **Distribución:** 22 changes entre 5 integrantes  
+> **Método:** Secuencial con fases Backend → Frontend  
+> **Versión:** 2.1 (reordenamiento backend-first)
 
 ---
 
-## 🔄 Pipeline de Implementación (Orden Estricto)
+## 🔄 Pipeline de Implementación (Backend-First)
 
 ```
 ┌──────────────────────────────────────────────────────────────────────────┐
-│                          INFRAESTRUCTURA                                 │
+│                FASE 0-1: INFRA + AUTH (✅ COMPLETADA)                     │
 ├──────────────────────────────────────────────────────────────────────────┤
 │                                                                           │
-│  1️⃣ EZE → infra-setup                                                   │
-│           ↓ (EZE termina, comparte código)                              │
-│                                                                           │
-│  2️⃣ MATI → backend-config                                              │
-│            ↓ (MATI termina, comparte modelos SQLModel)                 │
-│                                                                           │
-│  3️⃣ LUCAS → frontend-config (📦 paralelo a 2, mismo padre)             │
-│            ↓ (LUCAS termina, lista Vite)                               │
-│                                                                           │
-│  4️⃣ LEANDRO → backend-patterns                                            │
-│            ↓ (LEANDRO termina, BaseRepository + UoW listos)              │
-│                                                                           │
-│  5️⃣ EDGAR → error-handling                                            │
-│              ↓ (EDGAR termina, middleware + exceptions listos)        │
+│  1️⃣ EZE → infra-setup ✅                                                 │
+│  2️⃣ MATI → backend-config ✅                                            │
+│  3️⃣ LUCAS → frontend-config ✅                                           │
+│  4️⃣ LEANDRO → backend-patterns ✅                                        │
+│  5️⃣ EDGAR → error-handling ✅                                           │
+│  6️⃣ EZE → auth-backend ✅                                               │
+│  7️⃣ MATI → auth-frontend ✅                                             │
+│  8️⃣ LUCAS → categories-module ✅                                        │
+│  9️⃣ EDGAR → ingredients-module ✅                                       │
+│  🔟 LEANDRO → addresses-module ✅                                       │
 │                                                                           │
 ├──────────────────────────────────────────────────────────────────────────┤
-│                   AUTENTICACIÓN Y PERMISOS                               │
+│                FASE 2: DOCKER + BACKEND PURO (🔲 PENDIENTE)              │
 ├──────────────────────────────────────────────────────────────────────────┤
 │                                                                           │
-│  6️⃣ EZE → auth-backend                                                  │
-│           ↓ (EZE termina, auth endpoints listos)                       │
+│  1️⃣1️⃣ EZE → docker-setup 🆕                                             │
+│            ↓ (Docker Compose listo: PostgreSQL + backend + frontend)     │
 │                                                                           │
-│  7️⃣ MATI → auth-frontend (📦 paralelo a 8,9,10,11)                    │
-│  8️⃣ LUCAS → categories-module (📦 paralelo a 7,9,10,11)               │
-│  9️⃣ EDGAR → ingredients-module (📦 paralelo a 7,8,10,11)              │
-│  🔟 LEANDRO → addresses-module (📦 paralelo a 7,8,9,11)               │
-│  1️⃣1️⃣ EZE → products-module (❌ NO: depende de 8+9)                   │
+│  1️⃣2️⃣ MATI → products-module (⏳ espera 8+9)                            │
+│            ↓ (CRUD productos + catálogo público)                         │
 │                                                                           │
-│  [Todos reportan DONE]                                                   │
-│                                                                           │
-├──────────────────────────────────────────────────────────────────────────┤
-│                        CATÁLOGO + PRODUCTOS                              │
-├──────────────────────────────────────────────────────────────────────────┤
-│                                                                           │
-│  1️⃣1️⃣ MATI → products-module (⏳ espera 8+9)                           │
-│            ↓ (MATI termina, CRUD productos listo)                       │
-│                                                                           │
-│  1️⃣2️⃣ LUCAS → cart-frontend (⏳ espera 3+11)                            │
-│            ↓ (LUCAS termina, carrito listo)                             │
-│                                                                           │
-│  1️⃣7️⃣ EDGAR → users-admin (⏳ espera 6)                                 │
-│             ↓ (EDGAR termina, admin RBAC listo)                        │
-│                                                                           │
-├──────────────────────────────────────────────────────────────────────────┤
-│                        PEDIDOS + PAGOS                                    │
-├──────────────────────────────────────────────────────────────────────────┤
-│                                                                           │
-│  1️⃣3️⃣ LEANDRO → orders-fsm (⏳ espera 10+11)                            │
-│              ↓ (LEANDRO termina, FSM pedidos lista)                     │
+│  1️⃣3️⃣ LEANDRO → orders-fsm (⏳ espera 10+12)                            │
+│              ↓ (Pedidos + FSM básica)                                    │
 │                                                                           │
 │  1️⃣4️⃣ EZE → payments-integration (⏳ espera 13)                         │
-│           ↓ (EZE termina, MercadoPago integrado)                        │
+│           ↓ (MercadoPago webhook)                                        │
 │                                                                           │
-│  1️⃣5️⃣ MATI → orders-list-client (📦 paralelo a 16)                     │
-│  1️⃣6️⃣ LUCAS → orders-list-gestor (📦 paralelo a 15)                    │
+│  1️⃣5️⃣ LEANDRO → orders-list-gestor (⏳ espera 13) 🔀                     │
+│              ↓ (Router admin pedidos — solo backend)                     │
 │                                                                           │
-│  [Ambos reportan DONE]                                                   │
+│  1️⃣6️⃣ EDGAR → users-admin (⏳ espera 6) 🔀                               │
+│             ↓ (CRUD usuarios admin — solo backend)                       │
 │                                                                           │
-│  1️⃣8️⃣ EDGAR → admin-metrics (⏳ espera 13+17)                           │
-│             ↓ (EDGAR termina, dashboard KPIs listo)                    │
+│  1️⃣7️⃣ EDGAR → admin-metrics (⏳ espera 13+16) 🔀                         │
+│             ↓ (Endpoints métricas — solo backend)                        │
+│                                                                           │
+├──────────────────────────────────────────────────────────────────────────┤
+│                FASE 3: FRONTEND (🔒 CONSULTAR USUARIO)                   │
+├──────────────────────────────────────────────────────────────────────────┤
+│                                                                           │
+│  1️⃣8️⃣ LUCAS → cart-frontend 🔒 (⏳ espera 12)                            │
+│  1️⃣9️⃣ MATI → orders-list-client 🔒 (⏳ espera 13)                       │
+│  2️⃣0️⃣ LUCAS → orders-list-gestor-frontend 🔒 (⏳ espera 15) 🆕           │
+│  2️⃣1️⃣ MATI → users-admin-frontend 🔒 (⏳ espera 16) 🆕                   │
+│  2️⃣2️⃣ LUCAS → admin-metrics-frontend 🔒 (⏳ espera 17) 🆕                │
 │                                                                           │
 └──────────────────────────────────────────────────────────────────────────┘
 ```
@@ -82,31 +68,56 @@
 
 ## Orden de Implementación (Secuencial)
 
+### ✅ COMPLETADOS (Fase 0-1)
+
+| # | Orden | Integrante | Change | Depende de | Estado |
+|---|-------|-----------|--------|-----------|--------|
+| 1 | 1º | Eze | `infra-setup` | — | ✅ |
+| 2 | 2º | Mati | `backend-config` | 1 | ✅ |
+| 3 | 3º | Lucas | `frontend-config` | 1 | ✅ |
+| 4 | 4º | Leandro | `backend-patterns` | 2 | ✅ |
+| 5 | 5º | Edgar | `error-handling` | 4 | ✅ |
+| 6 | 6º | Eze | `auth-backend` | 5 | ✅ |
+| 7 | 7º | Mati | `auth-frontend` | 6,3 | ✅ |
+| 8 | 7º | Lucas | `categories-module` | 6 | ✅ |
+| 9 | 7º | Edgar | `ingredients-module` | 6 | ✅ |
+| 10 | 8º | Leandro | `addresses-module` | 6 | ✅ |
+
+### 🔲 FASE 2 — Docker + Backend Puro
+
 | # | Orden | Integrante | Change | Depende de | Estado | ETA |
 |---|-------|-----------|--------|-----------|--------|-----|
-| 1 | **1º** | Eze | `infra-setup` | — | ⏳ | 1 día |
-| 2 | **2º** | Mati | `backend-config` | 1 | ⏳ | 1 día |
-| 3 | **3º** | Lucas | `frontend-config` | 1 | 📦 | 1 día |
-| 4 | **4º** | Leandro | `backend-patterns` | 2 | ⏳ | 0.5 días |
-| 5 | **5º** | Edgar | `error-handling` | 4 | ⏳ | 0.5 días |
-| 6 | **6º** | Eze | `auth-backend` | 5 | ⏳ | 1.5 días |
-| 7 | **7º** | Mati | `auth-frontend` | 6,3 | 📦 | 1 día |
-| 8 | **7º** | Lucas | `categories-module` | 6 | 📦 | 1 día |
-| 9 | **7º** | Edgar | `ingredients-module` | 6 | 📦 | 0.5 días |
-| 10 | **7º** | Leandro | `addresses-module` | 6 | 📦 | 1 día |
-| 11 | **8º** | Mati | `products-module` | 8,9 | ⏳ | 1.5 días |
-| 12 | **9º** | Lucas | `cart-frontend` | 3,11 | ⏳ | 1 día |
-| 17 | **10º** | Edgar | `users-admin` | 6 | ⏳ | 0.5 días |
-| 13 | **11º** | Leandro | `orders-fsm` | 10,11 | ⏳ | 1.5 días |
+| 11 | **9º** | Eze | `docker-setup` 🆕 | 10 | ⏳ | 0.5 días |
+| 12 | **10º** | Mati | `products-module` | 8,9 | ⏳ | 1.5 días |
+| 13 | **11º** | Leandro | `orders-fsm` | 10,12 | ⏳ | 1.5 días |
 | 14 | **12º** | Eze | `payments-integration` | 13 | ⏳ | 1 día |
-| 15 | **13º** | Mati | `orders-list-client` | 13 | 📦 | 0.5 días |
-| 16 | **13º** | Lucas | `orders-list-gestor` | 13 | 📦 | 1 día |
-| 18 | **14º** | Edgar | `admin-metrics` | 13,17 | ⏳ | 1.5 días |
+| 15 | **13º** | Leandro | `orders-list-gestor` 🔀 | 13 | ⏳ | 0.5 días |
+| 16 | **13º** | Edgar | `users-admin` 🔀 | 6 | 📦 | 1 día |
+| 17 | **14º** | Edgar | `admin-metrics` 🔀 | 13,16 | ⏳ | 1 día |
+
+> 📦 = Puede ejecutarse en paralelo con el cambio anterior (mismo padre terminado)  
+> 🔀 = Cambio partido — solo backend en esta fase
+
+### 🔒 FASE 3 — Frontend (consultar antes de cada uno)
+
+| # | Orden | Integrante | Change | Depende de | Estado | ETA |
+|---|-------|-----------|--------|-----------|--------|-----|
+| 18 | **15º** | Lucas | `cart-frontend` 🔒 | 12 | 🔒 | 1 día |
+| 19 | **15º** | Mati | `orders-list-client` 🔒 | 13 | 🔒 | 0.5 días |
+| 20 | **16º** | Lucas | `orders-list-gestor-frontend` 🆕 🔒 | 15 | 🔒 | 0.5 días |
+| 21 | **16º** | Mati | `users-admin-frontend` 🆕 🔒 | 16 | 🔒 | 1 día |
+| 22 | **17º** | Lucas | `admin-metrics-frontend` 🆕 🔒 | 17 | 🔒 | 1 día |
+
+> 🔒 = **NO implementar sin consulta explícita al usuario.**  
+> La Fase 3 no arranca automáticamente al terminar la Fase 2.
 
 **Leyenda:**  
+- ✅ = Completado y archivado
 - ⏳ = Espera a que el anterior esté archivado (MERGE)
 - 📦 = Puede ejecutarse en paralelo (mismo padre)
-- **Total secuencial:** ~14-15 días efectivos (3 semanas)
+- 🔒 = Requiere consulta al usuario antes de empezar
+- 🆕 = Change nuevo (no existía en v2.0)
+- 🔀 = Change partido (solo backend en esta fase)
 
 ---
 
@@ -115,12 +126,12 @@
 ### ✅ Antes de empezar cada change
 
 1. **Tu integrante anterior debe haber hecho MERGE** a `main`
-2. Leer el `CHANGES-ROADMAP.md` completo
+2. Leer el `CHANGES-ROADMAP.md` completo (versión 2.1)
 3. El código base que necesitas debe estar en `main` (hacer `git pull`)
 
 ### ✅ Durante implementación
 
-1. Crear rama: `git checkout -b {change-name}` (ej: `auth-backend`)
+1. Crear rama: `git checkout -b {change-name}` (ej: `products-module`)
 2. Crear **proposal.md** → Review
 3. Crear **design.md** → Review
 4. Implementar cambios (tests incluidos)
@@ -138,22 +149,32 @@
 - ❌ Hacer commit sin tests
 - ❌ Mezclar dos changes en un mismo PR
 - ❌ Dejar ramas sin mergear
+- ❌ **Tocar frontend en Fase 2** (solo backend puro)
+- ❌ **Empezar Fase 3 sin consultar al usuario**
+
+### 🆕 Reglas Backend-First
+
+1. **Fase 2 es backend puro.** Si durante la implementación de un change de backend se detecta que se necesita un cambio en el frontend, se consulta al usuario
+2. **Docker es opcional.** Si el equipo prefiere no usar Docker, se saltea el change 11 y cada integrante configura PostgreSQL localmente
+3. **Cambios partidos (🔀):** `orders-list-gestor`, `users-admin` y `admin-metrics` ahora son solo backend. Su frontend se implementa en changes separados (20, 21, 22) durante la Fase 3
+4. **Fase 3 bloqueada:** Nadie arranca un change de frontend sin que el usuario dé el visto bueno explícito
 
 ---
 
 ## Resumen Final
 
-| Integrante | Changes | Total HU | Duración | Rol |
-|-----------|---------|----------|----------|-----|
-| **Eze** | 1, 6, 14 | 9 | +3 semanas | Infra + Auth + Pagos |
-| **Mati** | 2, 7, 11, 15 | 17 | +4.5 semanas | Backend + Auth-FE + Productos + Orders-client |
-| **Lucas** | 3, 8, 12, 16 | 14 | +4 semanas | Frontend + Categorías + Carrito + Orders-gestor |
-| **Edgar** | 4, 9, 17, 18 | 15 | +4 semanas | Patrones + Ingredientes + Users-admin + Metrics |
-| **Leandro** | 5, 10, 13 | 10 | +3.5 semanas | Errores + Direcciones + FSM |
+| Integrante | Changes | Total HU | Cambios nuevos | Rol |
+|-----------|---------|----------|---------------|-----|
+| **Eze** | 1, 6, 11, 14 | 12 + docker | `docker-setup` 🆕 | Infra + Auth + Docker + Pagos |
+| **Mati** | 2, 7, 12, 19, 21 | 21 | `users-admin-frontend` 🆕 | Backend + Auth-FE + Productos + Orders-client + Admin-FE |
+| **Lucas** | 3, 8, 18, 20, 22 | 10 | `orders-list-gestor-frontend` 🆕, `admin-metrics-frontend` 🆕 | Frontend + Categorías + Carrito + Admin-FE |
+| **Edgar** | 5, 9, 16, 17 | 16 | — | Errores + Ingredientes + Users-admin + Metrics |
+| **Leandro** | 4, 10, 13, 15 | 15 | `orders-list-gestor` (backend) 🔀 | Patrones + Direcciones + FSM + Admin-pedidos |
 
-**Total:** 18 changes, 77 HU, ~3-4 semanas (asumiendo 1-2 días/change)
+**Total:** 22 changes, 77 HU, ~4-5 semanas (Fase 2: ~2 semanas, Fase 3: ~2 semanas)
 
 ---
 
-> **Cada integrante conoce exactamente cuándo es su turno y de quién depende.**  
-> **El siguiente no puede empezar hasta que el anterior haya mergado a `main`.**
+> **Fase actual:** Fase 2 — Backend Puro  
+> **Próximo change:** `docker-setup` (Eze)  
+> **Regla de oro:** Backend first, frontend after — siempre consultar antes de tocar frontend.
