@@ -1,5 +1,6 @@
 import { create } from 'zustand'
 import { persist } from 'zustand/middleware'
+import { api, type LoginRequest, type LoginResponse, type RegisterRequest } from '../lib/api'
 
 export interface User {
   id: number
@@ -13,10 +14,14 @@ interface AuthState {
   refreshToken: string | null
   user: User | null
   isAuthenticated: boolean
-  login: (tokens: { accessToken: string; refreshToken: string }, user: User) => void
+  isLoading: boolean
+  error: string | null
+  login: (credentials: LoginRequest) => Promise<void>
+  register: (data: RegisterRequest) => Promise<void>
   logout: () => void
   updateTokens: (tokens: { accessToken: string; refreshToken: string }) => void
   setUser: (user: User) => void
+  clearError: () => void
 }
 
 export const useAuthStore = create<AuthState>()(
@@ -26,26 +31,74 @@ export const useAuthStore = create<AuthState>()(
       refreshToken: null,
       user: null,
       isAuthenticated: false,
-      login: (tokens, user) =>
-        set({
-          accessToken: tokens.accessToken,
-          refreshToken: tokens.refreshToken,
-          user,
-          isAuthenticated: true,
-        }),
-      logout: () =>
+      isLoading: false,
+      error: null,
+
+      login: async (credentials: LoginRequest) => {
+        set({ isLoading: true, error: null })
+        try {
+          const response = await api.post<LoginResponse>('/auth/login', credentials)
+          const { accessToken, refreshToken, user } = response.data
+
+          set({
+            accessToken,
+            refreshToken,
+            user,
+            isAuthenticated: true,
+            isLoading: false,
+            error: null,
+          })
+        } catch (error: unknown) {
+          const err = error as { response?: { data?: { detail?: string } } }
+          set({
+            isLoading: false,
+            error: err.response?.data?.detail || 'Error al iniciar sesión',
+          })
+          throw error
+        }
+      },
+
+      register: async (data: RegisterRequest) => {
+        set({ isLoading: true, error: null })
+        try {
+          const response = await api.post<LoginResponse>('/auth/register', data)
+          const { accessToken, refreshToken, user } = response.data
+
+          set({
+            accessToken,
+            refreshToken,
+            user,
+            isAuthenticated: true,
+            isLoading: false,
+            error: null,
+          })
+        } catch (error: unknown) {
+          const err = error as { response?: { data?: { detail?: string } } }
+          set({
+            isLoading: false,
+            error: err.response?.data?.detail || 'Error al registrarse',
+          })
+          throw error
+        }
+      },
+
+      logout: () => {
         set({
           accessToken: null,
           refreshToken: null,
           user: null,
           isAuthenticated: false,
-        }),
-      updateTokens: (tokens) =>
-        set({
-          accessToken: tokens.accessToken,
-          refreshToken: tokens.refreshToken,
-        }),
+          isLoading: false,
+          error: null,
+        })
+        window.location.href = '/'
+      },
+
+      updateTokens: (tokens) => set(tokens),
+
       setUser: (user) => set({ user }),
+
+      clearError: () => set({ error: null }),
     }),
     {
       name: 'food-store-auth',
