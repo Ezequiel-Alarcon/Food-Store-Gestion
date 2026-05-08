@@ -7,6 +7,9 @@ import pytest
 from fastapi.testclient import TestClient
 from sqlmodel import Session, SQLModel, create_engine
 
+# Importar modelos para que SQLModel.metadata los registre
+from app.modules.categorias.model import Categoria  # noqa: F401
+
 from app.main import app
 
 
