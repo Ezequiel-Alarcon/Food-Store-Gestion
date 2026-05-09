@@ -2,8 +2,11 @@
 
 Schemas Pydantic para el módulo de productos.
 """
-
 from __future__ import annotations
+
+from datetime import datetime
+from decimal import Decimal
+from typing import Optional
 
 from pydantic import BaseModel, Field, field_validator
 
@@ -17,25 +20,37 @@ class ProductoCreate(BaseModel):
         min_length=1,
         max_length=200,
     )
-    descripcion: str | None = Field(
+    descripcion: Optional[str] = Field(
         default=None,
         description="Descripción del producto",
-        max_length=1000,
+        max_length=2000,
     )
     precio: float = Field(
         ...,
-        description="Precio del producto",
+        description="Precio del producto (debe ser mayor a 0)",
         gt=0,
+    )
+    imagen_url: Optional[str] = Field(
+        default=None,
+        description="URL de la imagen del producto",
+        max_length=500,
     )
     stock: int = Field(
         default=0,
-        description="Cantidad en stock",
+        description="Cantidad disponible en inventario",
         ge=0,
     )
-    categoria_id: int | None = Field(
-        default=None,
-        description="ID de la categoría",
-        gt=0,
+    categoria_ids: list[int] = Field(
+        default_factory=list,
+        description="IDs de categorías asociadas",
+    )
+    ingrediente_ids: list[int] = Field(
+        default_factory=list,
+        description="IDs de ingredientes asociados",
+    )
+    activo: bool = Field(
+        default=True,
+        description="Si el producto está activo/publicado",
     )
 
     @field_validator("nombre")
@@ -43,12 +58,12 @@ class ProductoCreate(BaseModel):
     def nombre_not_whitespace(cls, v: str) -> str:
         stripped = v.strip()
         if not stripped:
-            raise ValueError("El nombre no puede ser vacío")
+            raise ValueError("El nombre no puede ser vacío ni solo espacios")
         return stripped
 
     @field_validator("descripcion")
     @classmethod
-    def descripcion_cleanup(cls, v: str | None) -> str | None:
+    def descripcion_cleanup(cls, v: Optional[str]) -> Optional[str]:
         if v is None:
             return v
         return v.strip() or None
@@ -57,65 +72,152 @@ class ProductoCreate(BaseModel):
 class ProductoUpdate(BaseModel):
     """Schema para actualizar un producto."""
 
-    nombre: str | None = Field(
+    nombre: Optional[str] = Field(
         default=None,
         description="Nombre del producto",
         min_length=1,
         max_length=200,
     )
-    descripcion: str | None = Field(
+    descripcion: Optional[str] = Field(
         default=None,
         description="Descripción del producto",
-        max_length=1000,
+        max_length=2000,
     )
-    precio: float | None = Field(
+    precio: Optional[float] = Field(
         default=None,
-        description="Precio del producto",
+        description="Precio del producto (debe ser mayor a 0)",
         gt=0,
     )
-    stock: int | None = Field(
+    imagen_url: Optional[str] = Field(
         default=None,
-        description="Cantidad en stock",
+        description="URL de la imagen del producto",
+        max_length=500,
+    )
+    stock: Optional[int] = Field(
+        default=None,
+        description="Cantidad disponible en inventario",
         ge=0,
     )
-    categoria_id: int | None = Field(
+    categoria_ids: Optional[list[int]] = Field(
         default=None,
-        description="ID de la categoría",
-        gt=0,
+        description="IDs de categorías asociadas",
     )
-    activo: bool | None = Field(
+    ingrediente_ids: Optional[list[int]] = Field(
         default=None,
-        description="Si el producto está activo",
+        description="IDs de ingredientes asociados",
+    )
+    activo: Optional[bool] = Field(
+        default=None,
+        description="Si el producto está activo/publicado",
     )
 
     @field_validator("nombre")
     @classmethod
-    def nombre_not_whitespace(cls, v: str | None) -> str | None:
+    def nombre_not_whitespace(cls, v: Optional[str]) -> Optional[str]:
         if v is None:
             return v
         stripped = v.strip()
         if not stripped:
-            raise ValueError("El nombre no puede ser vacío")
+            raise ValueError("El nombre no puede ser vacío ni solo espacios")
         return stripped
 
     @field_validator("descripcion")
     @classmethod
-    def descripcion_cleanup(cls, v: str | None) -> str | None:
+    def descripcion_cleanup(cls, v: Optional[str]) -> Optional[str]:
         if v is None:
             return v
         return v.strip() or None
 
 
-class ProductoResponse(BaseModel):
-    """Schema para respuesta de producto."""
+class CategoriaSimple(BaseModel):
+    """Schema simple para categoría relacionada."""
 
     id: int
     nombre: str
-    descripcion: str | None
-    precio: float
-    stock: int
-    categoria_id: int | None
-    activo: bool
 
     class Config:
         from_attributes = True
+
+
+class IngredienteSimple(BaseModel):
+    """Schema simple para ingrediente relacionado."""
+
+    id: int
+    nombre: str
+
+    class Config:
+        from_attributes = True
+
+
+class ProductoResponse(BaseModel):
+    """Schema para respuesta de producto (detalle completo)."""
+
+    id: int
+    nombre: str
+    descripcion: Optional[str]
+    precio: float
+    imagen_url: Optional[str]
+    stock: int
+    activo: bool
+    creado_en: datetime
+    actualizado_en: datetime
+    categorias: list[CategoriaSimple] = Field(default_factory=list)
+    ingredientes: list[IngredienteSimple] = Field(default_factory=list)
+
+    class Config:
+        from_attributes = True
+
+
+class ProductoListResponse(BaseModel):
+    """Schema para respuesta de lista de productos."""
+
+    id: int
+    nombre: str
+    descripcion: Optional[str]
+    precio: float
+    imagen_url: Optional[str]
+    stock: int
+    activo: bool
+    categorias: list[CategoriaSimple] = Field(default_factory=list)
+
+    class Config:
+        from_attributes = True
+
+
+class ProductoStockUpdate(BaseModel):
+    """Schema para actualizar el stock de un producto."""
+
+    stock: int = Field(
+        ...,
+        description="Nueva cantidad de stock",
+        ge=0,
+    )
+    operacion: str = Field(
+        ...,
+        description="Tipo de operación: 'set' (setear), 'add' (sumar), 'subtract' (restar)",
+        pattern="^(set|add|subtract)$",
+    )
+
+
+class ProductoCatalogoResponse(BaseModel):
+    """Schema para respuesta del catálogo público."""
+
+    id: int
+    nombre: str
+    descripcion: Optional[str]
+    precio: float
+    imagen_url: Optional[str]
+    disponible: bool
+    categorias: list[CategoriaSimple] = Field(default_factory=list)
+
+    class Config:
+        from_attributes = True
+
+
+class PaginatedProductoResponse(BaseModel):
+    """Schema para respuesta paginada de productos."""
+
+    items: list
+    total: int
+    skip: int
+    limit: int

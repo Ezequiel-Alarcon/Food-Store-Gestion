@@ -3,8 +3,6 @@ app.modules.categorias.model
 
 Modelo SQLModel para categorías jerárquicas.
 """
-from __future__ import annotations
-
 from datetime import datetime
 from typing import Optional
 

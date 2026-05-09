@@ -3,8 +3,6 @@ app.modules.auth.model
 
 Modelos SQLModel para autenticación y usuarios.
 """
-from __future__ import annotations
-
 from datetime import datetime
 from enum import Enum
 from typing import Optional

@@ -103,12 +103,11 @@ def require_role(*roles: str) -> Callable[[Any], Any]:
         else:
             # Modelo: intentamos distintas convenciones sin acoplar fuerte.
             user_roles = set()
-            role_value: Optional[Any] = getattr(current_user, "role", None)
-            roles_value: Optional[Any] = getattr(current_user, "roles", None)
-            if role_value is not None:
-                user_roles |= _extract_roles({"role": role_value})
-            if roles_value is not None:
-                user_roles |= _extract_roles({"roles": roles_value})
+            # El modelo Usuario usa "rol" (español), otros pueden usar "role" o "roles"
+            for attr in ("rol", "role", "roles"):
+                value: Optional[Any] = getattr(current_user, attr, None)
+                if value is not None:
+                    user_roles |= _extract_roles({"role": value})
 
         if required and user_roles.isdisjoint(required):
             raise HTTPException(
