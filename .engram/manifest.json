@@ -112,6 +112,30 @@
       "sessions": 0,
       "memories": 0,
       "prompts": 1
+    },
+    {
+      "id": "5ee65cee",
+      "created_by": "Gorditos",
+      "created_at": "2026-05-09T01:31:22Z",
+      "sessions": 2,
+      "memories": 2,
+      "prompts": 10
+    },
+    {
+      "id": "30e1946f",
+      "created_by": "Gorditos",
+      "created_at": "2026-05-09T03:05:45Z",
+      "sessions": 1,
+      "memories": 3,
+      "prompts": 9
+    },
+    {
+      "id": "405641ba",
+      "created_by": "Gorditos",
+      "created_at": "2026-05-09T03:10:30Z",
+      "sessions": 0,
+      "memories": 2,
+      "prompts": 1
     }
   ]
 }

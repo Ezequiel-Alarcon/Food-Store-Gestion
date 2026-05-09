@@ -4,8 +4,6 @@ No es un módulo de negocio. Su objetivo es dejar un ejemplo copiables para
 futuros módulos.
 """
 
-from __future__ import annotations
-
 from typing import Optional
 
 from sqlmodel import Field, SQLModel
