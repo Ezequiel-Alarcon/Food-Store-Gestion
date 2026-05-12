@@ -136,6 +136,14 @@
       "sessions": 0,
       "memories": 2,
       "prompts": 1
+    },
+    {
+      "id": "9b00db52",
+      "created_by": "leand",
+      "created_at": "2026-05-12T01:12:49Z",
+      "sessions": 0,
+      "memories": 2,
+      "prompts": 0
     }
   ]
 }

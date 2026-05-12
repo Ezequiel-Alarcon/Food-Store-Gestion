@@ -1,0 +1,111 @@
+ADAPTACIÓN DE AGENTS.md — Food Store · Gestión de Pedidos
+==========================================================
+Fecha: 2026-05-11
+
+
+QUÉ SE HIZO
+-----------
+Se tomó el archivo "AGENTS A.md" (template base) y se adaptó al proyecto real
+Food-Store-Gestion, generando un nuevo archivo AGENTS.md dentro de la carpeta
+del proyecto.
+
+
+POR QUÉ ES NECESARIO UN AGENTS.MD
+-----------------------------------
+Un AGENTS.md es el archivo de instrucciones que leen los agentes de IA (Claude,
+Codex, Gemini, etc.) al abrir el proyecto. Define el rol del agente, la
+arquitectura del proyecto, las convenciones de código, el flujo de trabajo y
+los paths reales del repositorio. Sin este archivo, el agente trabaja "a ciegas"
+y comete errores estructurales graves (crea archivos en paths incorrectos,
+ignora convenciones, rompe la arquitectura).
+
+
+DISCREPANCIAS ENCONTRADAS Y POR QUÉ SE CORRIGIERON
+----------------------------------------------------
+
+1. NOMBRE DEL PROYECTO RAÍZ
+   - Template decía: sdd-parcial1-gestion/
+   - Proyecto real:  Food-Store-Gestion/
+   - Por qué importa: un agente que vea el nombre incorrecto puede fallar al
+     construir paths relativos o al buscar el proyecto en git.
+
+2. ESTRUCTURA DEL BACKEND (CRÍTICO)
+   - Template decía: backend/auth/, backend/usuarios/, backend/core/
+   - Proyecto real:  backend/app/modules/auth/, backend/app/modules/usuarios/,
+                     backend/app/core/
+   - Por qué importa: si el agente intenta leer o crear backend/auth/router.py,
+     ese path no existe. El archivo real está en
+     backend/app/modules/auth/router.py. Esto causa errores directos.
+
+3. MÓDULOS BACKEND FALTANTES
+   - El template no mencionaba: perfil/, sucursales/, patterns_example/
+   - Por qué importa: el agente no sabe que estos módulos existen. Podría
+     duplicarlos o ignorarlos al hacer cambios transversales.
+
+4. ESTRUCTURA DEL FRONTEND (IMPORTANTE)
+   - Template decía: frontend/app/, frontend/pages/, frontend/features/
+   - Proyecto real:  frontend/src/app/, frontend/src/pages/, frontend/src/features/
+                     + frontend/src/stores/ y frontend/src/lib/ (faltaban)
+   - Por qué importa: misma razón que el backend — paths incorrectos generan
+     errores de lectura/escritura de archivos.
+
+5. PATH DE SKILLS (IMPORTANTE)
+   - Template decía: .agents/skills/ (con 's' al final)
+   - Proyecto real:  .agent/skills/ (sin 's')
+   - Por qué importa: el agente intenta leer .agents/skills/fastapi-python/SKILL.md
+     y el path no existe. Falla sin dar error claro.
+
+6. SKILLS LISTADAS VS SKILLS INSTALADAS (IMPORTANTE)
+   - Template listaba 8 skills de dominio (fastapi-python, postgres,
+     frontend-design, tailwind-design-system, documentation-writer,
+     skill-creator, find-skills, commit-changes-reporter).
+   - Proyecto real: solo tiene 4 skills instaladas, todas de OPSX
+     (openspec-explore, openspec-propose, openspec-apply-change,
+     openspec-archive-change).
+   - Por qué importa: listar skills inexistentes es una instrucción rota.
+     Se separaron en dos tablas: "instaladas" y "pendientes de instalar",
+     para que el agente sepa cuáles puede usar ya y cuáles necesita instalar.
+
+7. DOCUMENTACIÓN DE REFERENCIA INCOMPLETA
+   - Template no incluía: CONTRIBUTING.md, AUDITORIA-ROADMAP.md,
+     TEAM-ASSIGNMENT.md
+   - Por qué importa:
+     * CONTRIBUTING.md contiene las reglas de arquitectura, patrones de DB
+       y el checklist de code review — información crítica para cualquier agente.
+     * AUDITORIA-ROADMAP.md documenta la corrección del roadmap original
+       (18 changes vs 15 del plan inicial) y las dependencias circulares
+       resueltas. Sin esto, el agente puede proponer changes ya descartados.
+     * TEAM-ASSIGNMENT.md asigna los 22 changes a cada integrante del equipo.
+       Sin esto, el agente no sabe quién es responsable de qué.
+
+8. PATH DE MIGRACIONES INCORRECTO
+   - Template decía: "Las migraciones van en alembic/versions/"
+   - Proyecto real:  backend/app/db/migrations/versions/
+   - Por qué importa: el agente podría crear migraciones en el path incorrecto,
+     dejándolas fuera del alcance de Alembic.
+
+
+QUÉ SE MANTUVO IGUAL
+--------------------
+Los siguientes elementos estaban correctos en el template y no se modificaron:
+
+- Rol del agente (Senior Tech Lead, orquestador con subagentes)
+- Regla de uso de subagentes
+- Flujo de arquitectura backend (Router → Service → UoW → Repository → Model)
+- Stack tecnológico completo (FastAPI, React, PostgreSQL, MercadoPago, etc.)
+- Reglas de FSD para el frontend
+- Flujo OPSX completo (/opsx:explore → propose → apply → archive)
+- Protocolo de Engram (git sync, cierre de sesión automático)
+- Convenciones de commits (Conventional Commits, sin atribución a IA)
+- Configuración de MCPs (devdocs-mcp)
+- Sync de docs/CHANGES.md al archivar un change
+
+
+RESULTADO
+---------
+Archivo generado: Food-Store-Gestion/AGENTS.md
+
+El AGENTS.md resultante refleja con exactitud la estructura real del proyecto,
+los paths correctos de todos los módulos, las skills disponibles y la
+documentación existente. Cualquier agente que lo lea puede operar el proyecto
+sin errores de navegación ni instrucciones rotas.
