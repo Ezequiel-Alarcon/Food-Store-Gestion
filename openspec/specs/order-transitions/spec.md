@@ -4,22 +4,22 @@
 El sistema SHALL validar toda transición de estado contra el mapa de transiciones válidas antes de persistir. Transiciones no definidas en el mapa son rechazadas con 422.
 
 ```
-PENDIENTE      → [CANCELADO]
-CONFIRMADO     → [EN_PREPARACION, CANCELADO]
-EN_PREPARACION → [EN_CAMINO, CANCELADO]
+PENDIENTE      → [CONFIRMADO, CANCELADO]
+CONFIRMADO     → [EN_PREP, CANCELADO]
+EN_PREP        → [EN_CAMINO, CANCELADO]
 EN_CAMINO      → [ENTREGADO]
 ENTREGADO      → [] (terminal)
 CANCELADO      → [] (terminal)
 ```
 
-La transición PENDIENTE→CONFIRMADO está reservada para el webhook de pagos; no es accesible vía PATCH manual.
+La transición PENDIENTE→CONFIRMADO es ejecutada exclusivamente por el SISTEMA en respuesta al webhook de pagos (`payment-webhook`). Ningún usuario puede ejecutarla manualmente.
 
 #### Scenario: Valid manual transition
 - **WHEN** un usuario con rol PEDIDOS envía PATCH /api/v1/pedidos/{id}/estado con un estado destino válido para el estado actual
 - **THEN** el sistema persiste el cambio, registra en historial y retorna 200 con el pedido actualizado
 
 #### Scenario: Invalid transition attempt
-- **WHEN** se intenta transicionar un pedido desde EN_CAMINO a EN_PREPARACION
+- **WHEN** se intenta transicionar un pedido desde EN_CAMINO a EN_PREP
 - **THEN** el sistema retorna 422 indicando que la transición no es válida
 
 #### Scenario: Transition from terminal state
@@ -29,6 +29,10 @@ La transición PENDIENTE→CONFIRMADO está reservada para el webhook de pagos; 
 #### Scenario: Manual attempt to set CONFIRMADO
 - **WHEN** un usuario intenta PATCH /api/v1/pedidos/{id}/estado con nuevo_estado=CONFIRMADO
 - **THEN** el sistema retorna 422; esa transición solo ocurre via webhook de pagos
+
+#### Scenario: System confirms order via payment webhook
+- **WHEN** el webhook de pagos recibe approved y el sistema ejecuta la transición PENDIENTE→CONFIRMADO
+- **THEN** el pedido pasa a CONFIRMADO con actor=SISTEMA, se decrementa stock, y se registra en historial
 
 ### Requirement: CONFIRMADO to EN_PREPARACION transition
 El sistema SHALL permitir a Gestor de Pedidos y Admin transicionar un pedido de CONFIRMADO a EN_PREPARACION.
@@ -59,7 +63,7 @@ El sistema SHALL permitir a Gestor de Pedidos y Admin transicionar un pedido de 
 El sistema SHALL permitir cancelar pedidos según el estado y el rol del actor (RN-FS08):
 - PENDIENTE: Cliente (propio), Gestor de Pedidos, Admin
 - CONFIRMADO: Gestor de Pedidos, Admin
-- EN_PREPARACION: solo Admin (RN-RB08)
+- EN_PREP: solo Admin (RN-RB08)
 - EN_CAMINO, ENTREGADO: nadie
 
 #### Scenario: Client cancels own pending order
@@ -70,8 +74,8 @@ El sistema SHALL permitir cancelar pedidos según el estado y el rol del actor (
 - **WHEN** un usuario con rol PEDIDOS o ADMIN cancela un pedido en CONFIRMADO
 - **THEN** el pedido pasa a CANCELADO y el stock de cada producto del pedido es restaurado atómicamente
 
-#### Scenario: Gestor attempts to cancel order in EN_PREPARACION
-- **WHEN** un usuario con rol PEDIDOS (sin ADMIN) intenta cancelar un pedido EN_PREPARACION
+#### Scenario: Gestor attempts to cancel order in EN_PREP
+- **WHEN** un usuario con rol PEDIDOS (sin ADMIN) intenta cancelar un pedido EN_PREP
 - **THEN** el sistema retorna 403 Forbidden
 
 #### Scenario: Cancel with motivo required

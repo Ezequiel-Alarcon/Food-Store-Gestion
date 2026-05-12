@@ -96,31 +96,56 @@ Router → Service → UoW → Repository → Model
 
 Las skills viven en `.agent/skills/`. Cargalas leyendo su `SKILL.md` **antes** de escribir código en los contextos indicados.
 
-### Skills de workflow instaladas
+### Skills de workflow
 
-| Contexto de activación | Skill | Archivo a leer |
+| Contexto de activación | Skill | Archivo |
 |---|---|---|
 | Explorar el proyecto antes de proponer cambios | `openspec-explore` | `.agent/skills/openspec-explore/SKILL.md` |
 | Proponer un nuevo change (proposal + design + tasks) | `openspec-propose` | `.agent/skills/openspec-propose/SKILL.md` |
 | Implementar tasks de un change activo | `openspec-apply-change` | `.agent/skills/openspec-apply-change/SKILL.md` |
 | Archivar un change completado | `openspec-archive-change` | `.agent/skills/openspec-archive-change/SKILL.md` |
 
-### Skills de dominio (pendientes de instalar)
+### Skills de dominio — Backend
 
-Las siguientes skills deben instalarse antes de usarlas. Si el contexto las activa, instalarlas con el CLI de skills e indicar al usuario.
+| Contexto de activación | Skill | Archivo |
+|---|---|---|
+| Endpoints FastAPI, services, repositories, schemas, UoW, routers | `fastapi-python` | `.agent/skills/fastapi-python/SKILL.md` |
+| Templates y scaffolding de módulos FastAPI | `fastapi-templates` | `.agent/skills/fastapi-templates/SKILL.md` |
+| Schemas Pydantic, validación, modelos | `pydantic` | `.agent/skills/pydantic/SKILL.md` |
+| Tests con pytest, fixtures, mocking, TDD | `python-testing-patterns` | `.agent/skills/python-testing-patterns/SKILL.md` |
+| SQLAlchemy ORM, queries, relaciones, sesiones | `sqlalchemy` | `.agent/skills/sqlalchemy/SKILL.md` |
+| Migraciones Alembic, code review, best practices | `sqlalchemy-alembic-expert-best-practices-code-review` | `.agent/skills/sqlalchemy-alembic-expert-best-practices-code-review/SKILL.md` |
+| PostgreSQL, optimización de queries, índices | `supabase-postgres-best-practices` | `.agent/skills/supabase-postgres-best-practices/SKILL.md` |
 
-| Contexto de activación | Skill |
-|---|---|
-| Cualquier endpoint FastAPI, service, repository, schema Pydantic, UoW, router | `fastapi-python` |
-| Queries SQL, migraciones Alembic, optimización PostgreSQL, índices | `postgres` |
-| Componentes React, páginas, hooks, Tailwind, estilo visual del frontend | `frontend-design` |
-| Design system, tokens, componentes Tailwind reutilizables | `tailwind-design-system` |
-| Documentación técnica, README, guías, diátaxis | `documentation-writer` |
-| Crear o mejorar una skill de agente IA | `skill-creator` |
-| El usuario pregunta qué skill usar o si existe una para X | `find-skills` |
-| Reportar cambios realizados en un commit (summary, changelog) | `commit-changes-reporter` |
+### Skills de dominio — Frontend
+
+| Contexto de activación | Skill | Archivo |
+|---|---|---|
+| Componentes React, performance, buenas prácticas (Vercel) | `react-best-practices` | `.agent/skills/react-best-practices/SKILL.md` |
+| Patrones de composición React | `composition-patterns` | `.agent/skills/composition-patterns/SKILL.md` |
+| TypeScript avanzado: generics, conditional types, mapped types | `typescript-advanced-types` | `.agent/skills/typescript-advanced-types/SKILL.md` |
+| Vite bundler, configuración, plugins | `vite` | `.agent/skills/vite/SKILL.md` |
+| Tests con Vitest | `vitest` | `.agent/skills/vitest/SKILL.md` |
+| Diseño frontend, UI/UX, componentes visuales | `frontend-design` | `.agent/skills/frontend-design/SKILL.md` |
+| Design system con Tailwind, tokens, componentes reutilizables | `tailwind-design-system` | `.agent/skills/tailwind-design-system/SKILL.md` |
+| Patrones Tailwind CSS, layouts, responsive | `tailwind-css-patterns` | `.agent/skills/tailwind-css-patterns/SKILL.md` |
+| Accesibilidad web (a11y) | `accessibility` | `.agent/skills/accessibility/SKILL.md` |
+| SEO para e-commerce | `seo` | `.agent/skills/seo/SKILL.md` |
+
+### Skills de documentación y workflow
+
+| Contexto de activación | Skill | Archivo |
+|---|---|---|
+| Documentación técnica, README, guías, diátaxis | `documentation-writer` | `.agent/skills/documentation-writer/SKILL.md` |
+| Changelogs automáticos, reportes de cambios | `changelog-automation` | `.agent/skills/changelog-automation/SKILL.md` |
+| Crear o mejorar una skill de agente IA | `skill-creator` | (skill global) |
+| Buscar skills en el ecosistema | `find-skills` | (skill global) |
 
 > **Regla:** si el contexto activa una skill, leé el `SKILL.md` correspondiente **antes** de generar código. Múltiples skills pueden aplicar simultáneamente.
+>
+> **Skills globales:** `skill-creator` y `find-skills` están instaladas a nivel usuario (`~/.agents/skills/`) y disponibles en todos los proyectos.
+>
+> **Nota:** `changelog-automation` reemplaza a `commit-changes-reporter` (no existe en el registry público). Usar para generar reportes de cambios y changelogs tras cada commit o archive.
 
 ---
 

@@ -61,6 +61,10 @@ class Settings(BaseSettings):
         default="",
         description="URL del webhook IPN de MercadoPago"
     )
+    MP_WEBHOOK_SECRET: str = Field(
+        default="",
+        description="Webhook secret para validar firmas de MercadoPago (opcional)"
+    )
 
     # Environment
     ENVIRONMENT: str = Field(
