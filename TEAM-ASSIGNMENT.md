@@ -42,7 +42,7 @@
 │  1️⃣3️⃣ LEANDRO → orders-fsm (⏳ espera 10+12) ✅                           │
 │              ↓ (Pedidos + FSM básica)                                    │
 │                                                                           │
-│  1️⃣4️⃣ EZE → payments-integration (⏳ espera 13)                         │
+│  1️⃣4️⃣ EZE → payments-integration (✅ 2026-05-12)                        │
 │           ↓ (MercadoPago webhook)                                        │
 │                                                                           │
 │  1️⃣5️⃣ LEANDRO → orders-list-gestor (⏳ espera 13) 🔀                     │
@@ -94,7 +94,7 @@
 | 11b | **9º** | Eze | `fix-backend-startup` 🆕 | 11 | ✅ | 0.25 días |
 | 12 | **10º** | Mati | `products-module` | 8,9 | ✅ | 1.5 días |
 | 13 | **11º** | Leandro | `orders-fsm` | 10,12 | ✅ | 1.5 días |
-| 14 | **12º** | Eze | `payments-integration` | 13 | ⏳ | 1 día |
+| 14 | **12º** | Eze | `payments-integration` | 13 | ✅ Archivado 2026-05-12 | 1 día |
 | 15 | **13º** | Leandro | `orders-list-gestor` 🔀 | 13 | ⏳ | 0.5 días |
 | 16 | **13º** | Edgar | `users-admin` 🔀 | 6 | 📦 | 1 día |
 | 17 | **14º** | Edgar | `admin-metrics` 🔀 | 13,16 | ⏳ | 1 día |
@@ -180,7 +180,7 @@
 ---
 
 > **Fase actual:** Fase 2 — Backend Puro  
-> **Próximo change:** `payments-integration` (Eze)  
+> **Último change completado:** `payments-integration` (Eze) ✅ 2026-05-12
 > **Regla de oro:** Backend first, frontend after — siempre consultar antes de tocar frontend.
 
 ---
