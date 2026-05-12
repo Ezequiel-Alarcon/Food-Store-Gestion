@@ -72,3 +72,15 @@ def check_cancel_permission(estado_actual: str, rol_actor: str) -> None:
         raise ForbiddenError(
             f"El rol '{rol_actor}' no tiene permiso para cancelar pedidos en estado '{estado_actual}'"
         )
+
+
+def confirmar_pedido(estado_actual: str) -> None:
+    """Valida que el pedido pueda ser confirmado por el SISTEMA (pago aprobado).
+    
+    Solo permite transicion PENDIENTE->CONFIRMADO.
+    Lanza ValidationError si el estado actual no es PENDIENTE.
+    """
+    if estado_actual != "PENDIENTE":
+        raise ValidationError(
+            f"Solo pedidos PENDIENTE pueden confirmarse, estado actual: '{estado_actual}'"
+        )
