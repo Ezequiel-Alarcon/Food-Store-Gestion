@@ -1,7 +1,7 @@
 # Food Store — Mapa de Changes CORREGIDO
 
 > **Proyecto:** Food Store E-Commerce  
-> **Fecha:** 2026-05-08  
+> **Fecha:** 2026-05-12  
 > **Metodología:** Spec-Driven Development (SDD) + Feature-First  
 > **Versión:** 2.1 (reordenamiento backend-first)
 
@@ -59,17 +59,17 @@
 | 9 | `ingredients-module` | CRUD ingredientes + alérgenos | EPIC 04 | 4 | ~5 | ✅ Archivado |
 | 10 | `addresses-module` | CRUD direcciones de entrega | EPIC 07 | 5 | ~6 | ✅ Archivado |
 
-### FASE 2 — Docker + Backend Puro (🔲 PENDIENTE)
+### FASE 2 — Docker + Backend Puro (🔄 EN PROGRESO)
 
 | # | ID | Change | Descripción | Épica | HU | Archivos~ | Capa |
 |---|-----|--------|-------------|-------|-----|-----------|------|
-| 11 | `docker-setup` | 🆕 Docker Compose: PostgreSQL + backend + frontend | EPIC 00 | — | ~5 | Infra |
-| 12 | `products-module` | CRUD productos + catálogo público | EPIC 05 | 9 | ~10 | Backend |
-| 13 | `orders-fsm` | Creación pedidos + FSM básica | EPIC 10,12 | 8 | ~10 | Backend |
-| 14 | `payments-integration` | MercadoPago webhook + confirmación | EPIC 11 | 4 | ~6 | Backend |
-| 15 | `orders-list-gestor` | Panel pedidos (gestor/ADMIN) — solo backend | EPIC 13 | 2 | ~4 | Backend |
-| 16 | `users-admin` | CRUD usuarios + asignación roles — solo backend | EPIC 15 | 3 | ~5 | Backend |
-| 17 | `admin-metrics` | Dashboard KPIs endpoints — solo backend | EPIC 17 | 4 | ~6 | Backend |
+| 11 | `docker-setup` | 🆕 Docker Compose: PostgreSQL + backend + frontend | EPIC 00 | — | ~5 | ✅ Archivado 2026-05-08 |
+| 12 | `products-module` | CRUD productos + catálogo público | EPIC 05 | 9 | ~10 | ✅ Archivado 2026-05-09 |
+| 13 | `orders-fsm` | Creación pedidos + FSM básica | EPIC 10,12 | 8 | ~10 | ✅ Archivado 2026-05-12 |
+| 14 | `payments-integration` | MercadoPago webhook + confirmación | EPIC 11 | 4 | ~6 | 🔲 Backend |
+| 15 | `orders-list-gestor` | Panel pedidos (gestor/ADMIN) — solo backend | EPIC 13 | 2 | ~4 | 🔲 Backend |
+| 16 | `users-admin` | CRUD usuarios + asignación roles — solo backend | EPIC 15 | 3 | ~5 | 🔲 Backend |
+| 17 | `admin-metrics` | Dashboard KPIs endpoints — solo backend | EPIC 17 | 4 | ~6 | 🔲 Backend |
 
 ### FASE 3 — Frontend (🔒 CONSULTAR antes de cada uno)
 
@@ -326,7 +326,7 @@
 
 ---
 
-### Change 11: `docker-setup` 🆕
+### Change 11: `docker-setup` 🆕 ✅ COMPLETADO
 
 | Campo | Valor |
 |------|-------|
@@ -334,6 +334,7 @@
 | **Épica** | EPIC 00 |
 | **HU** | — (infraestructura) |
 | **Archivos** | ~5 nuevos |
+| **Estado** | ✅ Archivado 2026-05-08 |
 | **Objetivo** | Docker Compose para levantar PostgreSQL + backend + frontend en entorno dev |
 
 **Scope de archivos:**
@@ -349,7 +350,7 @@
 
 ---
 
-### Change 12: `products-module` (backend)
+### Change 12: `products-module` (backend) ✅ COMPLETADO
 
 | Campo | Valor |
 |------|-------|
@@ -357,6 +358,7 @@
 | **Épica** | EPIC 05 |
 | **HU** | US-015, US-016, US-017, US-018, US-019, US-020, US-021, US-022, US-023 |
 | **Archivos** | ~10 nuevos |
+| **Estado** | ✅ Archivado 2026-05-09 |
 | **Objetivo** | CRUD productos + catálogo público + filtros por alérgenos (solo backend) |
 
 **Scope de archivos:**
@@ -377,7 +379,7 @@
 
 ---
 
-### Change 13: `orders-fsm` (backend)
+### Change 13: `orders-fsm` (backend) ✅ COMPLETADO
 
 | Campo | Valor |
 |------|-------|
@@ -385,6 +387,7 @@
 | **Épica** | EPIC 10, EPIC 12 |
 | **HU** | US-035, US-036, US-037, US-038, US-040, US-041, US-042, US-043 |
 | **Archivos** | ~10 nuevos |
+| **Estado** | ✅ Archivado 2026-05-12 |
 | **Objetivo** | Creación pedidos + FSM básica sin integración de pagos (solo backend) |
 
 **Scope de archivos:**
@@ -670,9 +673,9 @@
 | **Sprint 0** | 1-5 | EPIC 00 | 8 | ✅ Completado |
 | **Sprint 1** | 6-7 | EPIC 01-02 | 12 | ✅ Completado |
 | **Sprint 2** | 8-10 | EPIC 03-04,07 | 13 | ✅ Completado |
-| **Sprint 3** | 11 (`docker-setup`) | EPIC 00 | — | 🔲 Docker |
-| **Sprint 4** | 12 (`products-module`) | EPIC 05 | 9 | 🔲 Backend |
-| **Sprint 5** | 13 (`orders-fsm`) | EPIC 10,12 | 8 | 🔲 Backend |
+| **Sprint 3** | 11 (`docker-setup`) | EPIC 00 | — | ✅ Completado |
+| **Sprint 4** | 12 (`products-module`) | EPIC 05 | 9 | ✅ Completado |
+| **Sprint 5** | 13 (`orders-fsm`) | EPIC 10,12 | 8 | ✅ Completado |
 | **Sprint 6** | 14 (`payments-integration`) | EPIC 11 | 4 | 🔲 Backend |
 | **Sprint 7** | 15-17 (admin backend) | EPIC 13,15,17 | 9 | 🔲 Backend |
 | **Sprint 8** | 18 (`cart-frontend`) 🔒 | EPIC 08 | 6 | 🔒 Frontend |

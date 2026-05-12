@@ -152,6 +152,14 @@
       "sessions": 0,
       "memories": 4,
       "prompts": 0
+    },
+    {
+      "id": "d5a525b0",
+      "created_by": "Facultad",
+      "created_at": "2026-05-12T17:46:28Z",
+      "sessions": 2,
+      "memories": 4,
+      "prompts": 10
     }
   ]
 }

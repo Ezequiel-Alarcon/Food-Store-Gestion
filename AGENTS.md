@@ -159,26 +159,42 @@ Las siguientes skills deben instalarse antes de usarlas. Si el contexto las acti
 Este proyecto usa **OPSX** para gestión de cambios. Los artefactos viven en `openspec/`.
 
 ```
-/opsx:explore  →  /opsx:propose  →  /opsx:apply  →  /opsx:archive
+/opsx:explore  →  /opsx:propose  →  /opsx:apply  →  /opsx:archive  →  sync docs
 ```
+                                                                       ↑
+                                                            MANDATORIO: actualizar
+                                                            CHANGES-ROADMAP.md +
+                                                            TEAM-ASSIGNMENT.md
+                                                            (ver sección abajo)
 
 - Los cambios activos están en `openspec/changes/<nombre>/`
 - La config del proyecto está en `openspec/config.yaml`
 - Antes de implementar cualquier feature nueva, verificar si existe un change activo con `openspec list --json`
 
-### Sync de docs/CHANGES.md al archivar
+### Sync de documentación al archivar (MANDATORIO)
 
-Cada vez que completes el archivado de un change, **además de** ejecutar el comando de OPSX, mantené sincronizado el índice humano en `docs/CHANGES.md`:
+Cada vez que completes el archivado de un change, **además de** ejecutar el comando de OPSX, mantené sincronizada TODA la documentación de tracking del proyecto:
 
 ```bash
 /opsx:archive <change-name>
 ```
 
-- Abrí `docs/CHANGES.md` y actualizá `Última actualización` a la fecha del día (formato `YYYY-MM-DD`).
-- Ubicá la fila del change en la tabla donde esté (Sprint/Epic) y **movela** a `## Ya realizado (archivado en OPSX)` (manteniendo la misma estructura de columnas).
-- En la fila movida, `Estado` debe quedar como `✅ Hecho (archivado YYYY-MM-DD)`.
-- En la fila movida, `Evidencia` debe apuntar a `openspec/changes/archive/YYYY-MM-DD-<change-name>/`.
-- Importante: el **source of truth** del cambio sigue siendo `openspec/` (OPSX). `docs/CHANGES.md` es solo un resumen para lectura rápida.
+**Archivos a actualizar sin excepción:**
+
+1. **`docs/CHANGES-ROADMAP.md`** (source of truth del roadmap):
+   - Actualizá `Fecha:` al día actual (formato `YYYY-MM-DD`).
+   - Cambiá el `Estado` del change de `🔲 Backend` (o lo que corresponda) a `✅ Archivado YYYY-MM-DD`.
+   - Si el change estaba en la tabla de ruta crítica (`## 5. Ruta Crítica`), actualizá su estado a `✅ Completado`.
+
+2. **`TEAM-ASSIGNMENT.md`** (asignación por integrante):
+   - Actualizá `Fecha:` al día actual.
+   - Cambiá el `Estado` del change en TODAS las tablas donde aparezca (pipeline visual y tabla numérica).
+   - Si era el último cambio pendiente de un integrante, actualizá el resumen final.
+
+3. **`docs/CHANGES.md`** (guía de cambios, si tiene tracking):
+   - Si existe una tabla de cambios en este archivo, aplicá el mismo procedimiento.
+
+**Regla de oro:** El OPSX archive mueve los artefactos a `openspec/changes/archive/`. La documentación humana (`docs/`, `TEAM-ASSIGNMENT.md`) debe reflejar ese cambio inmediatamente. Nunca dejes documentación desincronizada después de un archive.
 
 ---
 
@@ -257,9 +273,10 @@ Configuración en `.opencode/opencode.json`.
 | `docs/Integrador.txt` | Especificación técnica SDD v5.0 completa — ERD v5, FSM de pedidos, API REST, schemas Pydantic, rúbrica |
 | `docs/Descripcion.txt` | Descripción integral del sistema (15 secciones) |
 | `docs/Historias_de_usuario.txt` | Historias de usuario por actor |
-| `docs/CHANGES.md` | Historial de cambios del proyecto |
+| `docs/CHANGES.md` | Guía de cambios y metodología OPSX |
+| `docs/CHANGES-ROADMAP.md` | **Source of truth del roadmap** — tracking de 22 cambios, fases, ruta crítica (actualizar tras cada archive) |
 | `CONTRIBUTING.md` | Reglas de arquitectura, patrones de DB, code review checklist, naming conventions |
 | `AUDITORIA-ROADMAP.md` | Auditoría crítica del roadmap: 18 changes corregidos, HU huérfanas, dependencias circulares resueltas |
-| `TEAM-ASSIGNMENT.md` | Asignación de los 22 changes por integrante (Eze, Mati, Lucas, Edgar, Leandro) y fases de implementación |
+| `TEAM-ASSIGNMENT.md` | Asignación de los 22 changes por integrante + pipeline visual (actualizar tras cada archive) |
 | `backend/README.md` | Setup y estructura del backend |
 | `frontend/README.md` | Setup y estructura del frontend |

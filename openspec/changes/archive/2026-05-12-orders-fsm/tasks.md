@@ -55,10 +55,10 @@
 
 ## 9. Verificación Manual
 
-- [ ] 9.1 Verificar POST /api/v1/pedidos crea pedido en PENDIENTE con snapshot correcto (precio y dirección)
-- [ ] 9.2 Verificar que un pedido con stock insuficiente retorna 422 sin crear ningún registro
-- [ ] 9.3 Verificar PATCH /{id}/estado con EN_PREP desde CONFIRMADO funciona para Gestor de Pedidos
-- [ ] 9.4 Verificar PATCH /{id}/estado CANCELADO desde CONFIRMADO restaura el stock del producto
-- [ ] 9.5 Verificar que PATCH con nuevo_estado=CONFIRMADO retorna 422 (reservado para webhook)
-- [ ] 9.6 Verificar GET /{id}/historial retorna entradas en orden cronológico
-- [ ] 9.7 Verificar que un Cliente no puede ver el pedido de otro usuario (403)
+- [x] 9.1 Verificar POST /api/v1/pedidos crea pedido en PENDIENTE con snapshot correcto (precio y dirección)
+- [x] 9.2 Verificar que un pedido con stock insuficiente retorna 422 sin crear ningún registro
+- [x] 9.3 Verificar PATCH /{id}/estado con EN_PREP desde CONFIRMADO funciona para Gestor de Pedidos
+- [x] 9.4 Verificar PATCH /{id}/estado CANCELADO desde CONFIRMADO restaura el stock del producto
+- [x] 9.5 Verificar que PATCH con nuevo_estado=CONFIRMADO retorna 422 (reservado para webhook)
+- [x] 9.6 Verificar GET /{id}/historial retorna entradas en orden cronológico
+- [x] 9.7 Verificar que un Cliente no puede ver el pedido de otro usuario (403)

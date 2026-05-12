@@ -1,7 +1,7 @@
 # Food Store — Asignación por Team (Pipeline Backend-First)
 
 > **Proyecto:** Food Store E-Commerce  
-> **Fecha:** 2026-05-08  
+> **Fecha:** 2026-05-12  
 > **Distribución:** 22 changes entre 5 integrantes  
 > **Método:** Secuencial con fases Backend → Frontend  
 > **Versión:** 2.1 (reordenamiento backend-first)
@@ -27,7 +27,7 @@
 │  🔟 LEANDRO → addresses-module ✅                                       │
 │                                                                           │
 ├──────────────────────────────────────────────────────────────────────────┤
-│                FASE 2: DOCKER + BACKEND PURO (🔲 PENDIENTE)              │
+│                FASE 2: DOCKER + BACKEND PURO (🔄 EN PROGRESO)              │
 ├──────────────────────────────────────────────────────────────────────────┤
 │                                                                           │
 │  1️⃣1️⃣ EZE → docker-setup 🆕 ✅                                            │
@@ -36,10 +36,10 @@
 │  1️⃣1️⃣🅱️ EZE → fix-backend-startup 🆕 ✅                                    │
 │            ↓ (Fix: forward refs en routers + seed condicional)           │
 │                                                                           │
-│  1️⃣2️⃣ MATI → products-module (⏳ espera 8+9)                            │
+│  1️⃣2️⃣ MATI → products-module (⏳ espera 8+9) ✅                            │
 │            ↓ (CRUD productos + catálogo público)                         │
 │                                                                           │
-│  1️⃣3️⃣ LEANDRO → orders-fsm (⏳ espera 10+12)                            │
+│  1️⃣3️⃣ LEANDRO → orders-fsm (⏳ espera 10+12) ✅                           │
 │              ↓ (Pedidos + FSM básica)                                    │
 │                                                                           │
 │  1️⃣4️⃣ EZE → payments-integration (⏳ espera 13)                         │
@@ -86,14 +86,14 @@
 | 9 | 7º | Edgar | `ingredients-module` | 6 | ✅ |
 | 10 | 8º | Leandro | `addresses-module` | 6 | ✅ |
 
-### 🔲 FASE 2 — Docker + Backend Puro
+### 🔲 FASE 2 — Docker + Backend Puro (🔄 EN PROGRESO)
 
 | # | Orden | Integrante | Change | Depende de | Estado | ETA |
 |---|-------|-----------|--------|-----------|--------|-----|
 | 11 | **9º** | Eze | `docker-setup` 🆕 | 10 | ✅ | 0.5 días |
 | 11b | **9º** | Eze | `fix-backend-startup` 🆕 | 11 | ✅ | 0.25 días |
-| 12 | **10º** | Mati | `products-module` | 8,9 | ⏳ | 1.5 días |
-| 13 | **11º** | Leandro | `orders-fsm` | 10,12 | ⏳ | 1.5 días |
+| 12 | **10º** | Mati | `products-module` | 8,9 | ✅ | 1.5 días |
+| 13 | **11º** | Leandro | `orders-fsm` | 10,12 | ✅ | 1.5 días |
 | 14 | **12º** | Eze | `payments-integration` | 13 | ⏳ | 1 día |
 | 15 | **13º** | Leandro | `orders-list-gestor` 🔀 | 13 | ⏳ | 0.5 días |
 | 16 | **13º** | Edgar | `users-admin` 🔀 | 6 | 📦 | 1 día |
@@ -180,7 +180,7 @@
 ---
 
 > **Fase actual:** Fase 2 — Backend Puro  
-> **Próximo change:** `products-module` (Mati)  
+> **Próximo change:** `payments-integration` (Eze)  
 > **Regla de oro:** Backend first, frontend after — siempre consultar antes de tocar frontend.
 
 ---
