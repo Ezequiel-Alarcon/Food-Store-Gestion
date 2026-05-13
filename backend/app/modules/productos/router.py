@@ -11,6 +11,7 @@ from sqlmodel import Session
 
 from app.core.database import get_session
 from app.core.deps import get_current_user, require_role
+from app.modules.auth.schemas import MessageResponse
 from app.modules.productos.schemas import (
     CategoriaSimple,
     IngredienteSimple,
@@ -97,7 +98,7 @@ def get_catalogo(
 
 
 # ============================================================
-# ENDPOINTS ADMIN (requieren AUTH + rol ADMIN o GESTOR_STOCK)
+# ENDPOINTS ADMIN (requieren AUTH + rol ADMIN o STOCK)
 # ============================================================
 
 
@@ -106,12 +107,12 @@ def get_catalogo(
     response_model=ProductoResponse,
     status_code=status.HTTP_201_CREATED,
     summary="Crear producto",
-    description="Crea un nuevo producto. Requiere rol ADMIN o GESTOR_STOCK.",
+    description="Crea un nuevo producto. Requiere rol ADMIN o STOCK.",
 )
 def create_producto(
     data: ProductoCreate,
     session: Session = Depends(get_session),
-    current_user: dict = Depends(require_role("ADMIN", "GESTOR_STOCK")),
+    current_user: dict = Depends(require_role("ADMIN", "STOCK")),
 ) -> dict:
     """Crea un nuevo producto."""
     service = ProductoService(session)
@@ -144,14 +145,14 @@ def create_producto(
 @router.get(
     "/",
     summary="Listar productos (admin)",
-    description="Lista todos los productos activos. Requiere rol ADMIN o GESTOR_STOCK.",
+    description="Lista todos los productos activos. Requiere rol ADMIN o STOCK.",
 )
 def list_productos(
     skip: int = Query(0, ge=0, description="Offset para paginación"),
     limit: int = Query(20, ge=1, le=100, description="Límite de resultados"),
     categoria_id: Optional[int] = Query(None, description="Filtrar por categoría"),
     session: Session = Depends(get_session),
-    current_user: dict = Depends(require_role("ADMIN", "GESTOR_STOCK")),
+    current_user: dict = Depends(require_role("ADMIN", "STOCK")),
 ) -> PaginatedProductoResponse:
     """Lista todos los productos (para admin)."""
     service = ProductoService(session)
@@ -191,12 +192,12 @@ def list_productos(
     "/{producto_id}",
     response_model=ProductoResponse,
     summary="Obtener producto (admin)",
-    description="Obtiene un producto por ID. Requiere rol ADMIN o GESTOR_STOCK.",
+    description="Obtiene un producto por ID. Requiere rol ADMIN o STOCK.",
 )
 def get_producto(
     producto_id: int,
     session: Session = Depends(get_session),
-    current_user: dict = Depends(require_role("ADMIN", "GESTOR_STOCK")),
+    current_user: dict = Depends(require_role("ADMIN", "STOCK")),
 ) -> dict:
     """Obtiene un producto por ID."""
     service = ProductoService(session)
@@ -227,13 +228,13 @@ def get_producto(
     "/{producto_id}",
     response_model=ProductoResponse,
     summary="Actualizar producto",
-    description="Actualiza un producto existente. Requiere rol ADMIN o GESTOR_STOCK.",
+    description="Actualiza un producto existente. Requiere rol ADMIN o STOCK.",
 )
 def update_producto(
     producto_id: int,
     data: ProductoUpdate,
     session: Session = Depends(get_session),
-    current_user: dict = Depends(require_role("ADMIN", "GESTOR_STOCK")),
+    current_user: dict = Depends(require_role("ADMIN", "STOCK")),
 ) -> dict:
     """Actualiza un producto."""
     service = ProductoService(session)
@@ -267,13 +268,13 @@ def update_producto(
     "/{producto_id}/stock",
     response_model=ProductoResponse,
     summary="Actualizar stock",
-    description="Actualiza el stock de un producto. Requiere rol ADMIN o GESTOR_STOCK.",
+    description="Actualiza el stock de un producto. Requiere rol ADMIN o STOCK.",
 )
 def update_stock(
     producto_id: int,
     data: ProductoStockUpdate,
     session: Session = Depends(get_session),
-    current_user: dict = Depends(require_role("ADMIN", "GESTOR_STOCK")),
+    current_user: dict = Depends(require_role("ADMIN", "STOCK")),
 ) -> dict:
     """Actualiza el stock de un producto."""
     service = ProductoService(session)
@@ -305,7 +306,7 @@ def update_stock(
 
 @router.delete(
     "/{producto_id}",
-    status_code=status.HTTP_204_NO_CONTENT,
+    response_model=MessageResponse,
     summary="Eliminar producto",
     description="Elimina (soft-delete) un producto. Requiere rol ADMIN.",
 )
@@ -313,10 +314,11 @@ def delete_producto(
     producto_id: int,
     session: Session = Depends(get_session),
     current_user: dict = Depends(require_role("ADMIN")),
-) -> None:
+) -> dict:
     """Elimina (soft-delete) un producto."""
     service = ProductoService(session)
     service.soft_delete(producto_id)
+    return {"message": "Producto eliminado correctamente"}
     return None
 
 

@@ -2,7 +2,7 @@
 app.modules.usuarios.router
 
 Router para gestión administrativa de usuarios.
-Solo accesible por ADMIN y GESTOR.
+Solo accesible por ADMIN, STOCK y PEDIDOS.
 """
 
 from fastapi import APIRouter, Depends, Query
@@ -11,6 +11,7 @@ from sqlmodel import Session
 from app.core.database import get_session
 from app.core.deps import get_current_user, require_role
 from app.modules.auth.model import Usuario
+from app.modules.auth.schemas import MessageResponse
 from app.modules.usuarios.schemas import UserRead, UserListResponse
 from app.modules.usuarios.service import UsuariosService
 
@@ -29,7 +30,7 @@ async def list_users(
     include_inactive: bool = Query(False, description="Incluir usuarios inactivos"),
     session: Session = Depends(get_session),
     current_user: Usuario = Depends(
-        require_role("ADMIN", "GESTOR")
+        require_role("ADMIN", "STOCK", "PEDIDOS")
     ),
 ) -> list[Usuario]:
     """Lista todos los usuarios (ADMIN/GESTOR)."""
@@ -52,7 +53,7 @@ async def get_user(
     user_id: int,
     session: Session = Depends(get_session),
     current_user: Usuario = Depends(
-        require_role("ADMIN", "GESTOR")
+        require_role("ADMIN", "STOCK", "PEDIDOS")
     ),
 ) -> Usuario:
     """Obtiene un usuario por ID (ADMIN/GESTOR)."""
@@ -70,6 +71,7 @@ async def get_user(
 async def update_user(
     user_id: int,
     nombre: str | None = Query(None, description="Nuevo nombre"),
+    apellido: str | None = Query(None, description="Nuevo apellido"),
     rol: str | None = Query(None, description="Nuevo rol"),
     telefono: str | None = Query(None, description="Nuevo teléfono"),
     activo: bool | None = Query(None, description="Estado activo"),
@@ -81,6 +83,7 @@ async def update_user(
     usuario = service.update_user(
         user_id=user_id,
         nombre=nombre,
+        apellido=apellido,
         rol=rol,
         telefono=telefono,
         activo=activo,
@@ -90,6 +93,7 @@ async def update_user(
 
 @router.delete(
     "/{user_id}",
+    response_model=MessageResponse,
     summary="Desactivar usuario",
     description="Desactiva un usuario (soft delete). Acceso: ADMIN.",
 )

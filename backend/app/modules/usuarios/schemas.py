@@ -15,8 +15,9 @@ class UserRead(BaseModel):
 
     id: int = Field(..., description="ID único del usuario")
     email: EmailStr = Field(..., description="Email del usuario")
-    nombre: str = Field(..., description="Nombre completo")
-    rol: str = Field(..., description="Rol del usuario (ADMIN, GESTOR, CLIENT)")
+    nombre: str = Field(..., description="Nombre")
+    apellido: str = Field(..., description="Apellido")
+    rol: str = Field(..., description="Rol del usuario (ADMIN, STOCK, PEDIDOS, CLIENT)")
     telefono: Optional[str] = Field(None, description="Teléfono en formato E.164")
     activo: bool = Field(..., description="Si el usuario está activo")
     created_at: Optional[datetime] = Field(None, description="Fecha de creación")
@@ -29,13 +30,19 @@ class UserUpdate(BaseModel):
 
     nombre: Optional[str] = Field(
         default=None,
-        description="Nombre completo",
+        description="Nombre",
         min_length=1,
         max_length=100,
     )
+    apellido: Optional[str] = Field(
+        default=None,
+        description="Apellido",
+        min_length=2,
+        max_length=80,
+    )
     rol: Optional[str] = Field(
         default=None,
-        description="Rol del usuario",
+        description="Rol del usuario (ADMIN, STOCK, PEDIDOS, CLIENT)",
         min_length=1,
         max_length=50,
     )
@@ -77,8 +84,9 @@ class UserListResponse(BaseModel):
 
     id: int = Field(..., description="ID único del usuario")
     email: EmailStr = Field(..., description="Email del usuario")
-    nombre: str = Field(..., description="Nombre completo")
-    rol: str = Field(..., description="Rol del usuario")
+    nombre: str = Field(..., description="Nombre")
+    apellido: str = Field(..., description="Apellido")
+    rol: str = Field(..., description="Rol del usuario (ADMIN, STOCK, PEDIDOS, CLIENT)")
     telefono: Optional[str] = Field(None, description="Teléfono en formato E.164")
     activo: bool = Field(..., description="Si el usuario está activo")
     created_at: Optional[str] = Field(None, description="Fecha de creación (ISO)")

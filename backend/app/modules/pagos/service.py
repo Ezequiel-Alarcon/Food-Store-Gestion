@@ -31,7 +31,8 @@ settings = get_settings()
 
 def _get_rol(current_user: Any) -> str:
     if hasattr(current_user, "rol"):
-        return str(current_user.rol)
+        rol = current_user.rol
+        return rol.value if hasattr(rol, "value") else str(rol)
     if isinstance(current_user, dict):
         return str(current_user.get("rol") or current_user.get("role") or "")
     return ""

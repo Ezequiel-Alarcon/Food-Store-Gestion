@@ -202,3 +202,52 @@
 - El backend arranca con `docker compose up`. Probar después de hacer `git pull`.
 - Los modelos `Usuario` y `UsuarioRol` YA existen en `app/modules/auth/model.py`. Al implementar `Rol`, el seed lo va a poblar automáticamente.
 - Si necesitás tocar `seed.py` para agregar productos de ejemplo, seguí el patrón de imports condicionales.
+
+---
+
+## 🔧 Pendientes de Verificación y Corrección (2026-05-13)
+
+> **Asignado a: Lucas**  
+> **Origen:** Auditoría `auth-audit` + verificación manual de endpoints  
+> **Contexto:** Se completaron 2 changes correctivos (auth-audit y bugfix-modules). Quedan tareas de verificación y ajustes en tests.
+
+### 1. Actualizar tests con expectativas 401 → 403
+
+`HTTPBearer` (reemplazo de `OAuth2PasswordBearer`) devuelve **403** en vez de **401** cuando no hay token. Tests que esperan 401 deben actualizarse:
+
+| Archivo | Tests afectados |
+|---------|-----------------|
+| `tests/modules/pedidos/test_pedidos_endpoints.py` | ~8 tests esperan 401 → deben esperar 403 |
+| `tests/modules/admin/test_admin_metrics.py` | ~6 tests esperan 401 → deben esperar 403 |
+
+### 2. Revisar tests de categorías hierarchy
+
+3 tests en `tests/modules/categorias/test_hierarchy.py` fallan con 404:
+- `test_move_category_to_different_branch`
+- `test_public_tree_no_auth`
+- `test_leaf_category_subcategorias`
+
+Posible causa: rutas incorrectas o endpoints no implementados.
+
+### 3. Schemas de update verificados ✅
+
+Todos los schemas de UPDATE tienen campos opcionales (`default=None`). Sin cambios necesarios.
+
+### 4. Rate limiting: 5/min vs 5/15min
+
+El código tiene `5/minute` (config.py default) pero los docs dicen `5/15min`. Evaluar cuál usar y unificar.
+
+### 5. Pagos y Admin endpoints
+
+Marcados PENDIENTE en verificación manual. Probar flujo completo de pago con MercadoPago y dashboard admin.
+
+### 6. Cambios archivados
+
+| Change | Archivo |
+|--------|---------|
+| `auth-audit` | `openspec/changes/archive/2026-05-13-auth-audit/` (48/48 tareas) |
+| `bugfix-modules` | `openspec/changes/archive/2026-05-13-bugfix-modules/` (12/12 tareas) |
+
+---
+
+> **Última actualización:** 2026-05-13 — Eze (auth-audit + bugfix-modules)

@@ -170,8 +170,10 @@ class CategoriaService:
                 detail="No se puede editar una categoría eliminada",
             )
 
-        # Nuevo padre
+        # Nuevo padre (0 = sin padre)
         nuevo_padre_id = data.categoria_padre_id
+        if nuevo_padre_id == 0:
+            nuevo_padre_id = None
 
         # Validar ciclo si se cambia el padre
         if nuevo_padre_id is not None and nuevo_padre_id != categoria.padre_id:

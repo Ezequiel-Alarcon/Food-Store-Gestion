@@ -1,9 +1,6 @@
 """
 Seed data - Datos iniciales obligatorios para el sistema.
 Ejecutar DESPUÉS de alembic upgrade head.
-
-Los imports son condicionales: si un modelo aún no está implementado
-(el proyecto está en desarrollo), esa parte del seed se omite.
 """
 from datetime import datetime, timezone
 from typing import Optional
@@ -13,14 +10,8 @@ from sqlmodel import Session, select
 from app.core.database import SessionLocal
 from app.core.security import hash_password
 
-# ── Imports condicionales (modelos pueden no existir aún en desarrollo) ──
-
-try:
-    from app.modules.auth.model import Rol, Usuario, UsuarioRol
-except ImportError:
-    Rol = None          # type: ignore
-    Usuario = None      # type: ignore
-    UsuarioRol = None   # type: ignore
+# ── Imports de modelos ──
+from app.modules.auth.model import Usuario
 
 try:
     from app.modules.pedidos.model import EstadoPedido
@@ -46,7 +37,7 @@ def run_seed() -> None:
     Debe llamarse DESPUÉS de alembic upgrade head.
     """
     with SessionLocal() as session:
-        # Seed de Roles
+        # Documentar los 4 roles del sistema
         seed_roles(session)
 
         # Seed de Estados de Pedido
@@ -66,26 +57,16 @@ def run_seed() -> None:
 
 
 def seed_roles(session: Session) -> None:
-    """Inserta los 4 roles del sistema RBAC."""
-    if Rol is None:
-        print("  ⚠ Seed roles omitido — modelo Rol no disponible aún")
-        return
-
-    roles_data = [
-        {"codigo": "ADMIN", "nombre": "Administrador", "descripcion": "Acceso total al sistema"},
-        {"codigo": "STOCK", "nombre": "Gestor de Stock", "descripcion": "Gestión de inventario y catálogo"},
-        {"codigo": "PEDIDOS", "nombre": "Gestor de Pedidos", "descripcion": "Gestión de pedidos y estados"},
-        {"codigo": "CLIENT", "nombre": "Cliente", "descripcion": "Usuario final del sistema"},
+    """Documenta los 4 roles del sistema RBAC (almacenados como string en Usuario.rol)."""
+    roles = [
+        ("ADMIN", "Administrador — acceso total al sistema"),
+        ("STOCK", "Gestor de Stock — gestión de inventario y catálogo"),
+        ("PEDIDOS", "Gestor de Pedidos — gestión de pedidos y estados"),
+        ("CLIENT", "Cliente — usuario final del sistema"),
     ]
-
-    for role_data in roles_data:
-        existing = session.get(Rol, role_data["codigo"])
-        if not existing:
-            rol = Rol(**role_data)
-            session.add(rol)
-            print(f"  ✓ Rol creado: {role_data['codigo']}")
-        else:
-            print(f"  - Rol ya existe: {role_data['codigo']}")
+    print("  ℹ Roles del sistema RBAC (almacenados en Usuario.rol):")
+    for codigo, desc in roles:
+        print(f"    • {codigo}: {desc}")
 
 
 def seed_estados_pedido(session: Session) -> None:
@@ -137,10 +118,6 @@ def seed_formas_pago(session: Session) -> None:
 
 def seed_usuario_admin(session: Session) -> None:
     """Crea el usuario administrador inicial."""
-    if Usuario is None or UsuarioRol is None:
-        print("  ⚠ Seed admin omitido — modelos Usuario/UsuarioRol no disponibles aún")
-        return
-
     admin_email = "admin@foodstore.com"
     admin_password = "Admin1234!"
 
@@ -152,25 +129,18 @@ def seed_usuario_admin(session: Session) -> None:
         print(f"  - Usuario admin ya existe: {admin_email}")
         return
 
-    # Crear usuario admin
+    # Crear usuario admin con los campos reales del modelo
     usuario = Usuario(
         nombre="Admin",
-        apellido="Admin",
+        apellido="Sistema",
         email=admin_email,
         password_hash=hash_password(admin_password),
+        rol="ADMIN",
         telefono="+5491112345678",
-        creado_en=datetime.now(timezone.utc),
-        actualizado_en=datetime.now(timezone.utc),
+        activo=True,
     )
     session.add(usuario)
-    session.flush()  # Obtener el ID
-
-    # Asignar rol ADMIN
-    usuario_rol = UsuarioRol(
-        usuario_id=usuario.id,
-        rol_codigo="ADMIN",
-    )
-    session.add(usuario_rol)
+    session.flush()
 
     print(f"  ✓ Usuario admin creado: {admin_email}")
     print(f"  ✓ Contraseña: {admin_password}")

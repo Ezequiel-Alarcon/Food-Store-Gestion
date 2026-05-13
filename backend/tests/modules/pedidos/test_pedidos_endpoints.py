@@ -35,11 +35,11 @@ def _decode_jwt_sub(token: str) -> int:
     return int(payload["sub"])
 
 
-def _register_and_login(client: TestClient, email: str, password: str = "Password1", nombre: str = "Test") -> dict:
+def _register_and_login(client: TestClient, email: str, password: str = "Password1", nombre: str = "Test", apellido: str = "Test") -> dict:
     """Registra un usuario CLIENT y devuelve tokens + user_id extraído del JWT."""
     resp = client.post(
         "/api/v1/auth/register",
-        json={"email": email, "password": password, "nombre": nombre},
+        json={"email": email, "password": password, "nombre": nombre, "apellido": apellido},
     )
     assert resp.status_code == 201, f"Register failed: {resp.json()}"
     tokens = resp.json()

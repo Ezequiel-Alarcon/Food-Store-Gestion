@@ -3,7 +3,7 @@ app.modules.refreshtokens.model
 
 Modelos SQLModel para refresh tokens.
 """
-from datetime import datetime
+from datetime import datetime, timezone
 from typing import Optional
 
 from sqlmodel import Field, SQLModel, Relationship
@@ -28,7 +28,7 @@ class RefreshToken(SQLModel, table=True):
     token: str = Field(description="JWT refresh token")
     revocado: bool = Field(default=False, description="Token revocado")
     expires_at: datetime = Field(description="Fecha de expiración")
-    created_at: datetime = Field(default_factory=datetime.utcnow, description="Fecha de creación")
+    created_at: datetime = Field(default_factory=lambda: datetime.now(timezone.utc), description="Fecha de creación")
 
     def __repr__(self) -> str:
         return f"<RefreshToken(id={self.id}, user_id={self.user_id}, revocado={self.revocado})>"

@@ -34,7 +34,7 @@ class Settings(BaseSettings):
         description="Algoritmo JWT"
     )
     ACCESS_TOKEN_EXPIRE_MINUTES: int = Field(
-        default=15,
+        default=30,
         description="Expiración del access token en minutos"
     )
     REFRESH_TOKEN_EXPIRE_DAYS: int = Field(

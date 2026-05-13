@@ -40,6 +40,7 @@ class AuthRepository(BaseRepository[Usuario]):
         email: str,
         nombre: str,
         password_hash: str,
+        apellido: str = "",
         rol: str = "CLIENT",
         telefono: Optional[str] = None,
     ) -> Usuario:
@@ -47,6 +48,7 @@ class AuthRepository(BaseRepository[Usuario]):
         usuario = Usuario(
             email=email.lower(),
             nombre=nombre,
+            apellido=apellido,
             password_hash=password_hash,
             rol=rol,
             telefono=telefono,

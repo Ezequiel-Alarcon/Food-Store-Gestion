@@ -1,7 +1,7 @@
 """app.modules.admin.router
 
 Rutas para métricas del dashboard admin.
-Acceso restringido a ADMIN y GESTOR.
+Acceso restringido a ADMIN, STOCK y PEDIDOS.
 """
 from __future__ import annotations
 
@@ -35,7 +35,7 @@ def _get_service() -> AdminService:
                 "Solo cuenta pedidos en estados ENTREGADO y CONFIRMADO.",
 )
 def get_general_metrics(
-    current_user: Any = Depends(require_role("ADMIN", "GESTOR")),
+    current_user: Any = Depends(require_role("ADMIN", "STOCK", "PEDIDOS")),
     service: AdminService = Depends(_get_service),
 ) -> GeneralMetricsResponse:
     """GET /admin/metrics/ — métricas generales del dashboard."""
@@ -52,7 +52,7 @@ def get_general_metrics(
                 "Solo incluye pedidos en estados ENTREGADO y CONFIRMADO.",
 )
 def get_sales_chart(
-    current_user: Any = Depends(require_role("ADMIN", "GESTOR")),
+    current_user: Any = Depends(require_role("ADMIN", "STOCK", "PEDIDOS")),
     service: AdminService = Depends(_get_service),
 ) -> SalesChartResponse:
     """GET /admin/metrics/sales-chart/ — datos del gráfico de ventas."""
@@ -69,7 +69,7 @@ def get_sales_chart(
                 "Sin filtro temporal, solo productos activos.",
 )
 def get_top_products(
-    current_user: Any = Depends(require_role("ADMIN", "GESTOR")),
+    current_user: Any = Depends(require_role("ADMIN", "STOCK", "PEDIDOS")),
     service: AdminService = Depends(_get_service),
 ) -> list[TopProductEntry]:
     """GET /admin/metrics/top-products/ — ranking de productos más vendidos."""
@@ -85,7 +85,7 @@ def get_top_products(
     description="Retorna la cantidad de pedidos agrupados por estado_codigo.",
 )
 def get_orders_by_status(
-    current_user: Any = Depends(require_role("ADMIN", "GESTOR")),
+    current_user: Any = Depends(require_role("ADMIN", "STOCK", "PEDIDOS")),
     service: AdminService = Depends(_get_service),
 ) -> list[OrdersByStatusEntry]:
     """GET /admin/metrics/orders-by-status/ — conteo de pedidos por estado."""

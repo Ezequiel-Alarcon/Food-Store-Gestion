@@ -36,11 +36,11 @@ def _decode_jwt_sub(token: str) -> int:
     return int(payload["sub"])
 
 
-def _register_and_login(client: TestClient, email: str, password: str = "Password1", nombre: str = "Test") -> dict:
+def _register_and_login(client: TestClient, email: str, password: str = "Password1", nombre: str = "Test", apellido: str = "Test") -> dict:
     """Registra un usuario y devuelve tokens + user_id extraído del JWT."""
     resp = client.post(
         "/api/v1/auth/register",
-        json={"email": email, "password": password, "nombre": nombre},
+        json={"email": email, "password": password, "nombre": nombre, "apellido": apellido},
     )
     assert resp.status_code == 201, f"Register failed: {resp.json()}"
     tokens = resp.json()
@@ -86,9 +86,9 @@ def fixture_setup(client, session):
     admin_data = _register_and_login(client, "admin-metrics@test.com")
     _set_role(session, admin_data["user_id"], "ADMIN")
 
-    # Gestor
-    gestor_data = _register_and_login(client, "gestor-metrics@test.com")
-    _set_role(session, gestor_data["user_id"], "GESTOR")
+    # Gestor de stock
+    gestor_data = _register_and_login(client, "stock-metrics@test.com")
+    _set_role(session, gestor_data["user_id"], "STOCK")
 
     # Cliente
     cliente_data = _register_and_login(client, "cliente-metrics@test.com")
@@ -103,7 +103,7 @@ def fixture_setup(client, session):
         "test_client": client,
         "session": session,
         "admin": admin_data,
-        "gestor": gestor_data,
+        "stock": gestor_data,
         "cliente": cliente_data,
     }
 
@@ -126,7 +126,7 @@ def test_general_metrics_admin_retorna_200(setup):
 
 def test_general_metrics_gestor_retorna_200(setup):
     """GET /admin/metrics/ como gestor retorna 200."""
-    ac = AuthClient(setup["test_client"], setup["gestor"]["access_token"])
+    ac = AuthClient(setup["test_client"], setup["stock"]["access_token"])
 
     resp = ac.get("/api/v1/admin/metrics/")
 

@@ -10,7 +10,7 @@ from sqlmodel import Session
 from app.core.database import get_session
 from app.core.deps import get_current_user
 from app.modules.auth.model import Usuario
-from app.modules.auth.schemas import ChangePasswordRequest, UpdateProfileRequest
+from app.modules.auth.schemas import ChangePasswordRequest, MessageResponse, UpdateProfileRequest
 from app.modules.perfil.service import PerfilService
 
 router = APIRouter()
@@ -52,6 +52,7 @@ async def update_perfil(
 
 @router.put(
     "/perfil/password",
+    response_model=MessageResponse,
     summary="Cambiar contraseña",
     description="Cambia la contraseña del usuario autenticado.",
 )
