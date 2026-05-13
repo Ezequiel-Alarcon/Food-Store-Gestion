@@ -68,7 +68,7 @@
 | 13 | `orders-fsm` | Creación pedidos + FSM básica | EPIC 10,12 | 8 | ~10 | ✅ Archivado 2026-05-12 |
 | 14 | `payments-integration` | MercadoPago webhook + confirmación | EPIC 11 | 4 | ~6 | ✅ Archivado 2026-05-12 |
 | 15 | `orders-list-gestor` | Panel pedidos (gestor/ADMIN) — solo backend | EPIC 13 | 2 | ~4 | ✅ Archivado 2026-05-13 |
-| 16 | `users-admin` | CRUD usuarios + asignación roles — solo backend | EPIC 15 | 3 | ~5 | 🔲 Backend |
+| 16 | `users-admin` | CRUD usuarios + asignación roles — solo backend | EPIC 15 | 3 | ~5 | ✅ Archivado 2026-05-13 |
 | 17 | `admin-metrics` | Dashboard KPIs endpoints — solo backend | EPIC 17 | 4 | ~6 | 🔲 Backend |
 
 ### FASE 3 — Frontend (🔒 CONSULTAR antes de cada uno)
