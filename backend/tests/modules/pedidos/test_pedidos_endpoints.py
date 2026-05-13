@@ -134,6 +134,10 @@ class AuthClient:
         headers = {"Authorization": f"Bearer {self._token}"}
         return self._client.get(url, headers=headers)
 
+    def get_params(self, url: str, params: dict):
+        headers = {"Authorization": f"Bearer {self._token}"}
+        return self._client.get(url, headers=headers, params=params)
+
     def patch(self, url: str, json: dict | None = None):
         headers = {"Authorization": f"Bearer {self._token}"}
         return self._client.patch(url, json=json, headers=headers)
@@ -469,3 +473,130 @@ def test_cliente_no_puede_ver_historial_ajeno(setup):
     assert resp2.status_code == 403, (
         f"Expected 403 for cross-user historial, got {resp2.status_code}: {resp2.json()}"
     )
+
+
+# ── Listado /api/v1/pedidos (RBAC + filtros + paginación + orden) ─────
+
+
+def test_list_pedidos_unauthorized_401(setup):
+    resp = setup["client"].get("/api/v1/pedidos/")
+    assert resp.status_code == 401
+
+
+def test_list_pedidos_forbidden_role_403(setup):
+    # Crear usuario y setear rol a STOCK
+    user = _register_and_login(setup["client"], "stock_role@test.com")
+    from app.modules.auth.model import Usuario
+    u = setup["session"].get(Usuario, user["user_id"])
+    u.rol = "STOCK"
+    setup["session"].add(u)
+    setup["session"].flush()
+
+    ac = AuthClient(setup["client"], user["access_token"])
+    resp = ac.get("/api/v1/pedidos/")
+    assert resp.status_code == 403
+
+
+def test_list_pedidos_rbac_scoping_and_email_visibility(setup):
+    # Cliente 1 crea un pedido
+    ac1 = AuthClient(setup["client"], setup["access_token"])
+    r1 = ac1.post(
+        "/api/v1/pedidos/",
+        json={
+            "direccion_id": setup["addr_id"],
+            "items": [{"producto_id": setup["prod_a"], "cantidad": 1}],
+        },
+    )
+    assert r1.status_code == 201
+    pedido1_id = r1.json()["id"]
+
+    # Cliente 2 crea un pedido
+    user2 = _register_and_login(setup["client"], "cliente2_list@test.com")
+    addr2 = _create_address(setup["session"], user2["user_id"])
+    ac2 = AuthClient(setup["client"], user2["access_token"])
+    r2 = ac2.post(
+        "/api/v1/pedidos/",
+        json={
+            "direccion_id": addr2,
+            "items": [{"producto_id": setup["prod_b"], "cantidad": 1}],
+        },
+    )
+    assert r2.status_code == 201
+
+    # CLIENT 1 lista: solo ve los propios y sin email
+    resp_c1 = ac1.get("/api/v1/pedidos/")
+    assert resp_c1.status_code == 200
+    body = resp_c1.json()
+    assert body["total"] >= 1
+    assert all(it["user_id"] == setup["user_id"] for it in body["items"])
+    assert all(it["cliente_email"] is None for it in body["items"])
+
+    # PEDIDOS lista: ve pedidos de múltiples usuarios y con email
+    pedidos_user = _register_and_login(setup["client"], "gestor_pedidos@test.com")
+    from app.modules.auth.model import Usuario
+    u = setup["session"].get(Usuario, pedidos_user["user_id"])
+    u.rol = "PEDIDOS"
+    setup["session"].add(u)
+    setup["session"].flush()
+
+    ac_p = AuthClient(setup["client"], pedidos_user["access_token"])
+    resp_p = ac_p.get("/api/v1/pedidos/")
+    assert resp_p.status_code == 200
+    items = resp_p.json()["items"]
+    user_ids = {it["user_id"] for it in items}
+    assert setup["user_id"] in user_ids
+    assert user2["user_id"] in user_ids
+    assert all(it["cliente_email"] for it in items)
+
+
+def test_list_pedidos_filters_pagination_and_ordering(setup):
+    ac = AuthClient(setup["client"], setup["access_token"])
+
+    # Crear 25 pedidos
+    created_ids = []
+    for _ in range(25):
+        r = ac.post(
+            "/api/v1/pedidos/",
+            json={
+                "direccion_id": setup["addr_id"],
+                "items": [{"producto_id": setup["prod_a"], "cantidad": 1}],
+            },
+        )
+        assert r.status_code == 201
+        created_ids.append(r.json()["id"])
+
+    # Paginación (page/size)
+    resp_page2 = ac.get_params("/api/v1/pedidos/", {"page": 2, "size": 20})
+    assert resp_page2.status_code == 200
+    data = resp_page2.json()
+    assert data["page"] == 2
+    assert data["size"] == 20
+    assert data["total"] == 25
+    assert data["pages"] == 2
+    assert len(data["items"]) == 5
+
+    # Orden ascendente: el primer item debe ser el más antiguo
+    resp_asc = ac.get_params("/api/v1/pedidos/", {"page": 1, "size": 25, "orden": "created_at_asc"})
+    assert resp_asc.status_code == 200
+    items = resp_asc.json()["items"]
+    created_ats = [it["created_at"] for it in items]
+    assert created_ats == sorted(created_ats)
+
+    # Filtro por estado: forzar un pedido a CANCELADO
+    from app.modules.pedidos.model import Pedido
+    pid = created_ids[0]
+    pedido = setup["session"].get(Pedido, pid)
+    pedido.estado_codigo = "CANCELADO"
+    setup["session"].add(pedido)
+    setup["session"].flush()
+
+    resp_estado = ac.get_params("/api/v1/pedidos/", {"estado": "CANCELADO", "page": 1, "size": 25})
+    assert resp_estado.status_code == 200
+    assert all(it["estado_codigo"] == "CANCELADO" for it in resp_estado.json()["items"])
+
+    # Búsqueda por id
+    resp_q = ac.get_params("/api/v1/pedidos/", {"q": str(pid), "page": 1, "size": 20})
+    assert resp_q.status_code == 200
+    q_items = resp_q.json()["items"]
+    assert len(q_items) == 1
+    assert q_items[0]["id"] == pid

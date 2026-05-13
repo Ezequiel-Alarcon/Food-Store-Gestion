@@ -85,3 +85,25 @@ class HistorialEstadoRead(BaseModel):
     creado_en: datetime
 
     model_config = {"from_attributes": True}
+
+
+class PedidoListItem(BaseModel):
+    """Item liviano para listados operativos de pedidos."""
+
+    id: int
+    user_id: int
+    estado_codigo: str
+    total: float
+    created_at: datetime
+    # Solo aplica para ADMIN/PEDIDOS; para CLIENT será null.
+    cliente_email: Optional[str] = None
+
+
+class PaginatedPedidosResponse(BaseModel):
+    """Respuesta paginada estándar (page/size)."""
+
+    items: list[PedidoListItem]
+    total: int
+    page: int
+    size: int
+    pages: int

@@ -7,13 +7,17 @@ GET    /api/v1/pedidos/{id}             — detalle de pedido (auth)
 PATCH  /api/v1/pedidos/{id}/estado      — transición FSM (PEDIDOS/ADMIN)
 GET    /api/v1/pedidos/{id}/historial   — historial de estados (auth)
 """
-from fastapi import APIRouter, Depends, status
+from datetime import datetime
+
+from fastapi import APIRouter, Depends, Query, status
 
 from app.core.deps import get_current_user, require_role
 from app.modules.pedidos.schemas import (
     EstadoTransicionCreate,
     HistorialEstadoRead,
+    PaginatedPedidosResponse,
     PedidoCreate,
+    PedidoListItem,
     PedidoRead,
 )
 from app.modules.pedidos.service import PedidosService
@@ -34,6 +38,38 @@ def crear_pedido(
 ) -> PedidoRead:
     service = PedidosService()
     return service.crear_pedido(data, current_user)
+
+
+@router.get(
+    "/",
+    response_model=PaginatedPedidosResponse,
+    summary="Listar pedidos",
+    description=(
+        "Listado paginado con filtros operativos. "
+        "RBAC: ADMIN/PEDIDOS ven todos; CLIENT solo sus pedidos."
+    ),
+)
+def list_pedidos(
+    page: int = Query(1, ge=1),
+    size: int = Query(20, ge=1, le=100),
+    estado: str | None = None,
+    desde: datetime | None = None,
+    hasta: datetime | None = None,
+    q: str | None = None,
+    orden: str | None = None,
+    current_user=Depends(require_role("ADMIN", "PEDIDOS", "CLIENT")),
+) -> PaginatedPedidosResponse:
+    service = PedidosService()
+    return service.list_pedidos(
+        page=page,
+        size=size,
+        estado=estado,
+        desde=desde,
+        hasta=hasta,
+        q=q,
+        orden=orden,
+        current_user=current_user,
+    )
 
 
 @router.get(

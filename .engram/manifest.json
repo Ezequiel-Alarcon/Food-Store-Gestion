@@ -168,6 +168,14 @@
       "sessions": 1,
       "memories": 5,
       "prompts": 21
+    },
+    {
+      "id": "81662558",
+      "created_by": "leand",
+      "created_at": "2026-05-13T14:13:26Z",
+      "sessions": 1,
+      "memories": 6,
+      "prompts": 9
     }
   ]
 }
