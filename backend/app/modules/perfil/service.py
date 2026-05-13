@@ -32,27 +32,30 @@ class PerfilService:
             "id": usuario.id,
             "email": usuario.email,
             "nombre": usuario.nombre,
-            "rol": usuario.rol,
+            "apellido": usuario.apellido,
+            "rol": usuario.rol.value if hasattr(usuario.rol, "value") else usuario.rol,
             "telefono": usuario.telefono,
             "activo": usuario.activo,
             "created_at": usuario.created_at.isoformat() if usuario.created_at else None,
         }
-    
+
     def update_perfil(self, usuario: Usuario, request: UpdateProfileRequest) -> dict:
-        """Actualiza nombre y/o teléfono del usuario."""
+        """Actualiza nombre, apellido y/o teléfono del usuario."""
         if request.nombre is not None:
             usuario.nombre = request.nombre
+        if request.apellido is not None:
+            usuario.apellido = request.apellido
         if request.telefono is not None:
             usuario.telefono = request.telefono
-        
-        self.auth_repo.session.add(usuario)
-        self.auth_repo.session.flush()
-        self.auth_repo.session.refresh(usuario)
-        
+
+        self.session.add(usuario)
+        self.session.flush()
+        self.session.refresh(usuario)
+
         return self.get_perfil(usuario)
-    
+
     def change_password(self, usuario: Usuario, request: ChangePasswordRequest) -> dict:
-        """Cambia la contraseña del usuario y revoca todos los refresh tokens."""
+        """Cambia la contraseña del usuario e invalida todos los refresh tokens."""
 
         # Verificar contraseña actual
         if not verify_password(request.current_password, usuario.password_hash):
@@ -60,13 +63,20 @@ class PerfilService:
                 status_code=status.HTTP_401_UNAUTHORIZED,
                 detail="Contraseña actual incorrecta",
             )
-        
+
+        # Verificar que la nueva no sea igual a la actual (defense in depth)
+        if request.new_password == request.current_password:
+            raise HTTPException(
+                status_code=status.HTTP_400_BAD_REQUEST,
+                detail="La nueva contraseña no puede ser igual a la actual",
+            )
+
         # Hashear nueva contraseña
         usuario.password_hash = hash_password(request.new_password)
         self.session.add(usuario)
         self.session.flush()
-        
-        # Invalidar todos los refresh tokens
+
+        # Invalidar TODOS los refresh tokens del usuario (RN-AU05, US-063)
         self.refresh_repo.revoke_all_by_user(usuario.id)
-        
+
         return {"message": "Contraseña actualizada correctamente"}

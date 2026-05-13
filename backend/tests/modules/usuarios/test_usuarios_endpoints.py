@@ -37,11 +37,11 @@ def _decode_jwt_sub(token: str) -> int:
     return int(payload["sub"])
 
 
-def _register_and_login(client: TestClient, email: str, password: str = "Password1", nombre: str = "Test") -> dict:
+def _register_and_login(client: TestClient, email: str, password: str = "Password1", nombre: str = "Test", apellido: str = "Test") -> dict:
     """Registra un usuario y devuelve tokens + user_id extraído del JWT."""
     resp = client.post(
         "/api/v1/auth/register",
-        json={"email": email, "password": password, "nombre": nombre},
+        json={"email": email, "password": password, "nombre": nombre, "apellido": apellido},
     )
     assert resp.status_code == 201, f"Register failed: {resp.json()}"
     tokens = resp.json()
@@ -98,9 +98,9 @@ def fixture_setup(client, session):
     admin_data = _register_and_login(client, "admin@test.com")
     _set_role(session, admin_data["user_id"], "ADMIN")
 
-    # Gestor
-    gestor_data = _register_and_login(client, "gestor@test.com")
-    _set_role(session, gestor_data["user_id"], "GESTOR")
+    # Gestor de stock
+    stock_data = _register_and_login(client, "stock@test.com")
+    _set_role(session, stock_data["user_id"], "STOCK")
 
     # Cliente
     client_data = _register_and_login(client, "cliente@test.com")
@@ -110,7 +110,7 @@ def fixture_setup(client, session):
         "test_client": client,
         "session": session,
         "admin": admin_data,
-        "gestor": gestor_data,
+        "stock": stock_data,
         "cliente": client_data,
     }
 
@@ -194,7 +194,7 @@ def test_get_user_inexistente_retorna_404(setup):
 def test_update_user_admin_actualiza_campos(setup):
     """3.8: PUT /usuarios/{user_id} como admin actualiza los campos del usuario."""
     ac = AuthClient(setup["test_client"], setup["admin"]["access_token"])
-    gestor_user_id = setup["gestor"]["user_id"]
+    gestor_user_id = setup["stock"]["user_id"]
 
     resp = ac.put(
         f"/api/v1/usuarios/{gestor_user_id}",
@@ -207,11 +207,11 @@ def test_update_user_admin_actualiza_campos(setup):
     assert data["rol"] == "ADMIN"
 
 
-# ── 3.9: update_user como gestor retorna 403 ─────────────────────────
+# ── 3.9: update_user como stock retorna 403 ─────────────────────────
 
-def test_update_user_gestor_retorna_403(setup):
-    """3.9: PUT /usuarios/{user_id} como gestor retorna 403 Forbidden."""
-    ac = AuthClient(setup["test_client"], setup["gestor"]["access_token"])
+def test_update_user_stock_retorna_403(setup):
+    """3.9: PUT /usuarios/{user_id} como stock retorna 403 Forbidden."""
+    ac = AuthClient(setup["test_client"], setup["stock"]["access_token"])
     admin_user_id = setup["admin"]["user_id"]
 
     resp = ac.put(
@@ -236,11 +236,11 @@ def test_deactivate_user_admin_retorna_200(setup):
     assert "message" in data or "Usuario desactivado" in str(data)
 
 
-# ── 3.11: deactivate_user como gestor retorna 403 ───────────────────
+# ── 3.11: deactivate_user como stock retorna 403 ───────────────────
 
-def test_deactivate_user_gestor_retorna_403(setup):
-    """3.11: DELETE /usuarios/{user_id} como gestor retorna 403 Forbidden."""
-    ac = AuthClient(setup["test_client"], setup["gestor"]["access_token"])
+def test_deactivate_user_stock_retorna_403(setup):
+    """3.11: DELETE /usuarios/{user_id} como stock retorna 403 Forbidden."""
+    ac = AuthClient(setup["test_client"], setup["stock"]["access_token"])
     admin_user_id = setup["admin"]["user_id"]
 
     resp = ac.delete(f"/api/v1/usuarios/{admin_user_id}")

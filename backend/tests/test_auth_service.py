@@ -46,6 +46,7 @@ class TestAuthServiceRegister:
             email="test@example.com",
             password="Password1",
             nombre="Test User",
+            apellido="Test",
         )
         response = service.register(request)
 
@@ -66,6 +67,7 @@ class TestAuthServiceRegister:
             email="dup@example.com",
             password="Password1",
             nombre="First User",
+            apellido="Test",
         )
         service.register(request)
 
@@ -79,6 +81,7 @@ class TestAuthServiceRegister:
             email="hash@example.com",
             password="MySecret1",
             nombre="Hash User",
+            apellido="Test",
         )
         service.register(request)
 
@@ -98,6 +101,7 @@ class TestAuthServiceLogin:
             email="login@example.com",
             password="Password1",
             nombre="Login User",
+            apellido="Test",
         )
         service.register(request)
 
@@ -114,6 +118,7 @@ class TestAuthServiceLogin:
             email="wrong@example.com",
             password="Password1",
             nombre="Wrong Pass",
+            apellido="Test",
         )
         service.register(request)
 

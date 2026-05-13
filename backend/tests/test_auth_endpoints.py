@@ -24,6 +24,7 @@ class TestAuthEndpoints:
                 "email": "integ@example.com",
                 "password": "Password1",
                 "nombre": "Integration User",
+                "apellido": "Test",
             },
         )
 
@@ -39,6 +40,7 @@ class TestAuthEndpoints:
             "email": "dup@example.com",
             "password": "Password1",
             "nombre": "First User",
+            "apellido": "Test",
         }
         client.post("/api/v1/auth/register", json=payload)
         response = client.post("/api/v1/auth/register", json=payload)
@@ -54,6 +56,7 @@ class TestAuthEndpoints:
                 "email": "not-an-email",
                 "password": "Password1",
                 "nombre": "Bad Email",
+                "apellido": "Test",
             },
         )
         assert response.status_code == 422
@@ -66,6 +69,7 @@ class TestAuthEndpoints:
                 "email": "weak@example.com",
                 "password": "123",
                 "nombre": "Weak Pass",
+            "apellido": "Test",
             },
         )
         assert response.status_code == 422
@@ -79,6 +83,7 @@ class TestAuthEndpoints:
                 "email": "login@example.com",
                 "password": "Password1",
                 "nombre": "Login User",
+                "apellido": "Test",
             },
         )
 
@@ -101,6 +106,7 @@ class TestAuthEndpoints:
                 "email": "wrong@example.com",
                 "password": "Password1",
                 "nombre": "Wrong",
+                "apellido": "Test",
             },
         )
 
@@ -118,6 +124,7 @@ class TestAuthEndpoints:
                 "email": "refresh@example.com",
                 "password": "Password1",
                 "nombre": "Refresh User",
+                "apellido": "Test",
             },
         )
         refresh_token = register_resp.json()["refresh_token"]
@@ -138,6 +145,7 @@ class TestAuthEndpoints:
                 "email": "logout@example.com",
                 "password": "Password1",
                 "nombre": "Logout User",
+                "apellido": "Test",
             },
         )
         refresh_token = register_resp.json()["refresh_token"]

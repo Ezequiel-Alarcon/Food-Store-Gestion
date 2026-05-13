@@ -12,6 +12,7 @@ from app.core.config import get_settings
 from app.core.limiter import limiter
 from app.modules.auth.schemas import (
     LoginRequest,
+    MessageResponse,
     RefreshRequest,
     RegisterRequest,
     TokenResponse,
@@ -88,6 +89,7 @@ async def refresh(
 
 @router.post(
     "/logout",
+    response_model=MessageResponse,
     status_code=status.HTTP_200_OK,
     summary="Cerrar sesión",
     description="Invalida el refresh token proporcionado.",

@@ -5,7 +5,7 @@ Repository para operaciones de refresh tokens.
 """
 from __future__ import annotations
 
-from datetime import datetime
+from datetime import datetime, timezone
 from typing import Optional
 
 from sqlmodel import Session, select, update
@@ -56,7 +56,7 @@ class RefreshTokenRepository(BaseRepository[RefreshToken]):
             select(RefreshToken)
             .where(RefreshToken.token == token)
             .where(RefreshToken.revocado == False)
-            .where(RefreshToken.expires_at > datetime.utcnow())
+            .where(RefreshToken.expires_at > datetime.now(timezone.utc))
         )
         return self.session.exec(stmt).first()
     
@@ -83,6 +83,6 @@ class RefreshTokenRepository(BaseRepository[RefreshToken]):
             select(RefreshToken)
             .where(RefreshToken.user_id == user_id)
             .where(RefreshToken.revocado == False)
-            .where(RefreshToken.expires_at > datetime.utcnow())
+            .where(RefreshToken.expires_at > datetime.now(timezone.utc))
         )
         return list(self.session.exec(stmt).all())

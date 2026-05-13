@@ -49,6 +49,7 @@ class UsuariosService:
         self,
         user_id: int,
         nombre: str | None = None,
+        apellido: str | None = None,
         rol: str | None = None,
         telefono: str | None = None,
         activo: bool | None = None,
@@ -58,6 +59,8 @@ class UsuariosService:
         
         if nombre is not None:
             usuario.nombre = nombre
+        if apellido is not None:
+            usuario.apellido = apellido
         if rol is not None:
             usuario.rol = rol
         if telefono is not None:

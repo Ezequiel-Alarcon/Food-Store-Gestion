@@ -54,6 +54,15 @@
 │  1️⃣7️⃣ EDGAR → admin-metrics (✅ 2026-05-13) 🔀                         │
 │             ↓ (Endpoints métricas — solo backend)                        │
 │                                                                           │
+│  1️⃣7️⃣🅱️ EZE → auth-audit (✅ 2026-05-13) 🆕                                │
+│             ↓ (Auditoría auth: 22 bugs, 48 tareas, HTTPBearer, apellido)  │
+│                                                                           │
+│  1️⃣7️⃣🅲️ EZE → bugfix-modules (✅ 2026-05-13) 🆕                            │
+│             ↓ (CTE text(), categoria_padre_id, producto delete msg)       │
+│                                                                           │
+│  1️⃣7️⃣🅳️ LUCAS → verification-fixes (🔲 PENDIENTE) 🆕                       │
+│             ↓ (401→403 tests, categorias hierarchy, rate limit, pagos)    │
+│                                                                           │
 ├──────────────────────────────────────────────────────────────────────────┤
 │                FASE 3: FRONTEND (🔒 CONSULTAR USUARIO)                   │
 ├──────────────────────────────────────────────────────────────────────────┤
@@ -98,6 +107,9 @@
 | 15 | **13º** | Leandro | `orders-list-gestor` 🔀 | 13 | ✅ Archivado 2026-05-13 | 0.5 días |
 | 16 | **13º** | Edgar | `users-admin` 🔀 | 6 | ✅ Archivado 2026-05-13 | 1 día |
 | 17 | **14º** | Edgar | `admin-metrics` 🔀 | 13,16 | ✅ Archivado 2026-05-13 | 1 día |
+| 17b | **14º** | Eze | `auth-audit` 🆕 | 6 | ✅ Archivado 2026-05-13 | 1 día |
+| 17c | **14º** | Eze | `bugfix-modules` 🆕 | 8,9,12 | ✅ Archivado 2026-05-13 | 0.5 días |
+| 17d | **15º** | Lucas | `verification-fixes` 🆕 | 17b,17c | 🔲 Pendiente | 0.5 días |
 
 > 📦 = Puede ejecutarse en paralelo con el cambio anterior (mismo padre terminado)  
 > 🔀 = Cambio partido — solo backend en esta fase
@@ -169,13 +181,13 @@
 
 | Integrante | Changes | Total HU | Cambios nuevos | Rol |
 |-----------|---------|----------|---------------|-----|
-| **Eze** | 1, 6, 11, 11b, 14 | 12 + docker | `docker-setup` 🆕, `fix-backend-startup` 🆕 | Infra + Auth + Docker + Pagos |
+| **Eze** | 1, 6, 11, 11b, 14, 17b, 17c | 12 + docker + fixes | `docker-setup` 🆕, `fix-backend-startup` 🆕, `auth-audit` 🆕, `bugfix-modules` 🆕 | Infra + Auth + Docker + Pagos + Fixes |
 | **Mati** | 2, 7, 12, 19, 21 | 21 | `users-admin-frontend` 🆕 | Backend + Auth-FE + Productos + Orders-client + Admin-FE |
-| **Lucas** | 3, 8, 18, 20, 22 | 10 | `orders-list-gestor-frontend` 🆕, `admin-metrics-frontend` 🆕 | Frontend + Categorías + Carrito + Admin-FE |
+| **Lucas** | 3, 8, 18, 20, 22, 17d | 10 + 1 fix | `orders-list-gestor-frontend` 🆕, `admin-metrics-frontend` 🆕, `verification-fixes` 🆕 | Frontend + Categorías + Carrito + Admin-FE + Fixes |
 | **Edgar** | 5, 9, 16, 17 | 16 | — | Errores + Ingredientes + Users-admin + Metrics |
 | **Leandro** | 4, 10, 13, 15 | 15 | `orders-list-gestor` (backend) 🔀 | Patrones + Direcciones + FSM + Admin-pedidos |
 
-**Total:** 22 changes, 77 HU, ~4-5 semanas (Fase 2: ~2 semanas, Fase 3: ~2 semanas)
+**Total:** 25 changes, 77 HU, ~4-5 semanas (Fase 2: ~2 semanas, Fase 3: ~2 semanas)
 
 ---
 
@@ -202,3 +214,52 @@
 - El backend arranca con `docker compose up`. Probar después de hacer `git pull`.
 - Los modelos `Usuario` y `UsuarioRol` YA existen en `app/modules/auth/model.py`. Al implementar `Rol`, el seed lo va a poblar automáticamente.
 - Si necesitás tocar `seed.py` para agregar productos de ejemplo, seguí el patrón de imports condicionales.
+
+---
+
+## 🔧 Pendientes de Verificación y Corrección (2026-05-13)
+
+> **Asignado a: Lucas**  
+> **Origen:** Auditoría `auth-audit` + verificación manual de endpoints  
+> **Contexto:** Se completaron 2 changes correctivos (auth-audit y bugfix-modules). Quedan tareas de verificación y ajustes en tests.
+
+### 1. Actualizar tests con expectativas 401 → 403
+
+`HTTPBearer` (reemplazo de `OAuth2PasswordBearer`) devuelve **403** en vez de **401** cuando no hay token. Tests que esperan 401 deben actualizarse:
+
+| Archivo | Tests afectados |
+|---------|-----------------|
+| `tests/modules/pedidos/test_pedidos_endpoints.py` | ~8 tests esperan 401 → deben esperar 403 |
+| `tests/modules/admin/test_admin_metrics.py` | ~6 tests esperan 401 → deben esperar 403 |
+
+### 2. Revisar tests de categorías hierarchy
+
+3 tests en `tests/modules/categorias/test_hierarchy.py` fallan con 404:
+- `test_move_category_to_different_branch`
+- `test_public_tree_no_auth`
+- `test_leaf_category_subcategorias`
+
+Posible causa: rutas incorrectas o endpoints no implementados.
+
+### 3. Schemas de update verificados ✅
+
+Todos los schemas de UPDATE tienen campos opcionales (`default=None`). Sin cambios necesarios.
+
+### 4. Rate limiting: 5/min vs 5/15min
+
+El código tiene `5/minute` (config.py default) pero los docs dicen `5/15min`. Evaluar cuál usar y unificar.
+
+### 5. Pagos y Admin endpoints
+
+Marcados PENDIENTE en verificación manual. Probar flujo completo de pago con MercadoPago y dashboard admin.
+
+### 6. Cambios archivados
+
+| Change | Archivo |
+|--------|---------|
+| `auth-audit` | `openspec/changes/archive/2026-05-13-auth-audit/` (48/48 tareas) |
+| `bugfix-modules` | `openspec/changes/archive/2026-05-13-bugfix-modules/` (12/12 tareas) |
+
+---
+
+> **Última actualización:** 2026-05-13 — Eze (auth-audit + bugfix-modules)

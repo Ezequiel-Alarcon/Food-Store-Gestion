@@ -8,6 +8,7 @@ from __future__ import annotations
 from typing import Optional
 
 from sqlmodel import Session, select
+from sqlalchemy import text
 
 from app.core.repository import BaseRepository
 from app.modules.categorias.model import Categoria
@@ -66,29 +67,30 @@ class CategoriaRepository(BaseRepository[Categoria]):
         """
         # Usamos texto plano para el CTE ya que SQLModel no tiene soporte directo
         if max_depth is not None:
-            cte_query = f"""
+            cte_query = text("""
             WITH RECURSIVE descendants AS (
                 SELECT id, nombre, slug, descripcion, padre_id, orden, activa, created_at, updated_at, 1 as depth
                 FROM categorias
-                WHERE id = {category_id} AND activa = true
+                WHERE id = :category_id AND activa = true
 
                 UNION ALL
 
                 SELECT c.id, c.nombre, c.slug, c.descripcion, c.padre_id, c.orden, c.activa, c.created_at, c.updated_at, d.depth + 1
                 FROM categorias c
                 INNER JOIN descendants d ON c.padre_id = d.id
-                WHERE c.activa = true AND d.depth < {max_depth}
+                WHERE c.activa = true AND d.depth < :max_depth
             )
             SELECT id, nombre, slug, descripcion, padre_id, orden, activa, created_at, updated_at
             FROM descendants
-            WHERE id != {category_id}
-            """
+            WHERE id != :category_id
+            """)
+            result = self.session.exec(cte_query, {"category_id": category_id, "max_depth": max_depth})
         else:
-            cte_query = f"""
+            cte_query = text("""
             WITH RECURSIVE descendants AS (
                 SELECT id, nombre, slug, descripcion, padre_id, orden, activa, created_at, updated_at, 1 as depth
                 FROM categorias
-                WHERE id = {category_id} AND activa = true
+                WHERE id = :category_id AND activa = true
 
                 UNION ALL
 
@@ -99,11 +101,9 @@ class CategoriaRepository(BaseRepository[Categoria]):
             )
             SELECT id, nombre, slug, descripcion, padre_id, orden, activa, created_at, updated_at
             FROM descendants
-            WHERE id != {category_id}
-            """
-
-        # Ejecutar raw SQL para CTE
-        result = self.session.exec(cte_query)
+            WHERE id != :category_id
+            """)
+            result = self.session.exec(cte_query, {"category_id": category_id})
         rows = result.fetchall()
 
         if not rows:

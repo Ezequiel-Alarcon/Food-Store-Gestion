@@ -17,7 +17,7 @@ from __future__ import annotations
 from typing import Any, Callable, Optional
 
 from fastapi import Depends, HTTPException, status
-from fastapi.security import OAuth2PasswordBearer
+from fastapi.security import HTTPAuthorizationCredentials, HTTPBearer
 from jose import JWTError
 from sqlmodel import Session
 
@@ -25,7 +25,7 @@ from app.core.database import get_session
 from app.core.security import decode_token
 
 
-oauth2_scheme = OAuth2PasswordBearer(tokenUrl="token")
+oauth2_scheme = HTTPBearer()
 
 
 def _extract_roles(payload: dict[str, Any]) -> set[str]:
@@ -38,7 +38,7 @@ def _extract_roles(payload: dict[str, Any]) -> set[str]:
 
 
 def get_current_user(
-    token: str = Depends(oauth2_scheme),
+    credentials: HTTPAuthorizationCredentials = Depends(oauth2_scheme),
     session: Session = Depends(get_session),
 ) -> Any:
     """Resuelve el usuario/principal actual desde JWT.
@@ -49,6 +49,7 @@ def get_current_user(
     - Si existe el modelo `Usuario`, intenta resolverlo por `sub`.
       Si no existe, retorna el payload del JWT como principal.
     """
+    token = credentials.credentials
 
     try:
         payload = decode_token(token)

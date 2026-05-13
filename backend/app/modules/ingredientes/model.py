@@ -3,7 +3,7 @@ app.modules.ingredientes.model
 
 Modelo SQLModel para ingredientes (alérgenos y componentes de productos).
 """
-from datetime import datetime
+from datetime import datetime, timezone
 from typing import Optional
 
 from sqlmodel import Field, SQLModel

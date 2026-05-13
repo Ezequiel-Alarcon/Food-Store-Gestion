@@ -60,6 +60,7 @@ class AuthService:
         usuario = self.auth_repo.create_user(
             email=request.email,
             nombre=request.nombre,
+            apellido=request.apellido,
             password_hash=password_hash,
             rol="CLIENT",
             telefono=request.telefono,
@@ -68,29 +69,28 @@ class AuthService:
         return self._create_token_pair(usuario)
     
     def login(self, request: LoginRequest) -> TokenResponse:
-        """Autentica un usuario y devuelve tokens."""
+        """Autentica un usuario y devuelve tokens.
+
+        RN-AU08: Mismo mensaje para todos los casos de fallo
+        (email inexistente, password incorrecto, usuario inactivo).
+        """
         # Buscar usuario
         usuario = self.auth_repo.get_user_by_email(request.email)
-        if not usuario:
+
+        # Verificar credenciales: todos los fallos devuelven el mismo mensaje
+        if not usuario or not verify_password(request.password, usuario.password_hash):
             raise HTTPException(
                 status_code=status.HTTP_401_UNAUTHORIZED,
                 detail="Credenciales inválidas",
             )
-        
-        # Verificar password
-        if not verify_password(request.password, usuario.password_hash):
-            raise HTTPException(
-                status_code=status.HTTP_401_UNAUTHORIZED,
-                detail="Credenciales inválidas",
-            )
-        
-        # Verificar si está activo
+
+        # Verificar si está activo — mismo mensaje genérico (RN-AU08)
         if not usuario.activo:
             raise HTTPException(
                 status_code=status.HTTP_401_UNAUTHORIZED,
-                detail="Usuario desactivado",
+                detail="Credenciales inválidas",
             )
-        
+
         return self._create_token_pair(usuario)
     
     def refresh_token(self, request: RefreshRequest) -> TokenResponse:
@@ -103,13 +103,13 @@ class AuthService:
                 status_code=status.HTTP_401_UNAUTHORIZED,
                 detail="Refresh token inválido",
             )
-        
+
         if payload.get("type") != "refresh":
             raise HTTPException(
                 status_code=status.HTTP_401_UNAUTHORIZED,
                 detail="Token inválido",
             )
-        
+
         # Verificar que el token existe y es válido en DB
         stored_token = self.refresh_repo.get_valid_token(request.refresh_token)
         if not stored_token:
@@ -117,18 +117,25 @@ class AuthService:
                 status_code=status.HTTP_401_UNAUTHORIZED,
                 detail="Refresh token expirado o revocado",
             )
-        
-        # Revocar token actual (token rotation)
-        self.refresh_repo.revoke(stored_token)
-        
-        # Obtener usuario
+
+        # Verificar usuario ANTES de revocar (BUG #14 — orden correcto)
         usuario = self.auth_repo.get_by_id(stored_token.user_id)
         if not usuario:
             raise HTTPException(
                 status_code=status.HTTP_401_UNAUTHORIZED,
                 detail="Usuario no encontrado",
             )
-        
+
+        # Verificar que el usuario esté activo (BUG #8)
+        if not usuario.activo:
+            raise HTTPException(
+                status_code=status.HTTP_401_UNAUTHORIZED,
+                detail="Credenciales inválidas",
+            )
+
+        # Revocar token actual (token rotation)
+        self.refresh_repo.revoke(stored_token)
+
         # Generar nuevo par de tokens
         return self._create_token_pair(usuario)
     
@@ -144,7 +151,7 @@ class AuthService:
         token_data = {
             "sub": str(usuario.id),
             "email": usuario.email,
-            "role": usuario.rol,
+            "role": usuario.rol.value if hasattr(usuario.rol, "value") else usuario.rol,
         }
         
         # Crear tokens
