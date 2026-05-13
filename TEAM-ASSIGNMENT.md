@@ -1,7 +1,7 @@
 # Food Store — Asignación por Team (Pipeline Backend-First)
 
 > **Proyecto:** Food Store E-Commerce  
-> **Fecha:** 2026-05-12  
+> **Fecha:** 2026-05-13  
 > **Distribución:** 22 changes entre 5 integrantes  
 > **Método:** Secuencial con fases Backend → Frontend  
 > **Versión:** 2.1 (reordenamiento backend-first)
@@ -45,7 +45,7 @@
 │  1️⃣4️⃣ EZE → payments-integration (✅ 2026-05-12)                        │
 │           ↓ (MercadoPago webhook)                                        │
 │                                                                           │
-│  1️⃣5️⃣ LEANDRO → orders-list-gestor (⏳ espera 13) 🔀                     │
+│  1️⃣5️⃣ LEANDRO → orders-list-gestor (✅ 2026-05-13) 🔀                     │
 │              ↓ (Router admin pedidos — solo backend)                     │
 │                                                                           │
 │  1️⃣6️⃣ EDGAR → users-admin (⏳ espera 6) 🔀                               │
@@ -95,7 +95,7 @@
 | 12 | **10º** | Mati | `products-module` | 8,9 | ✅ | 1.5 días |
 | 13 | **11º** | Leandro | `orders-fsm` | 10,12 | ✅ | 1.5 días |
 | 14 | **12º** | Eze | `payments-integration` | 13 | ✅ Archivado 2026-05-12 | 1 día |
-| 15 | **13º** | Leandro | `orders-list-gestor` 🔀 | 13 | ⏳ | 0.5 días |
+| 15 | **13º** | Leandro | `orders-list-gestor` 🔀 | 13 | ✅ Archivado 2026-05-13 | 0.5 días |
 | 16 | **13º** | Edgar | `users-admin` 🔀 | 6 | 📦 | 1 día |
 | 17 | **14º** | Edgar | `admin-metrics` 🔀 | 13,16 | ⏳ | 1 día |
 

@@ -1,7 +1,7 @@
 # Food Store — Mapa de Changes CORREGIDO
 
 > **Proyecto:** Food Store E-Commerce  
-> **Fecha:** 2026-05-12  
+> **Fecha:** 2026-05-13  
 > **Metodología:** Spec-Driven Development (SDD) + Feature-First  
 > **Versión:** 2.1 (reordenamiento backend-first)
 
@@ -67,7 +67,7 @@
 | 12 | `products-module` | CRUD productos + catálogo público | EPIC 05 | 9 | ~10 | ✅ Archivado 2026-05-09 |
 | 13 | `orders-fsm` | Creación pedidos + FSM básica | EPIC 10,12 | 8 | ~10 | ✅ Archivado 2026-05-12 |
 | 14 | `payments-integration` | MercadoPago webhook + confirmación | EPIC 11 | 4 | ~6 | ✅ Archivado 2026-05-12 |
-| 15 | `orders-list-gestor` | Panel pedidos (gestor/ADMIN) — solo backend | EPIC 13 | 2 | ~4 | 🔲 Backend |
+| 15 | `orders-list-gestor` | Panel pedidos (gestor/ADMIN) — solo backend | EPIC 13 | 2 | ~4 | ✅ Archivado 2026-05-13 |
 | 16 | `users-admin` | CRUD usuarios + asignación roles — solo backend | EPIC 15 | 3 | ~5 | 🔲 Backend |
 | 17 | `admin-metrics` | Dashboard KPIs endpoints — solo backend | EPIC 17 | 4 | ~6 | 🔲 Backend |
 

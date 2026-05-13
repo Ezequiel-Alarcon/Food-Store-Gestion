@@ -32,7 +32,9 @@ from app.modules.pedidos.schemas import (
     DetallePedidoRead,
     EstadoTransicionCreate,
     HistorialEstadoRead,
+    PaginatedPedidosResponse,
     PedidoCreate,
+    PedidoListItem,
     PedidoRead,
 )
 from app.modules.productos.model import Producto
@@ -318,3 +320,101 @@ class PedidosService:
                 )
                 for h in historial
             ]
+
+    # ------------------------------------------------------------------
+    # Listado paginado (RBAC + filtros operativos)
+    # ------------------------------------------------------------------
+
+    def list_pedidos(
+        self,
+        *,
+        page: int,
+        size: int,
+        estado: str | None,
+        desde: datetime | None,
+        hasta: datetime | None,
+        q: str | None,
+        orden: str | None,
+        current_user: Any,
+    ) -> PaginatedPedidosResponse:
+        rol = _get_rol(current_user)
+        user_id = _get_user_id(current_user)
+
+        allowed_estados = {
+            "PENDIENTE",
+            "CONFIRMADO",
+            "EN_PREP",
+            "EN_CAMINO",
+            "ENTREGADO",
+            "CANCELADO",
+        }
+        if estado is not None and estado not in allowed_estados:
+            raise ValidationError("Estado inválido")
+
+        q_norm = q.strip() if q else None
+        if q_norm == "":
+            q_norm = None
+
+        order_desc = True
+        if orden is not None:
+            if orden == "created_at_desc":
+                order_desc = True
+            elif orden == "created_at_asc":
+                order_desc = False
+            else:
+                raise ValidationError("Orden inválido")
+
+        scoped_cliente_id: int | None
+        if rol in ("ADMIN", "PEDIDOS"):
+            scoped_cliente_id = None
+        elif rol == "CLIENT":
+            scoped_cliente_id = user_id
+        else:
+            # require_role debería prevenir esto, pero dejamos el guard.
+            raise ForbiddenError("No autorizado")
+
+        with self.uow as uow:
+            assert uow.session is not None
+            session: Session = uow.session
+
+            repo = PedidosRepository(session)
+            total = repo.count_pedidos(
+                cliente_id=scoped_cliente_id,
+                estado=estado,
+                desde=desde,
+                hasta=hasta,
+                q=q_norm,
+            )
+            rows = repo.list_pedidos(
+                page=page,
+                size=size,
+                cliente_id=scoped_cliente_id,
+                estado=estado,
+                desde=desde,
+                hasta=hasta,
+                q=q_norm,
+                order_desc=order_desc,
+            )
+
+            items: list[PedidoListItem] = []
+            include_email = rol in ("ADMIN", "PEDIDOS")
+            for pedido, email in rows:
+                items.append(
+                    PedidoListItem(
+                        id=pedido.id,  # type: ignore[arg-type]
+                        user_id=pedido.cliente_id,
+                        estado_codigo=pedido.estado_codigo,
+                        total=pedido.total,
+                        created_at=pedido.creado_en,
+                        cliente_email=email if include_email else None,
+                    )
+                )
+
+            pages = (total + size - 1) // size if total > 0 else 0
+            return PaginatedPedidosResponse(
+                items=items,
+                total=total,
+                page=page,
+                size=size,
+                pages=pages,
+            )
