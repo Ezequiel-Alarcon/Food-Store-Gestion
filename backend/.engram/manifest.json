@@ -8,6 +8,14 @@
       "sessions": 39,
       "memories": 17,
       "prompts": 136
+    },
+    {
+      "id": "3bed7143",
+      "created_by": "edgar",
+      "created_at": "2026-05-13T15:19:07Z",
+      "sessions": 10,
+      "memories": 24,
+      "prompts": 83
     }
   ]
 }

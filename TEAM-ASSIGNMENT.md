@@ -51,7 +51,7 @@
 │  1️⃣6️⃣ EDGAR → users-admin (✅ 2026-05-13) 🔀                               │
 │             ↓ (CRUD usuarios admin — solo backend)                       │
 │                                                                           │
-│  1️⃣7️⃣ EDGAR → admin-metrics (⏳ espera 13+16) 🔀                         │
+│  1️⃣7️⃣ EDGAR → admin-metrics (✅ 2026-05-13) 🔀                         │
 │             ↓ (Endpoints métricas — solo backend)                        │
 │                                                                           │
 ├──────────────────────────────────────────────────────────────────────────┤
@@ -97,7 +97,7 @@
 | 14 | **12º** | Eze | `payments-integration` | 13 | ✅ Archivado 2026-05-12 | 1 día |
 | 15 | **13º** | Leandro | `orders-list-gestor` 🔀 | 13 | ✅ Archivado 2026-05-13 | 0.5 días |
 | 16 | **13º** | Edgar | `users-admin` 🔀 | 6 | ✅ Archivado 2026-05-13 | 1 día |
-| 17 | **14º** | Edgar | `admin-metrics` 🔀 | 13,16 | ⏳ | 1 día |
+| 17 | **14º** | Edgar | `admin-metrics` 🔀 | 13,16 | ✅ Archivado 2026-05-13 | 1 día |
 
 > 📦 = Puede ejecutarse en paralelo con el cambio anterior (mismo padre terminado)  
 > 🔀 = Cambio partido — solo backend en esta fase
@@ -180,7 +180,7 @@
 ---
 
 > **Fase actual:** Fase 2 — Backend Puro  
-> **Último change completado:** `users-admin` (Edgar) ✅ 2026-05-13
+> **Último change completado:** `admin-metrics` (Edgar) ✅ 2026-05-13
 > **Regla de oro:** Backend first, frontend after — siempre consultar antes de tocar frontend.
 
 ---
