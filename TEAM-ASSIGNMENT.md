@@ -54,6 +54,15 @@
 │  1️⃣7️⃣ EDGAR → admin-metrics (✅ 2026-05-13) 🔀                         │
 │             ↓ (Endpoints métricas — solo backend)                        │
 │                                                                           │
+│  1️⃣7️⃣🅱️ EZE → auth-audit (✅ 2026-05-13) 🆕                                │
+│             ↓ (Auditoría auth: 22 bugs, 48 tareas, HTTPBearer, apellido)  │
+│                                                                           │
+│  1️⃣7️⃣🅲️ EZE → bugfix-modules (✅ 2026-05-13) 🆕                            │
+│             ↓ (CTE text(), categoria_padre_id, producto delete msg)       │
+│                                                                           │
+│  1️⃣7️⃣🅳️ LUCAS → verification-fixes (🔲 PENDIENTE) 🆕                       │
+│             ↓ (401→403 tests, categorias hierarchy, rate limit, pagos)    │
+│                                                                           │
 ├──────────────────────────────────────────────────────────────────────────┤
 │                FASE 3: FRONTEND (🔒 CONSULTAR USUARIO)                   │
 ├──────────────────────────────────────────────────────────────────────────┤
@@ -98,6 +107,9 @@
 | 15 | **13º** | Leandro | `orders-list-gestor` 🔀 | 13 | ✅ Archivado 2026-05-13 | 0.5 días |
 | 16 | **13º** | Edgar | `users-admin` 🔀 | 6 | ✅ Archivado 2026-05-13 | 1 día |
 | 17 | **14º** | Edgar | `admin-metrics` 🔀 | 13,16 | ✅ Archivado 2026-05-13 | 1 día |
+| 17b | **14º** | Eze | `auth-audit` 🆕 | 6 | ✅ Archivado 2026-05-13 | 1 día |
+| 17c | **14º** | Eze | `bugfix-modules` 🆕 | 8,9,12 | ✅ Archivado 2026-05-13 | 0.5 días |
+| 17d | **15º** | Lucas | `verification-fixes` 🆕 | 17b,17c | 🔲 Pendiente | 0.5 días |
 
 > 📦 = Puede ejecutarse en paralelo con el cambio anterior (mismo padre terminado)  
 > 🔀 = Cambio partido — solo backend en esta fase
@@ -169,13 +181,13 @@
 
 | Integrante | Changes | Total HU | Cambios nuevos | Rol |
 |-----------|---------|----------|---------------|-----|
-| **Eze** | 1, 6, 11, 11b, 14 | 12 + docker | `docker-setup` 🆕, `fix-backend-startup` 🆕 | Infra + Auth + Docker + Pagos |
+| **Eze** | 1, 6, 11, 11b, 14, 17b, 17c | 12 + docker + fixes | `docker-setup` 🆕, `fix-backend-startup` 🆕, `auth-audit` 🆕, `bugfix-modules` 🆕 | Infra + Auth + Docker + Pagos + Fixes |
 | **Mati** | 2, 7, 12, 19, 21 | 21 | `users-admin-frontend` 🆕 | Backend + Auth-FE + Productos + Orders-client + Admin-FE |
-| **Lucas** | 3, 8, 18, 20, 22 | 10 | `orders-list-gestor-frontend` 🆕, `admin-metrics-frontend` 🆕 | Frontend + Categorías + Carrito + Admin-FE |
+| **Lucas** | 3, 8, 18, 20, 22, 17d | 10 + 1 fix | `orders-list-gestor-frontend` 🆕, `admin-metrics-frontend` 🆕, `verification-fixes` 🆕 | Frontend + Categorías + Carrito + Admin-FE + Fixes |
 | **Edgar** | 5, 9, 16, 17 | 16 | — | Errores + Ingredientes + Users-admin + Metrics |
 | **Leandro** | 4, 10, 13, 15 | 15 | `orders-list-gestor` (backend) 🔀 | Patrones + Direcciones + FSM + Admin-pedidos |
 
-**Total:** 22 changes, 77 HU, ~4-5 semanas (Fase 2: ~2 semanas, Fase 3: ~2 semanas)
+**Total:** 25 changes, 77 HU, ~4-5 semanas (Fase 2: ~2 semanas, Fase 3: ~2 semanas)
 
 ---
 
