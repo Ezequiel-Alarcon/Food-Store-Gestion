@@ -8,7 +8,6 @@ from typing import Any
 from fastapi import FastAPI, HTTPException, Request, status
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.responses import JSONResponse
-from slowapi import _rate_limit_exceeded_handler
 from slowapi.errors import RateLimitExceeded
 from slowapi.middleware import SlowAPIMiddleware
 
@@ -49,7 +48,6 @@ app = FastAPI(
 
 # Rate limiting state
 app.state.limiter = limiter
-app.add_exception_handler(RateLimitExceeded, _rate_limit_exceeded_handler)
 
 # Rate limiting middleware (must be added for @limiter.limit() to work)
 app.add_middleware(SlowAPIMiddleware)
@@ -159,7 +157,7 @@ from app.modules.admin.router import router as admin_router
 app.include_router(auth_router, prefix="/api/v1/auth", tags=["auth"])
 app.include_router(usuarios_router, prefix="/api/v1", tags=["usuarios"])
 app.include_router(perfil_router, prefix="/api/v1", tags=["perfil"])
-app.include_router(categorias_router, prefix="/api/v1", tags=["categorias"])
+app.include_router(categorias_router, prefix="/api/v1/categorias", tags=["categorias"])
 
 app.include_router(direcciones_router, prefix="/api/v1", tags=["direcciones"])
 app.include_router(sucursales_router, prefix="/api/v1", tags=["branches"])

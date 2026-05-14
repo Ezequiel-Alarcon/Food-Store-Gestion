@@ -16,10 +16,10 @@ Public endpoints SHALL be rate-limited by source IP address using slowapi:
 ### Requirement: Rate limiting by user for authenticated endpoints
 Authenticated endpoints SHALL be rate-limited by user ID (from JWT):
 - Default limit: 100 requests per minute per user
-- Auth endpoints (login, register): 5 requests per 15 minutes per IP
+- Auth endpoints (login, register): 5 requests per minute per IP
 
 #### Scenario: Auth endpoint rate limiting
-- **WHEN** a client makes 6 failed login attempts in 15 minutes from the same IP
+- **WHEN** a client makes 6 failed login attempts in one minute from the same IP
 - **THEN** the 7th attempt SHALL return HTTP 429
 
 #### Scenario: Authenticated user exceeds rate limit
@@ -30,7 +30,7 @@ Authenticated endpoints SHALL be rate-limited by user ID (from JWT):
 Rate limit values SHALL be configurable via environment variables:
 - `RATE_LIMIT_PUBLIC`: requests per minute for public endpoints (default: 60)
 - `RATE_LIMIT_AUTHENTICATED`: requests per minute for authenticated endpoints (default: 100)
-- `RATE_LIMIT_AUTH`: request count for auth endpoints per IP (default: 5, window: 15 minutes)
+- `RATE_LIMIT_AUTH`: requests per minute for auth endpoints per IP (default: 5)
 
 #### Scenario: Custom rate limit is applied
 - **WHEN** `RATE_LIMIT_PUBLIC=30` is set in environment

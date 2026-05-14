@@ -478,9 +478,9 @@ def test_cliente_no_puede_ver_historial_ajeno(setup):
 # ── Listado /api/v1/pedidos (RBAC + filtros + paginación + orden) ─────
 
 
-def test_list_pedidos_unauthorized_401(setup):
+def test_list_pedidos_unauthorized_403(setup):
     resp = setup["client"].get("/api/v1/pedidos/")
-    assert resp.status_code == 401
+    assert resp.status_code == 403
 
 
 def test_list_pedidos_forbidden_role_403(setup):

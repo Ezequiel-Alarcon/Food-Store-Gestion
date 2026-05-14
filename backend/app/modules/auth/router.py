@@ -28,9 +28,11 @@ settings = get_settings()
     response_model=TokenResponse,
     status_code=status.HTTP_201_CREATED,
     summary="Registrar nuevo usuario",
-    description="Crea un nuevo usuario con rol CLIENT y devuelve tokens JWT.",
+    description="Crea un nuevo usuario con rol CLIENT y devuelve tokens JWT. Rate limited: 5 intentos/15 minutos.",
 )
+@limiter.limit(f"{settings.RATE_LIMIT_AUTH}/15minutes")
 async def register(
+    request: Request,
     body: RegisterRequest,
     session: Session = Depends(get_session),
 ) -> TokenResponse:
@@ -39,7 +41,8 @@ async def register(
     
     - **email**: Email único del usuario
     - **password**: Contraseña (mínimo 8 caracteres)
-    - **nombre**: Nombre completo
+    - **nombre**: Nombre
+    - **apellido**: Apellido
     - **telefono**: Teléfono opcional en formato E.164
     """
     service = AuthService(session)
@@ -50,9 +53,9 @@ async def register(
     "/login",
     response_model=TokenResponse,
     summary="Iniciar sesión",
-    description="Autentica un usuario y devuelve tokens JWT. Rate limited: 5 intentos/minuto.",
+    description="Autentica un usuario y devuelve tokens JWT. Rate limited: 5 intentos/15 minutos.",
 )
-@limiter.limit(f"{settings.RATE_LIMIT_AUTH}/minute")
+@limiter.limit(f"{settings.RATE_LIMIT_AUTH}/15minutes")
 async def login(
     request: Request,
     body: LoginRequest,
