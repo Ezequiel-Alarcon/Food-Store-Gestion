@@ -1,9 +1,9 @@
 # Food Store — Mapa de Changes CORREGIDO
 
-> **Proyecto:** Food Store E-Commerce  
-> **Fecha:** 2026-05-14  
-> **Metodología:** Spec-Driven Development (SDD) + Feature-First  
-> **Versión:** 2.1 (reordenamiento backend-first)
+> **Proyecto:** Food Store E-Commerce
+> **Fecha:** 2026-05-14
+> **Metodología:** Spec-Driven Development (SDD) + Feature-First
+> **Versión:** 3.0 (sync de 33 changes + Fase 4 pendientes)
 
 ---
 
@@ -24,16 +24,17 @@
 
 ## 1. Resumen Ejecutivo
 
-| Métrica | v1 (Original) | v2.0 (Corregido) | v2.1 (Backend-First) |
-|---------|--------------|---------------|-------------------|
-| Total changes | 15 | 18 | 22 |
-| HU total | 65 (~85%) | 77 (100%) | 77 (100%) |
-| Changes >6 HU | 5 | 0 | 0 |
-| Dependencias circulares | 1 | 0 | 0 |
-| Épicas mezcladas | 3 | 0 | 0 |
-| Config.yaml | vacío | ✅ | ✅ |
-| Docker | ❌ | ❌ | ✅ |
-| Backend-First | ❌ | ❌ | ✅ |
+| Métrica | v1 (Original) | v2.0 (Corregido) | v2.1 (Backend-First) | v3.0 (Sync) |
+|---------|--------------|---------------|-------------------|-------------|
+| Total changes | 15 | 18 | 22 | 33 |
+| HU total | 65 (~85%) | 77 (100%) | 77 (100%) | 77 (100%) |
+| Changes >6 HU | 5 | 0 | 0 | 0 |
+| Dependencias circulares | 1 | 0 | 0 | 0 |
+| Épicas mezcladas | 3 | 0 | 0 | 0 |
+| Config.yaml | vacío | ✅ | ✅ | ✅ |
+| Docker | ❌ | ❌ | ✅ | ✅ |
+| Backend-First | ❌ | ❌ | ✅ | ✅ |
+| Docs sync | ❌ | ❌ | ❌ | ✅ |
 
 ---
 
@@ -84,8 +85,42 @@
 | 22 | `admin-metrics-frontend` | 🆕 Dashboard KPIs frontend (recharts) | EPIC 17 | — | ~4 | Frontend | ✅ Archivado 2026-05-14 |
 | 23 | `checkout-frontend` | 🆕 Checkout con tarjeta (CardPayment Brick + tokenización MP) | EPIC 11 | — | ~10 | Frontend + Backend | ✅ Archivado 2026-05-14 |
 
-> **Regla FASE 3:** Cada change de frontend requiere consulta explícita al usuario.  
+> **Regla FASE 3:** Cada change de frontend requiere consulta explícita al usuario.
 > No se avanza automáticamente a ningún change de frontend sin aprobación.
+
+### FASE 3b — Fixes y Auditorías (✅ COMPLETADA)
+
+| # | ID | Change | Descripción | Épica | HU | Archivos~ | Capa | Estado |
+|---|-----|--------|-------------|-------|-----|-----------|------|--------|
+| 24 | `fix-backend-startup` | Fix forward refs en routers + seed condicional | EPIC 00 | — | ~3 | Backend | ✅ Archivado 2026-05-08 |
+| 25 | `auth-audit` | Auditoría auth: 22 bugs, 48 tareas, HTTPBearer, apellido | EPIC 01 | — | ~10 | Backend + Frontend | ✅ Archivado 2026-05-13 |
+| 26 | `bugfix-modules` | CTE text(), categoria_padre_id, producto delete msg | EPIC 00 | — | ~5 | Backend | ✅ Archivado 2026-05-13 |
+| 27 | `verification-fixes` | 401→403 tests, categorias hierarchy, rate limit, pagos | EPIC 00 | — | ~6 | Tests | ✅ Archivado 2026-05-13 |
+| 28 | `auth-frontend-fix` | snake_case auth, apellido register, perfil fetch, cart UI | EPIC 02 | — | ~7 | Frontend | ✅ Archivado 2026-05-13 |
+| 29 | `audit-fixes` | Sync roles backend↔frontend, EN_PREP, modales, CartSummary | EPIC 00 | — | ~8 | Frontend | ✅ Archivado 2026-05-14 |
+| 30 | `backend-security-fixes` | Email normalization, token rotation atómica, timezone, AppError | EPIC 01 | — | ~6 | Backend | ✅ Archivado 2026-05-14 |
+| 31 | `payments-audit-fixes` | Webhook HMAC x-signature, async processing, payer data, rate limit | EPIC 11 | — | ~8 | Backend | ✅ Archivado 2026-05-14 |
+| 32 | `frontend-integration-fixes` | App.tsx children render, paymentStore redirect timeout | EPIC 11 | — | ~3 | Frontend | ✅ Archivado 2026-05-14 |
+| 33 | `docs-sync` | Unificar soft delete, FSM states, endpoint, sucursales en docs | EPIC 00 | — | ~10 | Docs | ✅ Archivado 2026-05-14 |
+
+---
+
+### FASE 4 — Deuda Técnica (🔄 PARALELO — 2 changes por persona)
+
+| # | ID | Change | Descripción | Épica | HU | Archivos~ | Capa | Asignado |
+|---|-----|--------|-------------|-------|-----|-----------|------|----------|
+| 34 | `backend-datetime-fix` | Reemplazar 21 `datetime.utcnow()` → `datetime.now(timezone.utc)` | EPIC 00 | — | ~4 | Backend | 🔲 Edgar |
+| 35 | `backend-pydantic-modernize` | Migrar `class Config:` → `model_config = ConfigDict(...)` | EPIC 00 | — | ~5 | Backend | 🔲 Edgar |
+| 36 | `frontend-home-page` | Crear HomePage con catálogo destacado, hero, categorías | EPIC 05 | 3 | ~4 | Frontend | 🔲 Lucas |
+| 37 | `frontend-shared-ui` | Crear componentes base: Button, Input, Modal, Card | EPIC 00 | — | ~8 | Frontend | 🔲 Lucas |
+| 38 | `frontend-profile-page` | Crear ProfilePage para editar perfil y cambiar contraseña | EPIC 02 | 2 | ~4 | Frontend | 🔲 Mati |
+| 39 | `frontend-fsd-restructure` | Mover providers/ dentro de app/ | EPIC 00 | — | ~3 | Frontend | 🔲 Leandro |
+| 40 | `backend-refreshtokens` | Completar refreshtokens: router.py, schemas.py, main.py | EPIC 01 | — | ~4 | Backend | 🔲 Eze |
+| 41 | `backend-admin-model` | Crear model.py de admin con queries reutilizables | EPIC 17 | — | ~3 | Backend | 🔲 Eze |
+| 42 | `frontend-addresses-barrel` | Agregar index.ts barrel a entities/addresses/ | EPIC 07 | — | ~1 | Frontend | 🔲 Leandro |
+| 43 | `frontend-orders-feature` | Mover OrdersPage de pages/ a features/orders/ | EPIC 13 | — | ~3 | Frontend | 🔲 Mati |
+
+> **Regla FASE 4:** 2 changes por persona, todos en paralelo. Sin dependencias entre ellos.
 
 ---
 
@@ -693,7 +728,7 @@
 
 ---
 
-## 5. Ruta Crítica (v2.1 Backend-First)
+## 5. Ruta Crítica (v3.0 Sync)
 
 | Etapa | Cambios | Épicas | Total HU | Estado |
 |------|--------|--------|--------|--------|
@@ -703,12 +738,13 @@
 | **Sprint 3** | 11 (`docker-setup`) | EPIC 00 | — | ✅ Completado |
 | **Sprint 4** | 12 (`products-module`) | EPIC 05 | 9 | ✅ Completado |
 | **Sprint 5** | 13 (`orders-fsm`) | EPIC 10,12 | 8 | ✅ Completado |
-| **Sprint 6** | 14 (`payments-integration`) | EPIC 11 | 4 | ✅ Archivado 2026-05-12 |
-| **Sprint 7** | 15-17 (admin backend) + 17d-17e (fixes) | EPIC 13,15,17 | 9 | ✅ Completado |
-| **Sprint 8** | 18 (`cart-frontend`) | EPIC 08 | 6 | ✅ Archivado 2026-05-13 |
-| **Sprint 9** | 19-23 (frontend) 🔒 | EPIC 08,11,13,15,17 | — | ✅ Completado 2026-05-14 |
+| **Sprint 6** | 14 (`payments-integration`) | EPIC 11 | 4 | ✅ Completado |
+| **Sprint 7** | 15-17 + 24-28 (fixes) | EPIC 13,15,17,00 | — | ✅ Completado |
+| **Sprint 8** | 18 (`cart-frontend`) | EPIC 08 | 6 | ✅ Completado |
+| **Sprint 9** | 19-23 + 29-33 (frontend + fixes) | EPIC 08,11,13,15,17 | — | ✅ Completado 2026-05-14 |
+| **Sprint 10** | 34-43 (deuda técnica, paralelo) | EPIC 00,01,02,05,07,13,17 | — | 🔲 Pendiente |
 
-**Total: 23 cambios en ~9-10 sprints. Fase backend puro: sprints 3-7 (5 sprints).**
+**Total: 43 changes. 33 completados + 10 pendientes (Fase 4: 2 por persona, todos en paralelo).**
 
 ---
 
@@ -725,7 +761,7 @@
 
 ---
 
-## 7. Reglas de Implementación (v2.1 Backend-First)
+## 7. Reglas de Implementación (v3.0 Sync)
 
 - **Nunca implementar sin artefactos:** Si no existe `proposal.md` y `design.md` aprobados, no hay `/opsx:apply`
 - **El orden importa:** Si el change B necesita código del change A, A debe estar archivado antes de proponer B
@@ -737,8 +773,10 @@
 - 🆕 **Backend-First:** A partir del change 11, todos los cambios son backend puro. Cualquier cambio de frontend requiere consulta explícita al usuario
 - 🆕 **Docker recomendado:** El change `docker-setup` (11) es opcional pero recomendado para estandarizar el entorno de desarrollo
 - 🆕 **Cambios partidos:** `orders-list-gestor`, `users-admin` y `admin-metrics` se implementan en dos fases: backend primero, frontend después (previa consulta)
+- 🆕 **Fase 4 (deuda técnica):** Changes 34-43 son mejoras de calidad, no funcionalidad nueva. Prioridad media-baja. Asignados por capa.
 
 ---
 
-> **Aprobado para Fase 2 (Backend-First)** — 22 cambios. Backend puro: cambios 11-17. Frontend: cambios 18-22 (previa consulta).  
-> **Próximo change a implementar:** `docker-setup` (11).
+> **Estado actual:** 33/43 changes completados. 10 pendientes en Fase 4 (deuda técnica).
+> **Última actualización:** 2026-05-14 — Sync de documentación v3.0
+> **Próximos changes a implementar:** Fase 4 — `backend-datetime-fix` (34), `backend-pydantic-modernize` (35), `frontend-home-page` (36)

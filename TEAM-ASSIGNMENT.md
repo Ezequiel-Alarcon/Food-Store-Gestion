@@ -1,10 +1,10 @@
 # Food Store — Asignación por Team (Pipeline Backend-First)
 
-> **Proyecto:** Food Store E-Commerce  
-> **Fecha:** 2026-05-14  
-> **Distribución:** 22 changes entre 5 integrantes  
-> **Método:** Secuencial con fases Backend → Frontend  
-> **Versión:** 2.1 (reordenamiento backend-first)
+> **Proyecto:** Food Store E-Commerce
+> **Fecha:** 2026-05-14
+> **Distribución:** 43 changes entre 5 integrantes
+> **Método:** Secuencial con fases Backend → Frontend → Deuda Técnica
+> **Versión:** 3.0 (sync 33 changes + Fase 4 pendientes)
 
 ---
 
@@ -81,6 +81,81 @@
 
 ---
 
+### 🔄 FASE 3b — Fixes y Auditorías (✅ COMPLETADA)
+
+```
+┌──────────────────────────────────────────────────────────────────────────┐
+│                FASE 3b: FIXES Y AUDITORÍAS (✅ COMPLETADA)                │
+├──────────────────────────────────────────────────────────────────────────┤
+│                                                                           │
+│  2️⃣4️⃣ EZE → fix-backend-startup (✅ Archivado 2026-05-08)                │
+│  2️⃣5️⃣ EZE → auth-audit (✅ Archivado 2026-05-13)                         │
+│  2️⃣6️⃣ EZE → bugfix-modules (✅ Archivado 2026-05-13)                     │
+│  2️⃣7️⃣ LUCAS → verification-fixes (✅ Archivado 2026-05-13)               │
+│  2️⃣8️⃣ EZE → auth-frontend-fix (✅ Archivado 2026-05-13)                  │
+│  2️⃣9️⃣ EZE → audit-fixes (✅ Archivado 2026-05-14)                        │
+│  3️⃣0️⃣ EZE → backend-security-fixes (✅ Archivado 2026-05-14)             │
+│  3️⃣1️⃣ EZE → payments-audit-fixes (✅ Archivado 2026-05-14)               │
+│  3️⃣2️⃣ EZE → frontend-integration-fixes (✅ Archivado 2026-05-14)         │
+│  3️⃣3️⃣ EZE → docs-sync (✅ Archivado 2026-05-14)                          │
+│                                                                           │
+└──────────────────────────────────────────────────────────────────────────┘
+```
+
+---
+
+### 🔲 FASE 4 — Deuda Técnica (🔄 PARALELO — TODOS ARRANCAN JUNTOS)
+
+```
+┌──────────────────────────────────────────────────────────────────────────┐
+│           FASE 4: DEUDA TÉCNICA (🔄 PARALELO — 2 changes c/u)            │
+├──────────────────────────────────────────────────────────────────────────┤
+│                                                                           │
+│  ┌─ EDGAR (Backend) ──────────────────────────────────────────────────┐  │
+│  │  3️⃣4️⃣ backend-datetime-fix 🆕                                       │  │
+│  │     ↓ (21 datetime.utcnow() → datetime.now(timezone.utc))          │  │
+│  │                                                                     │  │
+│  │  3️⃣5️⃣ backend-pydantic-modernize 🆕                                │  │
+│  │     ↓ (class Config: → model_config = ConfigDict(...))             │  │
+│  └─────────────────────────────────────────────────────────────────────┘  │
+│                                                                           │
+│  ┌─ LUCAS (Frontend) ─────────────────────────────────────────────────┐  │
+│  │  3️⃣6️⃣ frontend-home-page 🆕                                         │  │
+│  │     ↓ (HomePage con catálogo destacado, hero, categorías)          │  │
+│  │                                                                     │  │
+│  │  3️⃣7️⃣ frontend-shared-ui 🆕                                         │  │
+│  │     ↓ (Button, Input, Modal, Card en shared/ui/)                   │  │
+│  └─────────────────────────────────────────────────────────────────────┘  │
+│                                                                           │
+│  ┌─ MATI (Frontend) ──────────────────────────────────────────────────┐  │
+│  │  3️⃣8️⃣ frontend-profile-page 🆕                                      │  │
+│  │     ↓ (ProfilePage para editar perfil y cambiar contraseña)        │  │
+│  │                                                                     │  │
+│  │  4️⃣3️⃣ frontend-orders-feature 🆕                                     │  │
+│  │     ↓ (Mover OrdersPage de pages/ a features/orders/)              │  │
+│  └─────────────────────────────────────────────────────────────────────┘  │
+│                                                                           │
+│  ┌─ EZE (Backend) ────────────────────────────────────────────────────┐  │
+│  │  4️⃣0️⃣ backend-refreshtokens 🆕                                      │  │
+│  │     ↓ (Completar router.py, schemas.py, registrar en main.py)      │  │
+│  │                                                                     │  │
+│  │  4️⃣1️⃣ backend-admin-model 🆕                                        │  │
+│  │     ↓ (Crear model.py de admin con queries reutilizables)          │  │
+│  └─────────────────────────────────────────────────────────────────────┘  │
+│                                                                           │
+│  ┌─ LEANDRO (Frontend) ───────────────────────────────────────────────┐  │
+│  │  4️⃣2️⃣ frontend-addresses-barrel 🆕                                   │  │
+│  │     ↓ (Agregar index.ts barrel a entities/addresses/)              │  │
+│  │                                                                     │  │
+│  │  3️⃣9️⃣ frontend-fsd-restructure 🆕                                    │  │
+│  │     ↓ (Mover providers/ dentro de app/)                            │  │
+│  └─────────────────────────────────────────────────────────────────────┘  │
+│                                                                           │
+└──────────────────────────────────────────────────────────────────────────┘
+```
+
+---
+
 ## Orden de Implementación (Secuencial)
 
 ### ✅ COMPLETADOS (Fase 0-1)
@@ -118,7 +193,7 @@
 > 📦 = Puede ejecutarse en paralelo con el cambio anterior (mismo padre terminado)  
 > 🔀 = Cambio partido — solo backend en esta fase
 
-### 🔒 FASE 3 — Frontend (consultar antes de cada uno)
+### ✅ FASE 3 — Frontend (completada)
 
 | # | Orden | Integrante | Change | Depende de | Estado | ETA |
 |---|-------|-----------|--------|-----------|--------|-----|
@@ -129,16 +204,48 @@
 | 22 | **17º** | Lucas | `admin-metrics-frontend` 🆕 | 17 | ✅ Archivado 2026-05-14 | 1 día |
 | 23 | **17º** | Eze | `checkout-frontend` 🆕 | 14, 18, 10 | ✅ Archivado 2026-05-14 | 1 día |
 
-> 🔒 = **NO implementar sin consulta explícita al usuario.**  
-> La Fase 3 no arranca automáticamente al terminar la Fase 2.
+### ✅ FASE 3b — Fixes y Auditorías (completada)
+
+| # | Orden | Integrante | Change | Depende de | Estado |
+|---|-------|-----------|--------|-----------|--------|
+| 24 | — | Eze | `fix-backend-startup` 🆕 | 11 | ✅ Archivado 2026-05-08 |
+| 25 | — | Eze | `auth-audit` 🆕 | 6 | ✅ Archivado 2026-05-13 |
+| 26 | — | Eze | `bugfix-modules` 🆕 | 8,9,12 | ✅ Archivado 2026-05-13 |
+| 27 | — | Lucas | `verification-fixes` 🆕 | 25,26 | ✅ Archivado 2026-05-13 |
+| 28 | — | Eze | `auth-frontend-fix` 🆕 | 27 | ✅ Archivado 2026-05-13 |
+| 29 | — | Eze | `audit-fixes` 🆕 | 23 | ✅ Archivado 2026-05-14 |
+| 30 | — | Eze | `backend-security-fixes` 🆕 | 6 | ✅ Archivado 2026-05-14 |
+| 31 | — | Eze | `payments-audit-fixes` 🆕 | 14 | ✅ Archivado 2026-05-14 |
+| 32 | — | Eze | `frontend-integration-fixes` 🆕 | 23 | ✅ Archivado 2026-05-14 |
+| 33 | — | Eze | `docs-sync` 🆕 | — | ✅ Archivado 2026-05-14 |
+
+### 🔲 FASE 4 — Deuda Técnica (paralelo — todos arrancan juntos)
+
+| # | Integrante | Change | Qué hacer | Prioridad |
+|---|-----------|--------|-----------|-----------|
+| 34 | Edgar | `backend-datetime-fix` 🆕 | 21 `datetime.utcnow()` → `datetime.now(timezone.utc)` | 🟡 Media |
+| 35 | Edgar | `backend-pydantic-modernize` 🆕 | `class Config:` → `model_config` en 5 schemas | 🟡 Media |
+| 36 | Lucas | `frontend-home-page` 🆕 | HomePage con catálogo, hero, categorías | 🔴 Alta |
+| 37 | Lucas | `frontend-shared-ui` 🆕 | Button, Input, Modal, Card en `shared/ui/` | 🔴 Alta |
+| 38 | Mati | `frontend-profile-page` 🆕 | ProfilePage para editar perfil | 🟡 Media |
+| 43 | Mati | `frontend-orders-feature` 🆕 | Mover OrdersPage a `features/orders/` | 🟢 Baja |
+| 40 | Eze | `backend-refreshtokens` 🆕 | Completar router.py, schemas.py, main.py | 🟢 Baja |
+| 41 | Eze | `backend-admin-model` 🆕 | Crear model.py de admin con queries | 🟢 Baja |
+| 42 | Leandro | `frontend-addresses-barrel` 🆕 | Agregar index.ts a entities/addresses/ | 🟢 Baja |
+| 39 | Leandro | `frontend-fsd-restructure` 🆕 | Mover providers/ dentro de app/ | 🟢 Baja |
+
+> 🔄 **Todos arrancan en paralelo.** Cada change es independiente — nadie bloquea a nadie.
 
 **Leyenda:**  
 - ✅ = Completado y archivado
+- 🔲 = Pendiente de implementar
 - ⏳ = Espera a que el anterior esté archivado (MERGE)
 - 📦 = Puede ejecutarse en paralelo (mismo padre)
-- 🔒 = Requiere consulta al usuario antes de empezar
 - 🆕 = Change nuevo (no existía en v2.0)
 - 🔀 = Change partido (solo backend en esta fase)
+- 🔴 = Prioridad alta (UX crítica)
+- 🟡 = Prioridad media (calidad de código)
+- 🟢 = Prioridad baja (deuda técnica menor)
 
 ---
 
@@ -178,27 +285,29 @@
 1. **Fase 2 es backend puro.** Si durante la implementación de un change de backend se detecta que se necesita un cambio en el frontend, se consulta al usuario
 2. **Docker es opcional.** Si el equipo prefiere no usar Docker, se saltea el change 11 y cada integrante configura PostgreSQL localmente
 3. **Cambios partidos (🔀):** `orders-list-gestor`, `users-admin` y `admin-metrics` ahora son solo backend. Su frontend se implementa en changes separados (20, 21, 22) durante la Fase 3
-4. **Fase 3 bloqueada:** Nadie arranca un change de frontend sin que el usuario dé el visto bueno explícito
+4. **Fase 3 completada:** Todos los changes de frontend están archivados
+5. **Fase 4 (deuda técnica):** 2 changes por persona. Todos arrancan en paralelo — nadie bloquea a nadie. Cada change es independiente.
 
 ---
 
 ## Resumen Final
 
-| Integrante | Changes | Total HU | Cambios nuevos | Rol |
-|-----------|---------|----------|---------------|-----|
-| **Eze** | 1, 6, 11, 11b, 14, 17b, 17c, 17e, 23 | 12 + docker + fixes + auth-frontend + checkout | `docker-setup` 🆕, `fix-backend-startup` 🆕, `auth-audit` 🆕, `bugfix-modules` 🆕, `auth-frontend-fix` 🆕, `checkout-frontend` 🆕 | Infra + Auth + Docker + Pagos + Fixes + Checkout |
-| **Mati** | 2, 7, 12, 19 | 21 | — | Backend + Auth-FE + Productos + Orders-client |
-| **Lucas** | 3, 8, 18, 20, 21, 22, 17d | 10 + 1 fix | `users-admin-frontend` 🆕, `admin-metrics-frontend` 🆕, `verification-fixes` 🆕 | Frontend + Categorías + Carrito + Admin-FE + Fixes |
-| **Edgar** | 5, 9, 16, 17 | 16 | — | Errores + Ingredientes + Users-admin + Metrics |
-| **Leandro** | 4, 10, 13, 15 | 15 | `orders-list-gestor` (backend) 🔀 | Patrones + Direcciones + FSM + Admin-pedidos |
+| Integrante | Completados | Pendientes (Fase 4) | Total |
+|-----------|-----------|-------------------|-------|
+| **Eze** | 1, 6, 11, 11b, 14, 17b, 17c, 17e, 23, 24, 25, 26, 28, 29, 30, 31, 32, 33 | 40 (`backend-refreshtokens`), 41 (`backend-admin-model`) | 18 ✅ + 2 🔲 |
+| **Mati** | 2, 7, 12, 19 | 38 (`frontend-profile-page`), 43 (`frontend-orders-feature`) | 4 ✅ + 2 🔲 |
+| **Lucas** | 3, 8, 18, 20, 21, 22, 27 | 36 (`frontend-home-page`), 37 (`frontend-shared-ui`) | 7 ✅ + 2 🔲 |
+| **Edgar** | 5, 9, 16, 17 | 34 (`backend-datetime-fix`), 35 (`backend-pydantic-modernize`) | 4 ✅ + 2 🔲 |
+| **Leandro** | 4, 10, 13, 15 | 42 (`frontend-addresses-barrel`), 39 (`frontend-fsd-restructure`) | 4 ✅ + 2 🔲 |
 
-**Total:** 27 changes, 77 HU, ~4-5 semanas (Fase 2: ~2 semanas, Fase 3: ~2 semanas)
+**Total:** 43 changes — 33 completados + 10 pendientes. **2 changes por persona, todos en paralelo.**
 
 ---
 
-> **Fase actual:** ✅ TODOS LOS 23 CHANGES COMPLETADOS  
-> **Último change completado:** `checkout-frontend` (Eze) ✅ 2026-05-14  
-> **Regla de oro:** Backend first, frontend after — siempre consultar antes de tocar frontend.
+> **Fase actual:** ✅ FASES 0-3 COMPLETADAS (33/43 changes)  
+> **Fase pendiente:** 🔲 FASE 4 — Deuda Técnica (10 changes)  
+> **Último change completado:** `docs-sync` (Eze) ✅ 2026-05-14  
+> **Última actualización:** 2026-05-14 — Sync de documentación v3.0
 
 ---
 
