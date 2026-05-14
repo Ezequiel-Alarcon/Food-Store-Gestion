@@ -5,6 +5,7 @@ from __future__ import annotations
 
 import pytest
 from fastapi.testclient import TestClient
+from sqlmodel import Session
 
 
 class TestCategoriaHierarchy:
@@ -138,7 +139,9 @@ class TestCategoriaHierarchy:
         )
 
         assert response.status_code == 400
-        assert "ciclo" in str(response.json()["detail"]).lower() or "descendente" in str(response.json()["detail"]).lower()
+        # Check for "descendientes" (plural) or "ciclo" in the error message
+        detail = response.json()["detail"].lower()
+        assert "ciclo" in detail or "descendientes" in detail, f"Expected cycle/self-reference error, got: {response.json()['detail']}"
 
     def test_cycle_prevention_descendant_as_parent(self, client: TestClient, create_admin_token):
         """No se puede establecer un descendiente como padre."""
@@ -237,9 +240,22 @@ class TestCategoriaHierarchy:
 
 # Fixture para crear token de admin
 @pytest.fixture(name="create_admin_token")
-def fixture_create_admin_token(client: TestClient):
-    """Crea un usuario admin y devuelve su token."""
-    from app.core.security import create_access_token
+def fixture_create_admin_token(session: Session):
+    """Crea un usuario admin directamente en BD y devuelve su token JWT."""
+    from app.core.security import create_access_token, hash_password
+    from app.modules.auth.model import Usuario
 
-    token = create_access_token({"sub": "1", "email": "admin@test.com", "role": "ADMIN"})
+    admin = Usuario(
+        email="admin_test@example.com",
+        nombre="Admin",
+        apellido="Test",
+        password_hash=hash_password("Admin123!"),
+        rol="ADMIN",
+        activo=True,
+    )
+    session.add(admin)
+    session.commit()
+    session.refresh(admin)
+
+    token = create_access_token(data={"sub": str(admin.id), "rol": admin.rol})
     return token

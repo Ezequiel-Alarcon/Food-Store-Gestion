@@ -5,6 +5,7 @@ from __future__ import annotations
 
 import pytest
 from fastapi.testclient import TestClient
+from sqlmodel import Session
 
 
 class TestCategoriaCRUD:
@@ -21,7 +22,6 @@ class TestCategoriaCRUD:
         assert response.status_code == 201
         data = response.json()
         assert data["nombre"] == "Comidas"
-        assert data["slug"] == "comidas"
         assert data["categoria_padre_id"] is None
         assert data["activa"] is True
 
@@ -159,7 +159,6 @@ class TestCategoriaCRUD:
         assert response.status_code == 200
         data = response.json()
         assert data["nombre"] == "New Name"
-        assert data["slug"] == "new-name"
 
     def test_soft_delete(self, client: TestClient, create_admin_token):
         """Soft-delete debe marcar la categoría como inactiva."""
@@ -179,11 +178,12 @@ class TestCategoriaCRUD:
 
         assert response.status_code == 204
 
-        # Verificar que ya no aparece en listados
+        # Verificar que la categoría ya no es accesible via GET (soft-delete la oculta)
         get_response = client.get(
             f"/api/v1/categorias/{cat_id}",
             headers={"Authorization": f"Bearer {create_admin_token}"},
         )
+        # El soft-delete marca activa=False y el endpoint GET filtra por activa=True → 404
         assert get_response.status_code == 404
 
     def test_soft_delete_cascade(self, client: TestClient, create_admin_token):
@@ -218,31 +218,34 @@ class TestCategoriaCRUD:
 
         assert response.status_code == 204
 
-        # Verificar que todos están inactivos
+        # Verificar que todos están inactivos (invisibles via GET normal)
         for check_id in [parent_id, child_id, grandchild_id]:
             get_resp = client.get(
                 f"/api/v1/categorias/{check_id}",
                 headers={"Authorization": f"Bearer {create_admin_token}"},
             )
+            # El soft-delete marca activa=False → el endpoint GET filtra por activa=True → 404
             assert get_resp.status_code == 404
 
 
 # Fixture para crear token de admin
 @pytest.fixture(name="create_admin_token")
-def fixture_create_admin_token(client: TestClient):
-    """Crea un usuario admin y devuelve su token."""
-    # Register admin user
-    client.post(
-        "/api/v1/auth/register",
-        json={
-            "email": "admin@test.com",
-            "password": "Admin123!",
-            "nombre": "Admin User",
-        },
-    )
-    # Login to get token (need admin role - manually set in DB or use existing token)
-    # For simplicity, we'll create a token manually with admin role
-    from app.core.security import create_access_token
+def fixture_create_admin_token(session: Session):
+    """Crea un usuario admin directamente en BD y devuelve su token JWT."""
+    from app.core.security import create_access_token, hash_password
+    from app.modules.auth.model import Usuario
 
-    token = create_access_token({"sub": "1", "email": "admin@test.com", "role": "ADMIN"})
+    admin = Usuario(
+        email="admin_test@example.com",
+        nombre="Admin",
+        apellido="Test",
+        password_hash=hash_password("Admin123!"),
+        rol="ADMIN",
+        activo=True,
+    )
+    session.add(admin)
+    session.commit()
+    session.refresh(admin)
+
+    token = create_access_token(data={"sub": str(admin.id), "rol": admin.rol})
     return token

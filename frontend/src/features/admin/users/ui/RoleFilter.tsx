@@ -1,4 +1,4 @@
-import { ROLES, type RolValue } from '../../../../entities/usuario-admin/types'
+import { ROLES } from '../../../../entities/usuario-admin/types'
 
 interface RoleFilterProps {
   value: string

@@ -17,8 +17,6 @@ export function EditUserModal({ user, onClose, onSuccess, currentUserId }: EditU
   const queryClient = useQueryClient()
 
   const isSelf = user.id === currentUserId
-  const isLastAdmin =
-    user.rol === 'ADMIN' && selectedRole !== 'ADMIN' && !showLastAdminWarning
 
   const updateMutation = useMutation({
     mutationFn: (rol: string) => usuarioAdminApi.updateUser(user.id, { rol }),

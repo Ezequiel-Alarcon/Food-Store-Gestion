@@ -5,8 +5,6 @@ import { pedidoAdminApi } from '../../../../entities/pedido-admin/api'
 import { StatusFilter } from './StatusFilter'
 import { ClientSearch } from './ClientSearch'
 
-const ESTADOS = ['PENDIENTE', 'CONFIRMADO', 'EN_PREP', 'EN_CAMINO', 'ENTREGADO', 'CANCELADO']
-
 const ESTADO_COLORS: Record<string, string> = {
   PENDIENTE: 'bg-yellow-100 text-yellow-800',
   CONFIRMADO: 'bg-blue-100 text-blue-800',
@@ -71,7 +69,7 @@ export function OrdersListPage() {
       {/* Filtros */}
       <div className="flex flex-wrap gap-4 mb-6">
         <div className="w-48">
-          <StatusFilter value={estado} onChange={setEstado} estados={ESTADOS} />
+          <StatusFilter value={estado} onChange={setEstado} />
         </div>
         <div className="flex-1 min-w-[200px] max-w-md">
           <ClientSearch value={search} onChange={setSearch} />

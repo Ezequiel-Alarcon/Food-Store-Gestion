@@ -17,6 +17,7 @@ from sqlmodel import Session, SQLModel
 
 # ═══ MUST be set BEFORE any app import — database.py runs create_engine at import time ═══
 os.environ["DATABASE_URL"] = "sqlite:///:memory:"
+os.environ["RATE_LIMIT_AUTH"] = "999999"  # Deshabilitar rate limiting en tests (slowapi)
 
 # ═══ Patch sqlmodel.create_engine to strip PostgreSQL-only kwargs for SQLite ═══
 import sqlmodel as _sqlmodel_mod
