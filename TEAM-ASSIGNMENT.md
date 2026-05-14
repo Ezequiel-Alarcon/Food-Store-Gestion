@@ -74,7 +74,7 @@
 │  1️⃣9️⃣ MATI → orders-list-client (✅ Archivado 2026-05-14)               │
 │  2️⃣0️⃣ LUCAS → orders-list-gestor-frontend (✅ Archivado 2026-05-14) 🆕           │
 │  2️⃣1️⃣ LUCAS → users-admin-frontend (✅ Archivado 2026-05-14) 🆕                   │
-│  2️⃣2️⃣ LUCAS → admin-metrics-frontend 🔒 (⏳ espera 17) 🆕                │
+│  2️⃣2️⃣ LUCAS → admin-metrics-frontend (✅ Archivado 2026-05-14) 🆕           │
 │                                                                           │
 └──────────────────────────────────────────────────────────────────────────┘
 ```
@@ -126,7 +126,7 @@
 | 19 | **15º** | Mati | `orders-list-client` | 13 | ✅ Archivado 2026-05-14 | 0.5 días |
 | 20 | **16º** | Lucas | `orders-list-gestor-frontend` 🆕 | 15 | ✅ Archivado 2026-05-14 | 0.5 días |
 | 21 | **16º** | Lucas | `users-admin-frontend` 🆕 | 16 | ✅ Archivado 2026-05-14 | 1 día |
-| 22 | **17º** | Lucas | `admin-metrics-frontend` 🆕 🔒 | 17 | 🔒 | 1 día |
+| 22 | **17º** | Lucas | `admin-metrics-frontend` 🆕 | 17 | ✅ Archivado 2026-05-14 | 1 día |
 
 > 🔒 = **NO implementar sin consulta explícita al usuario.**  
 > La Fase 3 no arranca automáticamente al terminar la Fase 2.
@@ -195,8 +195,8 @@
 
 ---
 
-> **Fase actual:** Fase 2 — Backend Puro (✅ COMPLETADA)  
-> **Último change completado:** `auth-frontend-fix` (Eze) ✅ 2026-05-13
+> **Fase actual:** ✅ TODOS LOS 22 CHANGES COMPLETADOS  
+> **Último change completado:** `admin-metrics-frontend` (Lucas) ✅ 2026-05-14  
 > **Regla de oro:** Backend first, frontend after — siempre consultar antes de tocar frontend.
 
 ---
