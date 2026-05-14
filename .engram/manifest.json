@@ -280,6 +280,14 @@
       "sessions": 1,
       "memories": 1,
       "prompts": 13
+    },
+    {
+      "id": "92fdbfad",
+      "created_by": "Facultad",
+      "created_at": "2026-05-14T21:37:12Z",
+      "sessions": 0,
+      "memories": 1,
+      "prompts": 0
     }
   ]
 }
