@@ -61,8 +61,7 @@ async def register_user(uow: UnitOfWork, email: str, password: str):
     # UoW handles commit/rollback
     async with uow:
         user = Usuario(email=email, password_hash=hash(password))
-        uow.usuarios.add(user)
-        await uow.commit()
+        uow.usuarios.create(user)
     return user
 ```
 

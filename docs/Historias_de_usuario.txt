@@ -44,7 +44,7 @@ Historias de Usuario — Food Store E-Commerce
 | RN-RB05 | Un CLIENT solo puede ver y operar sobre sus propios datos, nunca los de otros usuarios                         | US-049, US-050, US-025, US-061 |
 | RN-RB06 | Gestor de Stock NO tiene acceso a pedidos, usuarios ni métricas                                                | US-006, US-075 |
 | RN-RB07 | Gestor de Pedidos NO tiene acceso a catálogo ni gestión de usuarios                                            | US-006, US-075 |
-| RN-RB08 | Solo ADMIN puede cancelar pedidos en estado EN_PREPARACIÓN                                                     | US-043 |
+| RN-RB08 | Solo ADMIN puede cancelar pedidos en estado EN_PREP                                                     | US-043 |
 | RN-RB09 | Si el usuario no posee el rol requerido, el sistema retorna HTTP 403 Forbidden                                 | US-006, US-076 |
 | RN-RB10 | Endpoint sin token válido retorna HTTP 401; rutas públicas (catálogo, login, registro) no requieren auth       | US-006, US-076 |
 
@@ -108,7 +108,7 @@ Historias de Usuario — Food Store E-Commerce
 | RN-FS05 | Al cancelar un pedido que ya fue CONFIRMADO, se debe restaurar el stock de forma atómica (operación inversa)   | US-043 |
 | RN-FS06 | ENTREGADO y CANCELADO son estados terminales; no se permite ninguna transición adicional desde ellos            | US-042, US-043 |
 | RN-FS07 | Todo cambio de estado se registra en HistorialEstadoPedido (append-only: solo INSERT, nunca UPDATE ni DELETE)   | US-039 a US-044 |
-| RN-FS08 | Cancelación posible desde: PENDIENTE (Cliente/Gestor/Admin), CONFIRMADO (Gestor/Admin), EN_PREPARACIÓN (solo Admin) | US-043 |
+| RN-FS08 | Cancelación posible desde: PENDIENTE (Cliente/Gestor/Admin), CONFIRMADO (Gestor/Admin), EN_PREP (solo Admin) | US-043 |
 | RN-FS09 | Cada registro de historial incluye: estado anterior, estado nuevo, timestamp, usuario o SISTEMA, observación    | US-044 |
 
 **Dominio: Pagos — MercadoPago**
@@ -203,7 +203,7 @@ HISTORIAS DE USUARIO
 - [ ] UsuarioRol tiene restriccion UNIQUE compuesta (usuario_id, rol_id).
 - [ ] GIVEN las tablas creadas, WHEN se ejecuta el script de seed, THEN se cargan:
   - 4 Roles: ADMIN (1), STOCK (2), PEDIDOS (3), CLIENT (4)
-  - 6 EstadoPedido: PENDIENTE (1), CONFIRMADO (2), EN_PREPARACION (3), EN_CAMINO (4), ENTREGADO (5), CANCELADO (6)
+  - 6 EstadoPedido: PENDIENTE (1), CONFIRMADO (2), EN_PREP (3), EN_CAMINO (4), ENTREGADO (5), CANCELADO (6)
   - Formas de pago: Tarjeta de credito, Tarjeta de debito (activas)
   - 1 Usuario administrador con rol ADMIN y credenciales configurables por variables de entorno
 - [ ] Las migraciones son reversibles: `alembic downgrade -1` no genera errores.
@@ -665,8 +665,8 @@ HISTORIAS DE USUARIO
 
 **Notas Tecnicas**:
 - Endpoint: `DELETE /api/categorias/:id`
-- Campo `deletedAt` (timestamp nullable) para soft delete
-- Filtro global en queries publicas: `WHERE deletedAt IS NULL`
+- Campo `eliminado_en` (timestamp nullable) para soft delete
+- Filtro global en queries publicas: `WHERE eliminado_en IS NULL`
 
 ---
 
@@ -733,7 +733,7 @@ HISTORIAS DE USUARIO
 
 **Criterios de Aceptacion**:
 - [ ] GIVEN un ingrediente, WHEN se elimina logicamente, THEN deja de aparecer para nuevas asociaciones pero se mantiene en productos existentes.
-- [ ] Soft delete con campo `deletedAt`.
+- [ ] Soft delete con campo `eliminado_en`.
 
 **Notas Tecnicas**:
 - Endpoint: `DELETE /api/ingredientes/:id`
@@ -807,7 +807,7 @@ HISTORIAS DE USUARIO
 - **Dependencias**: US-015
 
 **Criterios de Aceptacion**:
-- [ ] GIVEN productos existentes y disponibles, WHEN se accede al catalogo, THEN se muestran solo los productos con `disponible=true` y `deletedAt IS NULL`.
+- [ ] GIVEN productos existentes y disponibles, WHEN se accede al catalogo, THEN se muestran solo los productos con `disponible=true` y `eliminado_en IS NULL`.
 - [ ] Cada producto muestra: nombre, precio, imagen, disponibilidad.
 - [ ] Soporta paginacion con `page` y `limit`.
 - [ ] Soporta filtro por categoria.
@@ -1393,12 +1393,12 @@ HISTORIAS DE USUARIO
 
 **Notas Tecnicas**:
 - Patron State Machine: validar transicion contra mapa de transiciones permitidas
-- `{ PENDIENTE: ['CONFIRMADO', 'CANCELADO'], CONFIRMADO: ['EN_PREPARACION', 'CANCELADO'], ... }`
+- `{ PENDIENTE: ['CONFIRMADO', 'CANCELADO'], CONFIRMADO: ['EN_PREP', 'CANCELADO'], ... }`
 - Stock: `UPDATE Producto SET stock = stock - :cant WHERE id = :id AND stock >= :cant`
 
 ---
 
- US-040: Transicion — CONFIRMADO a EN_PREPARACION
+ US-040: Transicion — CONFIRMADO a EN_PREP
 
 - **Titulo**: Inicio de preparacion del pedido
 - **Historia**: Como **Gestor de Pedidos**, quiero marcar un pedido confirmado como en preparacion, para que el equipo de cocina comience a trabajar en el.
@@ -1406,19 +1406,19 @@ HISTORIAS DE USUARIO
 - **Dependencias**: US-039
 
 **Criterios de Aceptacion**:
-- [ ] GIVEN un pedido en estado CONFIRMADO, WHEN el Gestor de Pedidos avanza el estado, THEN pasa a EN_PREPARACION.
+- [ ] GIVEN un pedido en estado CONFIRMADO, WHEN el Gestor de Pedidos avanza el estado, THEN pasa a EN_PREP.
 - [ ] Se registra en HistorialEstadoPedido con el usuario que realizo la accion (RN-FS07).
-- [ ] GIVEN un pedido en cualquier otro estado, WHEN se intenta pasar a EN_PREPARACION, THEN se rechaza con error (RN-FS01).
+- [ ] GIVEN un pedido en cualquier otro estado, WHEN se intenta pasar a EN_PREP, THEN se rechaza con error (RN-FS01).
 
 **Reglas de Negocio**: RN-FS01, RN-FS07, RN-FS09.
 
 **Notas Tecnicas**:
-- Endpoint: `PATCH /api/pedidos/:id/estado` (body: `{ nuevoEstado: 'EN_PREPARACION' }`)
+- Endpoint: `PATCH /api/pedidos/:id/estado` (body: `{ nuevoEstado: 'EN_PREP' }`)
 - Validar transicion contra FSM antes de persistir
 
 ---
 
- US-041: Transicion — EN_PREPARACION a EN_CAMINO
+ US-041: Transicion — EN_PREP a EN_CAMINO
 
 - **Titulo**: Despacho del pedido
 - **Historia**: Como **Gestor de Pedidos**, quiero marcar un pedido como en camino, para indicar que fue despachado para entrega.
@@ -1467,7 +1467,7 @@ HISTORIAS DE USUARIO
 **Criterios de Aceptacion**:
 - [ ] GIVEN un pedido en estado PENDIENTE, WHEN se cancela, THEN pasa a CANCELADO (RN-FS08).
 - [ ] GIVEN un pedido en estado CONFIRMADO, WHEN se cancela, THEN pasa a CANCELADO y se devuelve el stock descontado (RN-FS08, RN-FS05).
-- [ ] GIVEN un pedido en EN_PREPARACION, EN_CAMINO o ENTREGADO, WHEN se intenta cancelar, THEN se rechaza con error (RN-FS08, RN-RB08).
+- [ ] GIVEN un pedido en EN_PREP, EN_CAMINO o ENTREGADO, WHEN se intenta cancelar, THEN se rechaza con error (RN-FS08, RN-RB08).
 - [ ] Se registra en HistorialEstadoPedido el motivo de cancelacion (RN-FS07).
 - [ ] CANCELADO es estado terminal (RN-FS06).
 
@@ -1548,7 +1548,7 @@ HISTORIAS DE USUARIO
 
 **Criterios de Aceptacion**:
 - [ ] GIVEN un Gestor de Pedidos autenticado, WHEN accede al panel, THEN ve todos los pedidos de todos los clientes.
-- [ ] Puede filtrar por estado (especialmente CONFIRMADO, EN_PREPARACION, EN_CAMINO).
+- [ ] Puede filtrar por estado (especialmente CONFIRMADO, EN_PREP, EN_CAMINO).
 - [ ] Puede filtrar por rango de fechas.
 - [ ] Puede buscar por numero de pedido o nombre de cliente.
 - [ ] Paginacion obligatoria.
@@ -1852,7 +1852,7 @@ HISTORIAS DE USUARIO
 > Validacion de disponibilidad y precios al checkout. Creacion atomica de pedidos con snapshots de precio y direccion, validacion de stock.
 
 **Sprint 6**: EPIC 11 (Pagos con MercadoPago) + EPIC 12 (FSM de Pedidos)
-> Integracion con MercadoPago Orders API, webhooks IPN, consulta de estado de pago, reintento. Maquina de estados completa: PENDIENTE -> CONFIRMADO -> EN_PREPARACION -> EN_CAMINO -> ENTREGADO, cancelacion, auditoria.
+> Integracion con MercadoPago Orders API, webhooks IPN, consulta de estado de pago, reintento. Maquina de estados completa: PENDIENTE -> CONFIRMADO -> EN_PREP -> EN_CAMINO -> ENTREGADO, cancelacion, auditoria.
 
 **Sprint 7**: EPIC 13 (Visualizacion de Pedidos) + EPIC 14 (Notificaciones y Feedback UX)
 > Historial de pedidos del cliente, detalle de pedido, panel de gestion para Gestor de Pedidos. Confirmacion visual de pedido creado, feedback de retorno de MercadoPago.

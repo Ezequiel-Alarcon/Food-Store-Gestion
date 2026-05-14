@@ -12,7 +12,7 @@ El sistema contempla cinco actores principales que interactúan con la plataform
 
 - **Gestor de Stock**: Es el responsable de mantener actualizado el inventario. Puede consultar y modificar las cantidades disponibles de cada producto, marcar productos como disponibles o no disponibles, y gestionar los ingredientes asociados a cada producto incluyendo la identificación de alérgenos. Su alcance está limitado exclusivamente a las operaciones de catálogo e inventario.
 
-- **Gestor de Pedidos**: Se encarga del flujo operativo de los pedidos. Puede visualizar todos los pedidos del sistema, avanzar su estado a través de la máquina de estados definida (por ejemplo, de CONFIRMADO a EN_PREPARACIÓN, o de EN_PREPARACIÓN a EN_CAMINO), y cancelar pedidos cuando las reglas de negocio lo permitan. No tiene acceso a la gestión de productos ni de usuarios.
+- **Gestor de Pedidos**: Se encarga del flujo operativo de los pedidos. Puede visualizar todos los pedidos del sistema, avanzar su estado a través de la máquina de estados definida (por ejemplo, de CONFIRMADO a EN_PREP, o de EN_PREP a EN_CAMINO), y cancelar pedidos cuando las reglas de negocio lo permitan. No tiene acceso a la gestión de productos ni de usuarios.
 
 - **Sistema**: Representa los procesos automatizados que operan sin intervención humana. El actor Sistema se encarga de recibir y procesar las notificaciones IPN (Instant Payment Notification) de MercadoPago, actualizar el estado de los pagos en la base de datos, y disparar las transiciones automáticas de estado en los pedidos cuando un pago es aprobado. También gestiona la expiración y rotación de tokens de autenticación.
 
@@ -142,7 +142,7 @@ La entidad **FormaPago** es una tabla catálogo que define los métodos de pago 
 
 Este es el dominio más complejo y donde se aplican los patrones más sofisticados del sistema. Gestiona todo el ciclo de vida de un pedido desde su creación hasta su entrega, incluyendo el procesamiento de pagos.
 
-La entidad **EstadoPedido** es una tabla catálogo que define los estados posibles de un pedido. Se carga mediante seed data y contiene seis registros: PENDIENTE, CONFIRMADO, EN_PREPARACIÓN, EN_CAMINO, ENTREGADO y CANCELADO. Cada estado tiene un identificador, un nombre único y una descripción.
+La entidad **EstadoPedido** es una tabla catálogo que define los estados posibles de un pedido. Se carga mediante seed data y contiene seis registros: PENDIENTE, CONFIRMADO, EN_PREP, EN_CAMINO, ENTREGADO y CANCELADO. Cada estado tiene un identificador, un nombre único y una descripción.
 
 La entidad **Pedido** es el agregado raíz de una orden de compra. Sus campos incluyen: el ID del usuario que realizó el pedido, el ID del estado actual, el ID de la dirección de entrega seleccionada, el ID de la forma de pago elegida, el costo de envío calculado, y crucialmente, **snapshots** de los datos que podrían cambiar en el futuro. Estos snapshots son campos que copian el valor al momento de la creación del pedido: `direccion_snapshot` almacena una copia serializada de la dirección de entrega tal como era cuando se creó el pedido (porque el usuario podría modificar o eliminar la dirección original después), y campos similares para otros datos volátiles. El pedido también incluye un campo `total` que almacena el monto total calculado (suma de los subtotales de los detalles más el costo de envío). Los campos de auditoría y soft delete completan la entidad.
 
@@ -166,7 +166,7 @@ Los seis estados y sus significados son:
 
 **CONFIRMADO** es el estado al que transiciona un pedido cuando el pago asociado es aprobado por MercadoPago. En este momento, el sistema decrementa automáticamente el stock de cada producto incluido en el pedido. Este estado indica que el pedido es válido, pagado, y está listo para ser procesado por el equipo de preparación.
 
-**EN_PREPARACIÓN** indica que el equipo de cocina o preparación está trabajando activamente en el pedido. La transición a este estado es realizada por un usuario con rol PEDIDOS (Gestor de Pedidos) y marca el inicio del proceso operativo.
+**EN_PREP** indica que el equipo de cocina o preparación está trabajando activamente en el pedido.
 
 **EN_CAMINO** indica que el pedido ha sido despachado y está en tránsito hacia la dirección de entrega del cliente. Esta transición también es realizada por el Gestor de Pedidos.
 
@@ -177,16 +177,16 @@ Los seis estados y sus significados son:
 Las transiciones válidas son:
 
 - PENDIENTE → CONFIRMADO (automática, cuando el pago es aprobado)
-- CONFIRMADO → EN_PREPARACIÓN (manual, por Gestor de Pedidos)
-- EN_PREPARACIÓN → EN_CAMINO (manual, por Gestor de Pedidos)
+- CONFIRMADO → EN_PREP (manual, por Gestor de Pedidos)
+- EN_PREP → EN_CAMINO (manual, por Gestor de Pedidos)
 - EN_CAMINO → ENTREGADO (manual, por Gestor de Pedidos)
 - PENDIENTE → CANCELADO (manual, por Cliente, Gestor de Pedidos o Admin)
 - CONFIRMADO → CANCELADO (manual, por Gestor de Pedidos o Admin, con restauración de stock)
-- EN_PREPARACIÓN → CANCELADO (manual, por Admin únicamente, con restauración de stock)
+- EN_PREP → CANCELADO (manual, por Admin únicamente, con restauración de stock)
 
 Las reglas de negocio asociadas a la máquina de estados son:
 
-**RN-01**: Un pedido solo puede avanzar al siguiente estado en la secuencia definida. No se permiten saltos (por ejemplo, de PENDIENTE directamente a EN_CAMINO) ni retrocesos (por ejemplo, de EN_PREPARACIÓN a CONFIRMADO). La única excepción es la transición a CANCELADO, que puede ocurrir desde estados no terminales.
+**RN-01**: Un pedido solo puede avanzar al siguiente estado en la secuencia definida. No se permiten saltos (por ejemplo, de PENDIENTE directamente a EN_CAMINO) ni retrocesos (por ejemplo, de EN_PREP a CONFIRMADO). La única excepción es la transición a CANCELADO, que puede ocurrir desde estados no terminales.
 
 **RN-02**: La transición de PENDIENTE a CONFIRMADO es exclusivamente automática y se dispara cuando el sistema recibe una notificación IPN de MercadoPago indicando que el pago fue aprobado (`mp_status = "approved"`). Ningún usuario puede ejecutar esta transición manualmente.
 
@@ -286,7 +286,7 @@ El endpoint **GET /api/v1/pedidos** devuelve los pedidos según el rol del usuar
 
 El endpoint **GET /api/v1/pedidos/{id}** devuelve el detalle completo de un pedido incluyendo todos sus ítems con sus snapshots de precio, el historial de estados con timestamps y usuarios responsables, la dirección de entrega (snapshot), y la información de pagos asociados.
 
-El endpoint **PATCH /api/v1/pedidos/{id}/avanzar** permite avanzar el estado de un pedido al siguiente estado válido según la máquina de estados. Recibe opcionalmente una observación que se registra en el historial. Valida que la transición sea válida según las reglas de negocio y que el usuario tenga el rol necesario para ejecutarla. En el caso de la transición a CONFIRMADO, también ejecuta el decremento de stock.
+El endpoint **PATCH /api/v1/pedidos/{id}/estado** permite avanzar el estado de un pedido al siguiente estado válido según la máquina de estados. Recibe opcionalmente una observación que se registra en el historial. Valida que la transición sea válida según las reglas de negocio y que el usuario tenga el rol necesario para ejecutarla. En el caso de la transición a CONFIRMADO, también ejecuta el decremento de stock.
 
 El endpoint **PATCH /api/v1/pedidos/{id}/cancelar** permite cancelar un pedido. Valida que el pedido esté en un estado cancelable y que el usuario tenga permiso para cancelarlo según su rol. Si el pedido ya había sido confirmado, ejecuta la restauración de stock. Registra la transición en el historial con la observación proporcionada.
 
@@ -510,7 +510,7 @@ El sistema requiere datos iniciales que deben existir antes de que la aplicació
 
 Los **Roles** se cargan con cuatro registros: ADMIN (id: 1), STOCK (id: 2), PEDIDOS (id: 3) y CLIENT (id: 4). Estos IDs son estables y se referencian en el código.
 
-Los **EstadoPedido** se cargan con seis registros: PENDIENTE (id: 1), CONFIRMADO (id: 2), EN_PREPARACIÓN (id: 3), EN_CAMINO (id: 4), ENTREGADO (id: 5) y CANCELADO (id: 6). Estos IDs también son estables y se usan en la lógica de la máquina de estados.
+Los **EstadoPedido** se cargan con seis registros: PENDIENTE (id: 1), CONFIRMADO (id: 2), EN_PREP (id: 3), EN_CAMINO (id: 4), ENTREGADO (id: 5) y CANCELADO (id: 6).
 
 Las **FormaPago** se cargan con los métodos de pago aceptados: Tarjeta de crédito, Tarjeta de débito, y opcionalmente otros métodos según los requisitos del negocio.
 
