@@ -15,6 +15,7 @@ import { OrdersPage } from '../pages/OrdersPage'
 import { OrdersListPage } from '../features/admin/orders/ui/OrdersListPage'
 import { OrderDetailPage } from '../features/admin/orders/ui/OrderDetailPage'
 import { UsersPage } from '../features/admin/users/ui/UsersPage'
+import { DashboardPage } from '../features/admin/dashboard'
 
 interface RouterProviderProps {
   children: ReactNode
@@ -56,6 +57,14 @@ export function RouterProvider({ children }: RouterProviderProps) {
         <Route path="/puntos-retiro" element={<PickupPointsPage />} />
 
         {/* Rutas protegidas - Admin */}
+        <Route
+          path="/admin/dashboard"
+          element={
+            <ProtectedRoute allowedRoles={['ADMIN', 'GESTOR']}>
+              <DashboardPage />
+            </ProtectedRoute>
+          }
+        />
         <Route
           path="/admin"
           element={
