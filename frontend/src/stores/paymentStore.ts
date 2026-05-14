@@ -9,7 +9,7 @@ export type CheckoutStep =
   | 'rejected'
   | 'error'
 
-export type PaymentStatus = 'pending' | 'approved' | 'rejected' | 'error' | null
+export type PaymentStatus = 'pending' | 'approved' | 'rejected' | 'in_process' | 'cancelled' | 'refunded' | 'error' | null
 
 interface PaymentState {
   checkoutStep: CheckoutStep
@@ -47,6 +47,8 @@ export const usePaymentStore = create<PaymentState>()((set) => ({
     if (status === 'approved') checkoutStep = 'approved'
     else if (status === 'rejected') checkoutStep = 'rejected'
     else if (status === 'error') checkoutStep = 'error'
+    else if (status === 'in_process') checkoutStep = 'processing'
+    else if (status === 'cancelled' || status === 'refunded') checkoutStep = 'rejected'
     set({
       checkoutStep,
       paymentStatus: status,

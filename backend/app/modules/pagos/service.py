@@ -195,6 +195,8 @@ class PagoService:
                 }
                 if settings.MP_NOTIFICATION_URL:
                     payment_data["notification_url"] = settings.MP_NOTIFICATION_URL
+                if data.token:
+                    payment_data["token"] = data.token
 
                 request_options = mercadopago.config.RequestOptions(
                     custom_headers={"x-idempotency-key": idempotency_key}

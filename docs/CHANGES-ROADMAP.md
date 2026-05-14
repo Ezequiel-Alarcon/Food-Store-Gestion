@@ -82,6 +82,7 @@
 | 20 | `orders-list-gestor-frontend` | 🆕 Panel pedidos frontend (gestor/ADMIN) | EPIC 13 | — | ~3 | Frontend | ✅ Archivado 2026-05-14 |
 | 21 | `users-admin-frontend` | 🆕 Panel admin usuarios frontend | EPIC 15 | — | ~3 | Frontend | ✅ Archivado 2026-05-14 |
 | 22 | `admin-metrics-frontend` | 🆕 Dashboard KPIs frontend (recharts) | EPIC 17 | — | ~4 | Frontend | ✅ Archivado 2026-05-14 |
+| 23 | `checkout-frontend` | 🆕 Checkout con tarjeta (CardPayment Brick + tokenización MP) | EPIC 11 | — | ~10 | Frontend + Backend | ✅ Archivado 2026-05-14 |
 
 > **Regla FASE 3:** Cada change de frontend requiere consulta explícita al usuario.  
 > No se avanza automáticamente a ningún change de frontend sin aprobación.
@@ -617,6 +618,30 @@
 
 ---
 
+### Change 23: `checkout-frontend` 🆕 🔒 FRONTEND + BACKEND
+
+| Campo | Valor |
+|------|-------|
+| **ID** | `checkout-frontend` |
+| **Épica** | EPIC 11 |
+| **HU** | — (frontend de US-045) |
+| **Archivos** | ~12 nuevos, 10 modificados |
+| **Objetivo** | Checkout con tarjeta de crédito/débito usando `@mercadopago/sdk-react` CardPayment Brick. Incluye fix backend: schema `PagoCreate` con campo `token`. |
+
+**Scope de archivos:**
+- `backend/app/modules/pagos/schemas.py` — `token: Optional[str]` en `PagoCreate`
+- `backend/app/modules/pagos/service.py` — pasar token a MP SDK
+- `frontend/src/entities/pago/` — types, api, queries (TanStack Query polling)
+- `frontend/src/features/checkout/` — AddressSelector, CheckoutSummary, CardPaymentForm, PaymentResult
+- `frontend/src/pages/CheckoutPage.tsx` — wizard 4 pasos con useBlocker
+- `frontend/src/app/RouterProvider.tsx` — ruta `/checkout`
+- `frontend/src/pages/CartPage.tsx` — botón "Finalizar pedido"
+- `frontend/src/main.tsx` — `initMercadoPago()`
+
+**Dependencias:** `payments-integration`, `cart-frontend`, `addresses-module`
+
+---
+
 ## 4. Mapa de Dependencias (v2.1 Backend-First)
 
 ```
@@ -681,9 +706,9 @@
 | **Sprint 6** | 14 (`payments-integration`) | EPIC 11 | 4 | ✅ Archivado 2026-05-12 |
 | **Sprint 7** | 15-17 (admin backend) + 17d-17e (fixes) | EPIC 13,15,17 | 9 | ✅ Completado |
 | **Sprint 8** | 18 (`cart-frontend`) | EPIC 08 | 6 | ✅ Archivado 2026-05-13 |
-| **Sprint 9** | 19-22 (frontend) 🔒 | EPIC 08,13,15,17 | — | ✅ Completado 2026-05-14 |
+| **Sprint 9** | 19-23 (frontend) 🔒 | EPIC 08,11,13,15,17 | — | ✅ Completado 2026-05-14 |
 
-**Total: 22 cambios en ~9-10 sprints. Fase backend puro: sprints 3-7 (5 sprints).**
+**Total: 23 cambios en ~9-10 sprints. Fase backend puro: sprints 3-7 (5 sprints).**
 
 ---
 

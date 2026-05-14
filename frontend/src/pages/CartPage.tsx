@@ -1,6 +1,8 @@
-import { Link } from 'react-router-dom'
+import { Link, useNavigate } from 'react-router-dom'
 import { useCartStore, totalPrice } from '../stores/cartStore'
 import { useUIStore } from '../stores/uiStore'
+import { useUserAddresses } from '../entities/addresses/queries'
+import { useCreatePedido } from '../entities/pedido'
 
 /**
  * Página dedicada del carrito. Reutiliza la misma lógica que CartSummary
@@ -15,6 +17,35 @@ export function CartPage() {
   const openConfirmModal = useUIStore((s) => s.openConfirmModal)
 
   const total = totalPrice()
+
+  const navigate = useNavigate()
+  const { mutateAsync: createPedido, isPending: isCreating } = useCreatePedido()
+  const { data: addresses } = useUserAddresses()
+
+  const handleCheckout = async () => {
+    if (!addresses || addresses.length === 0) {
+      addToast('error', 'Necesitás una dirección de entrega. Agregala en "Mis Direcciones".')
+      return
+    }
+
+    try {
+      const pedido = await createPedido({
+        direccion_id: addresses[0].id,
+        items: items.map((item) => ({
+          producto_id: item.productoId,
+          cantidad: item.cantidad,
+          exclusiones: item.personalizacion,
+        })),
+      })
+
+      clearCart()
+      addToast('success', '¡Pedido creado! Completá el pago para confirmarlo.')
+      navigate(`/checkout?pedido=${pedido.id}`)
+    } catch (err) {
+      const message = err instanceof Error ? err.message : 'Error al crear el pedido'
+      addToast('error', message)
+    }
+  }
 
   const handleClearCart = () => {
     openConfirmModal(
@@ -117,6 +148,13 @@ export function CartPage() {
                 ${total.toFixed(2)}
               </span>
             </div>
+            <button
+              onClick={handleCheckout}
+              disabled={isCreating || items.length === 0}
+              className="w-full py-3 px-4 bg-indigo-600 text-white rounded-lg font-medium hover:bg-indigo-700 disabled:opacity-50 disabled:cursor-not-allowed focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 transition-colors mb-3"
+            >
+              {isCreating ? 'Creando pedido...' : 'Finalizar pedido'}
+            </button>
             <div className="flex gap-3">
               <button
                 onClick={handleClearCart}

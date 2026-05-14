@@ -4,13 +4,14 @@ Schemas Pydantic v2 para el módulo de pagos.
 """
 from datetime import datetime
 from typing import Optional
-from pydantic import BaseModel
+from pydantic import BaseModel, Field
 
 
 class PagoCreate(BaseModel):
     """Schema para crear un pago."""
     pedido_id: int
     payment_method_id: str = "account_money"
+    token: Optional[str] = Field(None, description="Token de tarjeta generado por MP SDK (solo para pagos con tarjeta)")
 
 
 class PagoResponse(BaseModel):
