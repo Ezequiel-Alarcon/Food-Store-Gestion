@@ -67,30 +67,30 @@ class CategoriaRepository(BaseRepository[Categoria]):
         """
         # Usamos texto plano para el CTE ya que SQLModel no tiene soporte directo
         if max_depth is not None:
-            cte_query = text("""
+            cte_query = text(f"""
             WITH RECURSIVE descendants AS (
                 SELECT id, nombre, slug, descripcion, padre_id, orden, activa, created_at, updated_at, 1 as depth
                 FROM categorias
-                WHERE id = :category_id AND activa = true
+                WHERE id = {category_id} AND activa = true
 
                 UNION ALL
 
                 SELECT c.id, c.nombre, c.slug, c.descripcion, c.padre_id, c.orden, c.activa, c.created_at, c.updated_at, d.depth + 1
                 FROM categorias c
                 INNER JOIN descendants d ON c.padre_id = d.id
-                WHERE c.activa = true AND d.depth < :max_depth
+                WHERE c.activa = true AND d.depth <= {max_depth}
             )
             SELECT id, nombre, slug, descripcion, padre_id, orden, activa, created_at, updated_at
             FROM descendants
-            WHERE id != :category_id
+            WHERE id != {category_id}
             """)
-            result = self.session.exec(cte_query, {"category_id": category_id, "max_depth": max_depth})
+            result = self.session.exec(cte_query)
         else:
-            cte_query = text("""
+            cte_query = text(f"""
             WITH RECURSIVE descendants AS (
                 SELECT id, nombre, slug, descripcion, padre_id, orden, activa, created_at, updated_at, 1 as depth
                 FROM categorias
-                WHERE id = :category_id AND activa = true
+                WHERE id = {category_id} AND activa = true
 
                 UNION ALL
 
@@ -101,9 +101,9 @@ class CategoriaRepository(BaseRepository[Categoria]):
             )
             SELECT id, nombre, slug, descripcion, padre_id, orden, activa, created_at, updated_at
             FROM descendants
-            WHERE id != :category_id
+            WHERE id != {category_id}
             """)
-            result = self.session.exec(cte_query, {"category_id": category_id})
+            result = self.session.exec(cte_query)
         rows = result.fetchall()
 
         if not rows:
@@ -149,6 +149,8 @@ class CategoriaRepository(BaseRepository[Categoria]):
         """
         Realiza soft-delete en cascada: marca como inactivas la categoría y todos sus descendientes.
 
+        Uses direct SQL UPDATE to avoid ORM datetime serialization issues with CTE-mapped objects.
+
         Returns:
             Lista de categorías afectadas
         """
@@ -162,15 +164,19 @@ class CategoriaRepository(BaseRepository[Categoria]):
         # Obtener todos los descendientes
         descendants = self.get_descendants_cte(category_id)
 
-        # Marcar como inactivas
-        for desc in descendants:
-            desc.activa = False
-            self.session.add(desc)
-            affected.append(desc)
+        # Marcar como inactivas usando SQL directo para evitar problemas de datetime con objetos ORM
+        # Primero marcar descendientes
+        if descendants:
+            for desc in descendants:
+                self.session.exec(
+                    text(f"UPDATE categorias SET activa = 0 WHERE id = {desc.id}")
+                )
+                affected.append(desc)
 
         # Marcar la categoría principal como inactiva
-        categoria.activa = False
-        self.session.add(categoria)
+        self.session.exec(
+            text(f"UPDATE categorias SET activa = 0 WHERE id = {category_id}")
+        )
 
         self.session.flush()
         return affected
