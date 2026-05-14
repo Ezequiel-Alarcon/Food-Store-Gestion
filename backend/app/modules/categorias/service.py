@@ -6,7 +6,7 @@ Servicio para operaciones de categorías.
 from __future__ import annotations
 
 import re
-from datetime import datetime
+from datetime import datetime, timezone
 from typing import Optional
 
 from fastapi import HTTPException, status
@@ -102,8 +102,8 @@ class CategoriaService:
             padre_id=padre_id,
             orden=0,  # Por defecto
             activa=True,
-            created_at=datetime.utcnow(),
-            updated_at=datetime.utcnow(),
+            created_at=datetime.now(timezone.utc),
+            updated_at=datetime.now(timezone.utc),
         )
 
         self.repo.add(categoria)
@@ -219,7 +219,7 @@ class CategoriaService:
         if data.activa is not None:
             categoria.activa = data.activa
 
-        categoria.updated_at = datetime.utcnow()
+        categoria.updated_at = datetime.now(timezone.utc)
         self.session.add(categoria)
         self.session.flush()
         return categoria
