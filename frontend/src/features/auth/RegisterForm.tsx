@@ -10,11 +10,13 @@ export function RegisterForm() {
   const clearError = useAuthStore((state) => state.clearError)
 
   const [nombre, setNombre] = useState('')
+  const [apellido, setApellido] = useState('')
   const [email, setEmail] = useState('')
   const [password, setPassword] = useState('')
   const [confirmarPassword, setConfirmarPassword] = useState('')
   const [errors, setErrors] = useState<{
     nombre?: string
+    apellido?: string
     email?: string
     password?: string
     confirmarPassword?: string
@@ -25,6 +27,10 @@ export function RegisterForm() {
 
     if (!nombre) {
       newErrors.nombre = 'El nombre es requerido'
+    }
+
+    if (!apellido) {
+      newErrors.apellido = 'El apellido es requerido'
     }
 
     if (!email) {
@@ -55,6 +61,7 @@ export function RegisterForm() {
     try {
       await register({
         nombre,
+        apellido,
         email,
         password,
       })
@@ -102,6 +109,22 @@ export function RegisterForm() {
               />
               {errors.nombre && (
                 <p className="text-red-500 text-xs mt-1">{errors.nombre}</p>
+              )}
+            </div>
+            <div>
+              <label htmlFor="apellido" className="sr-only">Apellido</label>
+              <input
+                id="apellido"
+                type="text"
+                autoComplete="family-name"
+                required
+                value={apellido}
+                onChange={(e) => setApellido(e.target.value)}
+                className="appearance-none relative block w-full px-3 py-2 border border-gray-300 placeholder-gray-500 text-gray-900 rounded-md focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
+                placeholder="Apellido"
+              />
+              {errors.apellido && (
+                <p className="text-red-500 text-xs mt-1">{errors.apellido}</p>
               )}
             </div>
             <div>

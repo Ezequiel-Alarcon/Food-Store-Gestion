@@ -6,6 +6,11 @@ import { ProtectedRoute } from '../features/auth/ProtectedRoute'
 import { Navigation } from '../features/layout/Navigation'
 import { MisDireccionesPage } from '../features/addresses/MisDireccionesPage'
 import { PickupPointsPage } from '../features/addresses/PickupPointsPage'
+import { CatalogPage } from '../pages/CatalogPage'
+import { CartPage } from '../pages/CartPage'
+import { CartDrawer } from '../features/cart/CartDrawer'
+import { ConfirmModal } from '../features/layout/ConfirmModal'
+import { ToastContainer } from '../features/layout/ToastContainer'
 
 interface RouterProviderProps {
   children: ReactNode
@@ -15,11 +20,15 @@ export function RouterProvider({ children }: RouterProviderProps) {
   return (
     <BrowserRouter>
       <Navigation />
+      <CartDrawer /><ConfirmModal /><ToastContainer />
       <Routes>
         {/* Rutas públicas */}
         <Route path="/" element={children} />
         <Route path="/login" element={<LoginForm />} />
         <Route path="/register" element={<RegisterForm />} />
+
+        <Route path="/productos" element={<CatalogPage />} />
+        <Route path="/carrito" element={<CartPage />} />
 
         {/* Rutas protegidas - Cliente */}
         <Route

@@ -1,6 +1,6 @@
 import { create } from 'zustand'
 import { persist } from 'zustand/middleware'
-import { api, type LoginRequest, type LoginResponse, type RegisterRequest } from '../lib/api'
+import { api, type LoginRequest, type LoginResponse, type RegisterRequest, type PerfilResponse } from '../lib/api'
 
 export interface User {
   id: number
@@ -38,22 +38,18 @@ export const useAuthStore = create<AuthState>()(
         set({ isLoading: true, error: null })
         try {
           const response = await api.post<LoginResponse>('/auth/login', credentials)
-          const { accessToken, refreshToken, user } = response.data
-
-          set({
-            accessToken,
-            refreshToken,
-            user,
-            isAuthenticated: true,
-            isLoading: false,
-            error: null,
-          })
+          const { access_token, refresh_token } = response.data
+          set({ accessToken: access_token, refreshToken: refresh_token })
+          try {
+            const perfilRes = await api.get<PerfilResponse>('/perfil')
+            const p = perfilRes.data
+            set({ user: { id: p.id, nombre: p.nombre, email: p.email, roles: [p.rol] }, isAuthenticated: true, isLoading: false, error: null })
+          } catch {
+            set({ isAuthenticated: true, isLoading: false, error: null })
+          }
         } catch (error: unknown) {
           const err = error as { response?: { data?: { detail?: string } } }
-          set({
-            isLoading: false,
-            error: err.response?.data?.detail || 'Error al iniciar sesión',
-          })
+          set({ isLoading: false, error: err.response?.data?.detail || 'Error al iniciar sesión' })
           throw error
         }
       },
@@ -62,22 +58,20 @@ export const useAuthStore = create<AuthState>()(
         set({ isLoading: true, error: null })
         try {
           const response = await api.post<LoginResponse>('/auth/register', data)
-          const { accessToken, refreshToken, user } = response.data
-
-          set({
-            accessToken,
-            refreshToken,
-            user,
-            isAuthenticated: true,
-            isLoading: false,
-            error: null,
-          })
+          const { access_token, refresh_token } = response.data
+          set({ accessToken: access_token, refreshToken: refresh_token })
+          try {
+            const perfilRes = await api.get<PerfilResponse>('/perfil')
+            const p = perfilRes.data
+            set({ user: { id: p.id, nombre: p.nombre, email: p.email, roles: [p.rol] }, isAuthenticated: true, isLoading: false, error: null })
+          } catch {
+            set({ isAuthenticated: true, isLoading: false, error: null })
+          }
         } catch (error: unknown) {
-          const err = error as { response?: { data?: { detail?: string } } }
-          set({
-            isLoading: false,
-            error: err.response?.data?.detail || 'Error al registrarse',
-          })
+          const err = error as { response?: { data?: { detail?: string | Array<{ msg: string }> } } }
+          const detail = err.response?.data?.detail
+          const message = Array.isArray(detail) ? detail.map((d) => d.msg).join(', ') : (detail || 'Error al registrarse')
+          set({ isLoading: false, error: message })
           throw error
         }
       },
