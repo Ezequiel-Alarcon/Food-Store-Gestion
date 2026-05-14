@@ -6,7 +6,7 @@ que no encajan en el CRUD genérico — se implementan directamente.
 """
 from __future__ import annotations
 
-from datetime import datetime, timedelta
+from datetime import datetime, timedelta, timezone
 from typing import Any
 
 from sqlalchemy import func, select
@@ -90,7 +90,7 @@ class AdminRepository:
         Solo incluye pedidos en estados TERMINALES: ENTREGADO y CONFIRMADO.
         """
         completed_states = ("ENTREGADO", "CONFIRMADO")
-        since = datetime.utcnow() - timedelta(days=days)
+        since = datetime.now(timezone.utc) - timedelta(days=days)
 
         day_col = _date_trunc_day(self.session, Pedido.creado_en)
 
