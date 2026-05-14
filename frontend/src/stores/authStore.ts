@@ -96,7 +96,12 @@ export const useAuthStore = create<AuthState>()(
     }),
     {
       name: 'food-store-auth',
-      partialize: (state) => ({ accessToken: state.accessToken }),
+      partialize: (state) => ({
+        accessToken: state.accessToken,
+        refreshToken: state.refreshToken,
+        user: state.user,
+        isAuthenticated: state.isAuthenticated,
+      }),
     }
   )
 )

@@ -1,5 +1,5 @@
 import { Link } from 'react-router-dom'
-import { useCartStore } from '../stores/cartStore'
+import { useCartStore, totalPrice } from '../stores/cartStore'
 import { useUIStore } from '../stores/uiStore'
 
 /**
@@ -14,10 +14,7 @@ export function CartPage() {
   const addToast = useUIStore((s) => s.addToast)
   const openConfirmModal = useUIStore((s) => s.openConfirmModal)
 
-  const total = items.reduce(
-    (sum, item) => sum + item.producto.precio * item.cantidad,
-    0
-  )
+  const total = totalPrice()
 
   const handleClearCart = () => {
     openConfirmModal(

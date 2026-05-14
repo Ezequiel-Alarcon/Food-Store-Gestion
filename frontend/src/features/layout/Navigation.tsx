@@ -1,4 +1,4 @@
-import { Link, useNavigate } from 'react-router-dom'
+import { Link } from 'react-router-dom'
 import { useAuthStore } from '../../stores/authStore'
 import { useCartStore } from '../../stores/cartStore'
 import { useUIStore } from '../../stores/uiStore'
@@ -11,11 +11,11 @@ const MENU_BY_ROLE: Record<string, Array<{ label: string; href: string }>> = {
     { label: 'Mis Direcciones', href: '/direcciones' },
     { label: 'Puntos de Retiro', href: '/puntos-retiro' },
   ],
-  GESTOR_STOCK: [
+  STOCK: [
     { label: 'Productos', href: '/productos' },
     { label: 'Gestión de Stock', href: '/admin/stock' },
   ],
-  GESTOR_PEDIDOS: [
+  PEDIDOS: [
     { label: 'Productos', href: '/productos' },
     { label: 'Gestión de Pedidos', href: '/admin/pedidos' },
   ],
@@ -27,17 +27,14 @@ const MENU_BY_ROLE: Record<string, Array<{ label: string; href: string }>> = {
 }
 
 export function Navigation() {
-  const navigate = useNavigate()
   const isAuthenticated = useAuthStore((state) => state.isAuthenticated)
   const user = useAuthStore((state) => state.user)
   const logout = useAuthStore((state) => state.logout)
-
   const cartItems = useCartStore((state) => state.items)
   const toggleCart = useUIStore((state) => state.toggleCart)
 
   const handleLogout = () => {
     logout()
-    navigate('/')
   }
 
   // Obtener el primer rol del usuario para el menú

@@ -7,8 +7,7 @@ export function ConfirmModal() {
   if (!confirmModal.open) return null
 
   const handleConfirm = () => {
-    confirmModal.onConfirm?.()
-    closeConfirmModal()
+    try { confirmModal.onConfirm?.() } finally { closeConfirmModal() }
   }
 
   return (
