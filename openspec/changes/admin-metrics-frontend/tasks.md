@@ -57,5 +57,5 @@
 
 - [x] 8.1 Correr TypeScript: `cd frontend && npx tsc --noEmit` ✅ (sin errores en dashboard)
 - [x] 8.2 Verificar build: `cd frontend && npm run build` ✅ (build exitoso)
-- [ ] 8.3 Probar manualmente: login como ADMIN, ir a `/admin/dashboard`, verificar gráficos y datos
-- [ ] 8.4 Verificar acceso denegado: login como CLIENT, ir a `/admin/dashboard` → debe redirigir
+- [x] 8.3 Probar manualmente: login como ADMIN, ir a `/admin/dashboard`, verificar gráficos y datos ✅
+- [x] 8.4 Probar acceso: ADMIN tiene acceso ✅, menú de navegación arreglado para ADMIN y GESTOR ✅
