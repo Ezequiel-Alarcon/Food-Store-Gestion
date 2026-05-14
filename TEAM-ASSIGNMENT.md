@@ -1,7 +1,7 @@
 # Food Store — Asignación por Team (Pipeline Backend-First)
 
 > **Proyecto:** Food Store E-Commerce  
-> **Fecha:** 2026-05-13  
+> **Fecha:** 2026-05-14  
 > **Distribución:** 22 changes entre 5 integrantes  
 > **Método:** Secuencial con fases Backend → Frontend  
 > **Versión:** 2.1 (reordenamiento backend-first)
@@ -71,7 +71,7 @@
 ├──────────────────────────────────────────────────────────────────────────┤
 │                                                                           │
 │  1️⃣8️⃣ LUCAS → cart-frontend (✅ Archivado 2026-05-13)                            │
-│  1️⃣9️⃣ MATI → orders-list-client 🔒 (⏳ espera 13)                       │
+│  1️⃣9️⃣ MATI → orders-list-client (✅ Archivado 2026-05-14)               │
 │  2️⃣0️⃣ LUCAS → orders-list-gestor-frontend 🔒 (⏳ espera 15) 🆕           │
 │  2️⃣1️⃣ MATI → users-admin-frontend 🔒 (⏳ espera 16) 🆕                   │
 │  2️⃣2️⃣ LUCAS → admin-metrics-frontend 🔒 (⏳ espera 17) 🆕                │
@@ -123,7 +123,7 @@
 | # | Orden | Integrante | Change | Depende de | Estado | ETA |
 |---|-------|-----------|--------|-----------|--------|-----|
 | 18 | **15º** | Lucas | `cart-frontend` | 12 | ✅ Archivado 2026-05-13 | 1 día |
-| 19 | **15º** | Mati | `orders-list-client` 🔒 | 13 | 🔒 | 0.5 días |
+| 19 | **15º** | Mati | `orders-list-client` | 13 | ✅ Archivado 2026-05-14 | 0.5 días |
 | 20 | **16º** | Lucas | `orders-list-gestor-frontend` 🆕 🔒 | 15 | 🔒 | 0.5 días |
 | 21 | **16º** | Mati | `users-admin-frontend` 🆕 🔒 | 16 | 🔒 | 1 día |
 | 22 | **17º** | Lucas | `admin-metrics-frontend` 🆕 🔒 | 17 | 🔒 | 1 día |

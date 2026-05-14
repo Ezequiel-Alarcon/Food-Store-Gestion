@@ -1,7 +1,7 @@
 # Food Store — Mapa de Changes CORREGIDO
 
 > **Proyecto:** Food Store E-Commerce  
-> **Fecha:** 2026-05-13  
+> **Fecha:** 2026-05-14  
 > **Metodología:** Spec-Driven Development (SDD) + Feature-First  
 > **Versión:** 2.1 (reordenamiento backend-first)
 
@@ -78,7 +78,7 @@
 | # | ID | Change | Descripción | Épica | HU | Archivos~ | Capa |
 |---|-----|--------|-------------|-------|-----|-----------|------|
 | 18 | `cart-frontend` | Carrito Zustand + persistencia | EPIC 08 | 6 | ~6 | ✅ Archivado 2026-05-13 |
-| 19 | `orders-list-client` | Ver mis pedidos (cliente) | EPIC 13 | 2 | ~3 | Frontend |
+| 19 | `orders-list-client` | Ver mis pedidos (cliente) | EPIC 13 | 2 | ~3 | ✅ Archivado 2026-05-14 |
 | 20 | `orders-list-gestor-frontend` | 🆕 Panel pedidos frontend (gestor/ADMIN) | EPIC 13 | — | ~3 | Frontend |
 | 21 | `users-admin-frontend` | 🆕 Panel admin usuarios frontend | EPIC 15 | — | ~3 | Frontend |
 | 22 | `admin-metrics-frontend` | 🆕 Dashboard KPIs frontend (recharts) | EPIC 17 | — | ~4 | Frontend |
@@ -681,7 +681,7 @@
 | **Sprint 6** | 14 (`payments-integration`) | EPIC 11 | 4 | ✅ Archivado 2026-05-12 |
 | **Sprint 7** | 15-17 (admin backend) + 17d-17e (fixes) | EPIC 13,15,17 | 9 | ✅ Completado |
 | **Sprint 8** | 18 (`cart-frontend`) | EPIC 08 | 6 | ✅ Archivado 2026-05-13 |
-| **Sprint 9** | 19-22 (resto frontend) 🔒 | EPIC 13,15,17 | — | 🔒 Frontend |
+| **Sprint 9** | 19 (archived) → 20-22 (resto frontend) 🔒 | EPIC 13,15,17 | — | 🔒 Frontend |
 
 **Total: 22 cambios en ~9-10 sprints. Fase backend puro: sprints 3-7 (5 sprints).**
 
