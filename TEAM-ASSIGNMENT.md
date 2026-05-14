@@ -60,14 +60,17 @@
 │  1️⃣7️⃣🅲️ EZE → bugfix-modules (✅ 2026-05-13) 🆕                            │
 │             ↓ (CTE text(), categoria_padre_id, producto delete msg)       │
 │                                                                           │
-│  1️⃣7️⃣🅳️ LUCAS → verification-fixes (🔲 PENDIENTE) 🆕                       │
-│             ↓ (401→403 tests, categorias hierarchy, rate limit, pagos)    │
+│  1️⃣7️⃣🅳️ LUCAS → verification-fixes ✅ Archivado 2026-05-13                               │
+│             ↓ (401→403 tests, categorias prefix, rate limit, pagos)    │
+│                                                                           │
+│  1️⃣7️⃣🅴️ EZE → auth-frontend-fix 🆕 ✅ Archivado 2026-05-13                            │
+│             ↓ (snake_case auth + fetch perfil post-login)                │
 │                                                                           │
 ├──────────────────────────────────────────────────────────────────────────┤
 │                FASE 3: FRONTEND (🔒 CONSULTAR USUARIO)                   │
 ├──────────────────────────────────────────────────────────────────────────┤
 │                                                                           │
-│  1️⃣8️⃣ LUCAS → cart-frontend 🔒 (⏳ espera 12)                            │
+│  1️⃣8️⃣ LUCAS → cart-frontend ✅ Archivado 2026-05-13                                  │
 │  1️⃣9️⃣ MATI → orders-list-client 🔒 (⏳ espera 13)                       │
 │  2️⃣0️⃣ LUCAS → orders-list-gestor-frontend 🔒 (⏳ espera 15) 🆕           │
 │  2️⃣1️⃣ MATI → users-admin-frontend 🔒 (⏳ espera 16) 🆕                   │
@@ -95,7 +98,7 @@
 | 9 | 7º | Edgar | `ingredients-module` | 6 | ✅ |
 | 10 | 8º | Leandro | `addresses-module` | 6 | ✅ |
 
-### 🔲 FASE 2 — Docker + Backend Puro (🔄 EN PROGRESO)
+### ✅ FASE 2 — Docker + Backend Puro (COMPLETADA)
 
 | # | Orden | Integrante | Change | Depende de | Estado | ETA |
 |---|-------|-----------|--------|-----------|--------|-----|
@@ -109,7 +112,8 @@
 | 17 | **14º** | Edgar | `admin-metrics` 🔀 | 13,16 | ✅ Archivado 2026-05-13 | 1 día |
 | 17b | **14º** | Eze | `auth-audit` 🆕 | 6 | ✅ Archivado 2026-05-13 | 1 día |
 | 17c | **14º** | Eze | `bugfix-modules` 🆕 | 8,9,12 | ✅ Archivado 2026-05-13 | 0.5 días |
-| 17d | **15º** | Lucas | `verification-fixes` 🆕 | 17b,17c | 🔲 Pendiente | 0.5 días |
+| 17d | **15º** | Lucas | `verification-fixes` 🆕 | 17b,17c | ✅ Archivado 2026-05-13 | 0.5 días |
+| 17e | **15º** | Eze | `auth-frontend-fix` 🆕 | 17d | ✅ Archivado 2026-05-13 | 0.25 días |
 
 > 📦 = Puede ejecutarse en paralelo con el cambio anterior (mismo padre terminado)  
 > 🔀 = Cambio partido — solo backend en esta fase
@@ -118,7 +122,7 @@
 
 | # | Orden | Integrante | Change | Depende de | Estado | ETA |
 |---|-------|-----------|--------|-----------|--------|-----|
-| 18 | **15º** | Lucas | `cart-frontend` 🔒 | 12 | 🔒 | 1 día |
+| 18 | **15º** | Lucas | `cart-frontend` 🔒 | 12 | ✅ Archivado 2026-05-13 | 1 día |
 | 19 | **15º** | Mati | `orders-list-client` 🔒 | 13 | 🔒 | 0.5 días |
 | 20 | **16º** | Lucas | `orders-list-gestor-frontend` 🆕 🔒 | 15 | 🔒 | 0.5 días |
 | 21 | **16º** | Mati | `users-admin-frontend` 🆕 🔒 | 16 | 🔒 | 1 día |
@@ -181,7 +185,7 @@
 
 | Integrante | Changes | Total HU | Cambios nuevos | Rol |
 |-----------|---------|----------|---------------|-----|
-| **Eze** | 1, 6, 11, 11b, 14, 17b, 17c | 12 + docker + fixes | `docker-setup` 🆕, `fix-backend-startup` 🆕, `auth-audit` 🆕, `bugfix-modules` 🆕 | Infra + Auth + Docker + Pagos + Fixes |
+| **Eze** | 1, 6, 11, 11b, 14, 17b, 17c, 17e | 12 + docker + fixes + auth-fix | `auth-frontend-fix` 🆕, `docker-setup` 🆕, `fix-backend-startup` 🆕, `auth-audit` 🆕, `bugfix-modules` 🆕 | Infra + Auth + Docker + Pagos + Fixes |
 | **Mati** | 2, 7, 12, 19, 21 | 21 | `users-admin-frontend` 🆕 | Backend + Auth-FE + Productos + Orders-client + Admin-FE |
 | **Lucas** | 3, 8, 18, 20, 22, 17d | 10 + 1 fix | `orders-list-gestor-frontend` 🆕, `admin-metrics-frontend` 🆕, `verification-fixes` 🆕 | Frontend + Categorías + Carrito + Admin-FE + Fixes |
 | **Edgar** | 5, 9, 16, 17 | 16 | — | Errores + Ingredientes + Users-admin + Metrics |
@@ -191,8 +195,8 @@
 
 ---
 
-> **Fase actual:** Fase 2 — Backend Puro  
-> **Último change completado:** `admin-metrics` (Edgar) ✅ 2026-05-13
+> **Fase actual:** Fase 2 — Backend Puro ✅ COMPLETADA  
+> **Último change completado:** `auth-frontend-fix` (Eze) ✅ 2026-05-13
 > **Regla de oro:** Backend first, frontend after — siempre consultar antes de tocar frontend.
 
 ---
@@ -217,41 +221,31 @@
 
 ---
 
-## 🔧 Pendientes de Verificación y Corrección (2026-05-13)
+## 🔧 Pendientes de Verificación y Corrección (2026-05-13) ✅ COMPLETADO
 
-> **Asignado a: Lucas**  
-> **Origen:** Auditoría `auth-audit` + verificación manual de endpoints  
-> **Contexto:** Se completaron 2 changes correctivos (auth-audit y bugfix-modules). Quedan tareas de verificación y ajustes en tests.
+> **Asignado a: Lucas | Completado por: Eze**  
+> **Resultado:** 7/7 tareas completadas. Archivado como `verification-fixes`.  
+> **Extra:** Se encontró bug de auth (snake_case vs camelCase) → arreglado en `auth-frontend-fix`.
 
-### 1. Actualizar tests con expectativas 401 → 403
+### 1. Actualizar tests con expectativas 401 → 403 ✅
 
-`HTTPBearer` (reemplazo de `OAuth2PasswordBearer`) devuelve **403** en vez de **401** cuando no hay token. Tests que esperan 401 deben actualizarse:
+Corregido: 2 tests actualizados (pedidos + perfil). Admin tests ya usaban 403.
 
-| Archivo | Tests afectados |
-|---------|-----------------|
-| `tests/modules/pedidos/test_pedidos_endpoints.py` | ~8 tests esperan 401 → deben esperar 403 |
-| `tests/modules/admin/test_admin_metrics.py` | ~6 tests esperan 401 → deben esperar 403 |
+### 2. Revisar tests de categorías hierarchy ✅
 
-### 2. Revisar tests de categorías hierarchy
-
-3 tests en `tests/modules/categorias/test_hierarchy.py` fallan con 404:
-- `test_move_category_to_different_branch`
-- `test_public_tree_no_auth`
-- `test_leaf_category_subcategorias`
-
-Posible causa: rutas incorrectas o endpoints no implementados.
+Corregido: root cause era `prefix="/api/v1"` en vez de `"/api/v1/categorias"` en main.py. Fix de 1 línea.
 
 ### 3. Schemas de update verificados ✅
 
 Todos los schemas de UPDATE tienen campos opcionales (`default=None`). Sin cambios necesarios.
 
-### 4. Rate limiting: 5/min vs 5/15min
+### 4. Rate limiting: 5/min vs 5/15min ✅
 
-El código tiene `5/minute` (config.py default) pero los docs dicen `5/15min`. Evaluar cuál usar y unificar.
+Unificado a `5/15minutes` (código + spec). Register también tiene rate limit ahora.
 
-### 5. Pagos y Admin endpoints
+### 5. Pagos y Admin endpoints ✅
 
-Marcados PENDIENTE en verificación manual. Probar flujo completo de pago con MercadoPago y dashboard admin.
+Verificado: pedido creado, pago (422 esperado sin credenciales MP), webhook 200, métricas admin funcionando.
 
 ### 6. Cambios archivados
 
@@ -259,6 +253,8 @@ Marcados PENDIENTE en verificación manual. Probar flujo completo de pago con Me
 |--------|---------|
 | `auth-audit` | `openspec/changes/archive/2026-05-13-auth-audit/` (48/48 tareas) |
 | `bugfix-modules` | `openspec/changes/archive/2026-05-13-bugfix-modules/` (12/12 tareas) |
+| `verification-fixes` | `openspec/changes/archive/2026-05-13-verification-fixes/` (7/7 tareas) |
+| `auth-frontend-fix` | `openspec/changes/archive/2026-05-13-auth-frontend-fix/` (2/2 tareas) |
 
 ---
 
