@@ -5,10 +5,13 @@ Acceso restringido a ADMIN, STOCK y PEDIDOS.
 """
 from __future__ import annotations
 
-from fastapi import APIRouter, Depends
+from fastapi import APIRouter, Depends, HTTPException
+from pydantic import BaseModel
 from typing import Any
+from sqlmodel import select
 
 from app.core.deps import get_current_user, require_role
+from app.core.database import SessionLocal
 from app.modules.admin.schemas import (
     GeneralMetricsResponse,
     OrdersByStatusEntry,
@@ -16,6 +19,8 @@ from app.modules.admin.schemas import (
     TopProductEntry,
 )
 from app.modules.admin.service import AdminService
+from app.modules.pedidos.model import Pedido, HistorialEstadoPedido
+from app.modules.auth.model import Usuario
 
 
 router = APIRouter(prefix="/admin", tags=["admin"])
@@ -90,3 +95,176 @@ def get_orders_by_status(
 ) -> list[OrdersByStatusEntry]:
     """GET /admin/metrics/orders-by-status/ — conteo de pedidos por estado."""
     return service.get_orders_by_status()
+
+
+# ── GET /admin/pedidos/ ─────────────────────────────────────────────────
+
+class PaginatedAdminPedidosResponse(BaseModel):
+    items: list[dict]
+    total: int
+    page: int
+    size: int
+    pages: int
+
+
+@router.get(
+    "/pedidos/",
+    response_model=PaginatedAdminPedidosResponse,
+    summary="Listar todos los pedidos",
+    description="Lista todos los pedidos del sistema con filtros opcionales.",
+)
+def list_pedidos(
+    page: int = 1,
+    size: int = 20,
+    estado: str | None = None,
+    q: str | None = None,
+    current_user: Any = Depends(require_role("ADMIN", "PEDIDOS")),
+) -> PaginatedAdminPedidosResponse:
+    """GET /admin/pedidos/ — listar pedidos con filtros."""
+    with SessionLocal() as session:
+        statement = select(Pedido)
+        
+        # Filtrar por estado
+        if estado:
+            statement = statement.where(Pedido.estado_codigo == estado)
+        
+        # Buscar por email del cliente (q)
+        if q:
+            statement = statement.where(Pedido.cliente_id.in_(
+                select(Usuario.id).where(Usuario.email.ilike(f"%{q}%"))
+            ))
+        
+        # Contar total
+        from sqlmodel import func
+        count_statement = select(func.count()).select_from(statement.subquery())
+        total = session.exec(count_statement).one()
+        
+        # Paginación
+        offset = (page - 1) * size
+        statement = statement.order_by(Pedido.creado_en.desc()).offset(offset).limit(size)
+        pedidos = session.exec(statement).all()
+        
+        # Armar respuesta
+        items = []
+        for p in pedidos:
+            # Obtener email del cliente
+            cliente_stmt = select(Usuario.email).where(Usuario.id == p.cliente_id)
+            email = session.exec(cliente_stmt).first()
+            
+            items.append({
+                "id": p.id,
+                "user_id": p.cliente_id,
+                "estado_codigo": p.estado_codigo,
+                "total": p.total,
+                "created_at": p.creado_en.isoformat() if p.creado_en else None,
+                "cliente_email": email,
+            })
+        
+        pages = (total + size - 1) // size if total > 0 else 1
+        
+        return PaginatedAdminPedidosResponse(
+            items=items,
+            total=total,
+            page=page,
+            size=size,
+            pages=pages,
+        )
+
+
+# ── GET /admin/pedidos/{id}/ ────────────────────────────────────────────
+
+@router.get(
+    "/pedidos/{pedido_id}/",
+    response_model=dict,
+    summary="Ver detalle de un pedido",
+    description="Retorna el detalle completo de un pedido.",
+)
+def get_pedido(
+    pedido_id: int,
+    current_user: Any = Depends(require_role("ADMIN", "PEDIDOS")),
+) -> dict:
+    """GET /admin/pedidos/{id}/ — detalle de un pedido."""
+    with SessionLocal() as session:
+        pedido = session.get(Pedido, pedido_id)
+        if not pedido:
+            raise HTTPException(status_code=404, detail="Pedido no encontrado")
+        
+        # Obtener datos del cliente
+        cliente = session.get(Usuario, pedido.cliente_id)
+        
+        # Obtener items del pedido
+        from app.modules.pedidos.model import DetallePedido
+        items_stmt = select(DetallePedido).where(DetallePedido.pedido_id == pedido_id)
+        items = session.exec(items_stmt).all()
+        
+        items_data = []
+        for item in items:
+            items_data.append({
+                "id": item.id,
+                "producto_id": item.producto_id,
+                "cantidad": item.cantidad,
+                "precio_unitario": item.precio_unitario,
+                "exclusiones": item.exclusiones or [],
+            })
+        
+        return {
+            "id": pedido.id,
+            "cliente_id": pedido.cliente_id,
+            "estado_codigo": pedido.estado_codigo,
+            "cliente_email": cliente.email if cliente else None,
+            "cliente_nombre": cliente.nombre if cliente else None,
+            "cliente_apellido": cliente.apellido if cliente else None,
+            "direccion_calle": pedido.direccion_calle,
+            "direccion_numero": pedido.direccion_numero,
+            "direccion_piso_depto": pedido.direccion_piso_depto,
+            "direccion_ciudad": pedido.direccion_ciudad,
+            "direccion_provincia": pedido.direccion_provincia,
+            "direccion_codigo_postal": pedido.direccion_codigo_postal,
+            "direccion_pais": pedido.direccion_pais,
+            "direccion_referencias": pedido.direccion_referencias,
+            "total": pedido.total,
+            "costo_envio": pedido.costo_envio,
+            "items": items_data,
+            "creado_en": pedido.creado_en.isoformat() if pedido.creado_en else None,
+            "actualizado_en": pedido.actualizado_en.isoformat() if pedido.actualizado_en else None,
+        }
+
+
+# ── GET /admin/pedidos/{id}/historial/ ───────────────────────────────────
+
+@router.get(
+    "/pedidos/{pedido_id}/historial/",
+    response_model=list[dict],
+    summary="Historial de estados de un pedido",
+    description="Retorna el historial de transiciones de estado de un pedido.",
+)
+def get_pedido_historial(
+    pedido_id: int,
+    current_user: Any = Depends(require_role("ADMIN", "PEDIDOS")),
+) -> list[dict]:
+    """GET /admin/pedidos/{id}/historial/ — historial de estados."""
+    with SessionLocal() as session:
+        # Verificar que existe el pedido
+        pedido = session.get(Pedido, pedido_id)
+        if not pedido:
+            raise HTTPException(status_code=404, detail="Pedido no encontrado")
+        
+        # Obtener historial
+        from app.modules.pedidos.model import HistorialEstadoPedido
+        historial_stmt = select(HistorialEstadoPedido).where(
+            HistorialEstadoPedido.pedido_id == pedido_id
+        ).order_by(HistorialEstadoPedido.creado_en.asc())
+        historial = session.exec(historial_stmt).all()
+        
+        return [
+            {
+                "id": h.id,
+                "estado_anterior_codigo": h.estado_anterior_codigo,
+                "estado_nuevo_codigo": h.estado_nuevo_codigo,
+                "actor_id": h.actor_id,
+                "actor_tipo": h.actor_tipo.value if h.actor_tipo else None,
+                "motivo": h.motivo,
+                "creado_en": h.creado_en.isoformat() if h.creado_en else None,
+            }
+            for h in historial
+        ]

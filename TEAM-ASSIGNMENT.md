@@ -72,7 +72,7 @@
 │                                                                           │
 │  1️⃣8️⃣ LUCAS → cart-frontend (✅ Archivado 2026-05-13)                            │
 │  1️⃣9️⃣ MATI → orders-list-client (✅ Archivado 2026-05-14)               │
-│  2️⃣0️⃣ LUCAS → orders-list-gestor-frontend 🔒 (⏳ espera 15) 🆕           │
+│  2️⃣0️⃣ LUCAS → orders-list-gestor-frontend (✅ Archivado 2026-05-14) 🆕           │
 │  2️⃣1️⃣ MATI → users-admin-frontend 🔒 (⏳ espera 16) 🆕                   │
 │  2️⃣2️⃣ LUCAS → admin-metrics-frontend 🔒 (⏳ espera 17) 🆕                │
 │                                                                           │
@@ -124,7 +124,7 @@
 |---|-------|-----------|--------|-----------|--------|-----|
 | 18 | **15º** | Lucas | `cart-frontend` | 12 | ✅ Archivado 2026-05-13 | 1 día |
 | 19 | **15º** | Mati | `orders-list-client` | 13 | ✅ Archivado 2026-05-14 | 0.5 días |
-| 20 | **16º** | Lucas | `orders-list-gestor-frontend` 🆕 🔒 | 15 | 🔒 | 0.5 días |
+| 20 | **16º** | Lucas | `orders-list-gestor-frontend` 🆕 | 15 | ✅ Archivado 2026-05-14 | 0.5 días |
 | 21 | **16º** | Mati | `users-admin-frontend` 🆕 🔒 | 16 | 🔒 | 1 día |
 | 22 | **17º** | Lucas | `admin-metrics-frontend` 🆕 🔒 | 17 | 🔒 | 1 día |
 
