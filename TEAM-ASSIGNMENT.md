@@ -127,6 +127,7 @@
 | 20 | **16º** | Lucas | `orders-list-gestor-frontend` 🆕 | 15 | ✅ Archivado 2026-05-14 | 0.5 días |
 | 21 | **16º** | Lucas | `users-admin-frontend` 🆕 | 16 | ✅ Archivado 2026-05-14 | 1 día |
 | 22 | **17º** | Lucas | `admin-metrics-frontend` 🆕 | 17 | ✅ Archivado 2026-05-14 | 1 día |
+| 23 | **17º** | Eze | `checkout-frontend` 🆕 | 14, 18, 10 | ✅ Archivado 2026-05-14 | 1 día |
 
 > 🔒 = **NO implementar sin consulta explícita al usuario.**  
 > La Fase 3 no arranca automáticamente al terminar la Fase 2.
@@ -185,18 +186,18 @@
 
 | Integrante | Changes | Total HU | Cambios nuevos | Rol |
 |-----------|---------|----------|---------------|-----|
-| **Eze** | 1, 6, 11, 11b, 14, 17b, 17c, 17e | 12 + docker + fixes + auth-frontend | `docker-setup` 🆕, `fix-backend-startup` 🆕, `auth-audit` 🆕, `bugfix-modules` 🆕, `auth-frontend-fix` 🆕 | Infra + Auth + Docker + Pagos + Fixes |
+| **Eze** | 1, 6, 11, 11b, 14, 17b, 17c, 17e, 23 | 12 + docker + fixes + auth-frontend + checkout | `docker-setup` 🆕, `fix-backend-startup` 🆕, `auth-audit` 🆕, `bugfix-modules` 🆕, `auth-frontend-fix` 🆕, `checkout-frontend` 🆕 | Infra + Auth + Docker + Pagos + Fixes + Checkout |
 | **Mati** | 2, 7, 12, 19 | 21 | — | Backend + Auth-FE + Productos + Orders-client |
 | **Lucas** | 3, 8, 18, 20, 21, 22, 17d | 10 + 1 fix | `users-admin-frontend` 🆕, `admin-metrics-frontend` 🆕, `verification-fixes` 🆕 | Frontend + Categorías + Carrito + Admin-FE + Fixes |
 | **Edgar** | 5, 9, 16, 17 | 16 | — | Errores + Ingredientes + Users-admin + Metrics |
 | **Leandro** | 4, 10, 13, 15 | 15 | `orders-list-gestor` (backend) 🔀 | Patrones + Direcciones + FSM + Admin-pedidos |
 
-**Total:** 26 changes, 77 HU, ~4-5 semanas (Fase 2: ~2 semanas, Fase 3: ~2 semanas)
+**Total:** 27 changes, 77 HU, ~4-5 semanas (Fase 2: ~2 semanas, Fase 3: ~2 semanas)
 
 ---
 
-> **Fase actual:** ✅ TODOS LOS 22 CHANGES COMPLETADOS  
-> **Último change completado:** `admin-metrics-frontend` (Lucas) ✅ 2026-05-14  
+> **Fase actual:** ✅ TODOS LOS 23 CHANGES COMPLETADOS  
+> **Último change completado:** `checkout-frontend` (Eze) ✅ 2026-05-14  
 > **Regla de oro:** Backend first, frontend after — siempre consultar antes de tocar frontend.
 
 ---
@@ -246,4 +247,4 @@ Marcados PENDIENTE en verificación manual. Probar flujo completo de pago con Me
 
 ---
 
-> **Última actualización:** 2026-05-13 — Eze (auth-audit + bugfix-modules)
+> **Última actualización:** 2026-05-14 — Eze (checkout-frontend)
