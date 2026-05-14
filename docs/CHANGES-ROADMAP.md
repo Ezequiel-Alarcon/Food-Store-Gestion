@@ -81,7 +81,7 @@
 | 19 | `orders-list-client` | Ver mis pedidos (cliente) | EPIC 13 | 2 | ~3 | ✅ Archivado 2026-05-14 |
 | 20 | `orders-list-gestor-frontend` | 🆕 Panel pedidos frontend (gestor/ADMIN) | EPIC 13 | — | ~3 | Frontend | ✅ Archivado 2026-05-14 |
 | 21 | `users-admin-frontend` | 🆕 Panel admin usuarios frontend | EPIC 15 | — | ~3 | Frontend | ✅ Archivado 2026-05-14 |
-| 22 | `admin-metrics-frontend` | 🆕 Dashboard KPIs frontend (recharts) | EPIC 17 | — | ~4 | Frontend |
+| 22 | `admin-metrics-frontend` | 🆕 Dashboard KPIs frontend (recharts) | EPIC 17 | — | ~4 | Frontend | ✅ Archivado 2026-05-14 |
 
 > **Regla FASE 3:** Cada change de frontend requiere consulta explícita al usuario.  
 > No se avanza automáticamente a ningún change de frontend sin aprobación.
@@ -681,7 +681,7 @@
 | **Sprint 6** | 14 (`payments-integration`) | EPIC 11 | 4 | ✅ Archivado 2026-05-12 |
 | **Sprint 7** | 15-17 (admin backend) + 17d-17e (fixes) | EPIC 13,15,17 | 9 | ✅ Completado |
 | **Sprint 8** | 18 (`cart-frontend`) | EPIC 08 | 6 | ✅ Archivado 2026-05-13 |
-| **Sprint 9** | 19 (archived) → 20-22 (resto frontend) 🔒 | EPIC 13,15,17 | — | 🔒 Frontend |
+| **Sprint 9** | 19-22 (frontend) 🔒 | EPIC 08,13,15,17 | — | ✅ Completado 2026-05-14 |
 
 **Total: 22 cambios en ~9-10 sprints. Fase backend puro: sprints 3-7 (5 sprints).**
 
