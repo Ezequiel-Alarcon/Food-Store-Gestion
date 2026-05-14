@@ -1,5 +1,5 @@
 import { useState } from 'react'
-import { useNavigate } from 'react-router-dom'
+import { useNavigate, Link } from 'react-router-dom'
 import { useAuthStore } from '../../stores/authStore'
 
 export function RegisterForm() {
@@ -81,9 +81,9 @@ export function RegisterForm() {
           </h2>
           <p className="mt-2 text-center text-sm text-gray-600">
             ¿Ya tenés cuenta?{' '}
-            <a href="/login" className="font-medium text-indigo-600 hover:text-indigo-500">
+            <Link to="/login" className="font-medium text-indigo-600 hover:text-indigo-500">
               Iniciá sesión
-            </a>
+            </Link>
           </p>
         </div>
 

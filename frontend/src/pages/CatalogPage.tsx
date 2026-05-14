@@ -156,8 +156,8 @@ export function CatalogPage() {
             ))}
           </div>
 
-          {/* Paginación */}
-          {totalPages > 1 && (
+          {/* Paginación — oculta mientras se busca */}
+          {!searchTerm && totalPages > 1 && (
             <div className="flex justify-center items-center gap-2 mt-8">
               <button
                 onClick={() => setPage((p) => Math.max(1, p - 1))}

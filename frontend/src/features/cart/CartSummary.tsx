@@ -1,5 +1,5 @@
 import { Link } from 'react-router-dom'
-import { useCartStore } from '../../stores/cartStore'
+import { useCartStore, totalPrice } from '../../stores/cartStore'
 import { useUIStore } from '../../stores/uiStore'
 
 export function CartSummary() {
@@ -11,7 +11,7 @@ export function CartSummary() {
   const openConfirmModal = useUIStore((s) => s.openConfirmModal)
   const closeCart = useUIStore((s) => s.closeCart)
 
-  const total = items.reduce((sum, i) => sum + i.producto.precio * i.cantidad, 0)
+  const total = totalPrice()
 
   const handleClearCart = () => {
     openConfirmModal('Vaciar carrito', '¿Eliminar todos los productos?', () => {
@@ -44,7 +44,7 @@ export function CartSummary() {
 
   // ── Items + Footer ──
   return (
-    <div className="flex flex-col h-[calc(100%-49px)]">
+    <div className="flex flex-col flex-1">
       {/* Item list */}
       <div className="flex-1 overflow-y-auto">
         {items.map((item) => (
