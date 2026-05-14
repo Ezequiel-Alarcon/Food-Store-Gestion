@@ -12,6 +12,7 @@ import { CartDrawer } from '../features/cart/CartDrawer'
 import { ConfirmModal } from '../features/layout/ConfirmModal'
 import { ToastContainer } from '../features/layout/ToastContainer'
 import { OrdersPage } from '../pages/OrdersPage'
+import CheckoutPage from '../pages/CheckoutPage'
 import { OrdersListPage } from '../features/admin/orders/ui/OrdersListPage'
 import { OrderDetailPage } from '../features/admin/orders/ui/OrderDetailPage'
 import { UsersPage } from '../features/admin/users/ui/UsersPage'
@@ -55,6 +56,15 @@ export function RouterProvider({ children }: RouterProviderProps) {
         />
 
         <Route path="/puntos-retiro" element={<PickupPointsPage />} />
+
+        <Route
+          path="/checkout"
+          element={
+            <ProtectedRoute allowedRoles={['CLIENT']}>
+              <CheckoutPage />
+            </ProtectedRoute>
+          }
+        />
 
         {/* Rutas protegidas - Admin */}
         <Route

@@ -1,5 +1,5 @@
 import { api } from '../../lib/api'
-import type { PedidoDetalle, PaginatedPedidos } from './types'
+import type { PedidoListItem, PedidoDetalle, PaginatedPedidos, PedidoCreateRequest } from './types'
 
 export interface PedidoFilters {
   page?: number
@@ -20,6 +20,11 @@ export const pedidoApi = {
 
   getById: async (id: number): Promise<PedidoDetalle> => {
     const response = await api.get<PedidoDetalle>(`/pedidos/${id}`)
+    return response.data
+  },
+
+  create: async (payload: PedidoCreateRequest): Promise<PedidoDetalle> => {
+    const response = await api.post<PedidoDetalle>('/pedidos/', payload)
     return response.data
   },
 }

@@ -1,5 +1,16 @@
 /** Tipos para el módulo de pedidos (vista cliente) */
 
+export interface PedidoItemCreate {
+  producto_id: number
+  cantidad: number
+  exclusiones: number[]
+}
+
+export interface PedidoCreateRequest {
+  direccion_id: number
+  items: PedidoItemCreate[]
+}
+
 export interface DetalleItem {
   id: number
   producto_id: number

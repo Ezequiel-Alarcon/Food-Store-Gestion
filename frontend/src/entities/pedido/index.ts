@@ -1,3 +1,11 @@
 export { pedidoApi } from './api'
 export type { PedidoFilters } from './api'
-export type { PedidoListItem, PedidoDetalle, DetalleItem, PaginatedPedidos } from './types'
+export { useCreatePedido } from './queries'
+export type {
+    PedidoListItem,
+    PedidoDetalle,
+    DetalleItem,
+    PaginatedPedidos,
+    PedidoCreateRequest,
+    PedidoItemCreate,
+} from './types'
