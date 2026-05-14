@@ -17,18 +17,20 @@ interface PaymentState {
   paymentStatus: PaymentStatus
   statusDetail: string | null
   error: string | null
+  timeoutId: number | null
   startCheckout: (pedidoId: number) => void
   setPreference: (preferenceId: string) => void
   updatePaymentStatus: (status: PaymentStatus, statusDetail?: string) => void
   resetPayment: () => void
 }
 
-export const usePaymentStore = create<PaymentState>()((set) => ({
+export const usePaymentStore = create<PaymentState>()((set, get) => ({
   checkoutStep: 'idle',
   preferenceId: null,
   paymentStatus: null,
   statusDetail: null,
   error: null,
+  timeoutId: null,
   startCheckout: () =>
     set({
       checkoutStep: 'creating',
@@ -36,13 +38,30 @@ export const usePaymentStore = create<PaymentState>()((set) => ({
       paymentStatus: null,
       statusDetail: null,
       error: null,
+      timeoutId: null,
     }),
-  setPreference: (preferenceId) =>
+  setPreference: (preferenceId) => {
+    const { timeoutId: prevTimeoutId } = get()
+    if (prevTimeoutId !== null) {
+      clearTimeout(prevTimeoutId)
+    }
+    const timeoutId = window.setTimeout(() => {
+      const state = usePaymentStore.getState()
+      if (state.checkoutStep === 'redirecting') {
+        state.updatePaymentStatus('cancelled', 'timeout')
+      }
+    }, 30000)
     set({
       checkoutStep: 'redirecting',
       preferenceId,
-    }),
+      timeoutId,
+    })
+  },
   updatePaymentStatus: (status, statusDetail) => {
+    const { timeoutId } = get()
+    if (timeoutId !== null) {
+      clearTimeout(timeoutId)
+    }
     let checkoutStep: CheckoutStep = 'processing'
     if (status === 'approved') checkoutStep = 'approved'
     else if (status === 'rejected') checkoutStep = 'rejected'
@@ -53,6 +72,7 @@ export const usePaymentStore = create<PaymentState>()((set) => ({
       checkoutStep,
       paymentStatus: status,
       statusDetail: statusDetail ?? null,
+      timeoutId: null,
     })
   },
   resetPayment: () =>
@@ -62,5 +82,6 @@ export const usePaymentStore = create<PaymentState>()((set) => ({
       paymentStatus: null,
       statusDetail: null,
       error: null,
+      timeoutId: null,
     }),
 }))
