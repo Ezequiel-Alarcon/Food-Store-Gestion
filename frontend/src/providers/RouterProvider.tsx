@@ -11,6 +11,7 @@ import { CartPage } from '../pages/CartPage'
 import { CartDrawer } from '../features/cart/CartDrawer'
 import { ConfirmModal } from '../features/layout/ConfirmModal'
 import { ToastContainer } from '../features/layout/ToastContainer'
+import { OrdersPage } from '../pages/OrdersPage'
 
 interface RouterProviderProps {
   children: ReactNode
@@ -35,10 +36,7 @@ export function RouterProvider({ children }: RouterProviderProps) {
           path="/pedidos"
           element={
             <ProtectedRoute allowedRoles={['CLIENT']}>
-              <div className="p-8">
-                <h1 className="text-2xl font-bold">Mis Pedidos</h1>
-                <p className="text-gray-600 mt-2">Aquí verás tus pedidos</p>
-              </div>
+              <OrdersPage />
             </ProtectedRoute>
           }
         />
@@ -58,7 +56,7 @@ export function RouterProvider({ children }: RouterProviderProps) {
         <Route
           path="/admin"
           element={
-            <ProtectedRoute allowedRoles={['ADMIN', 'GESTOR_PEDIDOS', 'GESTOR_STOCK']}>
+            <ProtectedRoute allowedRoles={['ADMIN', 'PEDIDOS', 'STOCK']}>
               <div className="p-8">
                 <h1 className="text-2xl font-bold">Dashboard</h1>
                 <p className="text-gray-600 mt-2">Panel de administración</p>
@@ -73,6 +71,28 @@ export function RouterProvider({ children }: RouterProviderProps) {
               <div className="p-8">
                 <h1 className="text-2xl font-bold">Gestión de Usuarios</h1>
                 <p className="text-gray-600 mt-2">Administración de usuarios</p>
+              </div>
+            </ProtectedRoute>
+          }
+        />
+        <Route
+          path="/admin/stock"
+          element={
+            <ProtectedRoute allowedRoles={['STOCK', 'ADMIN']}>
+              <div className="p-8">
+                <h1 className="text-2xl font-bold">Gestión de Stock</h1>
+                <p className="text-gray-600 mt-2">Administración de inventario</p>
+              </div>
+            </ProtectedRoute>
+          }
+        />
+        <Route
+          path="/admin/pedidos"
+          element={
+            <ProtectedRoute allowedRoles={['PEDIDOS', 'ADMIN']}>
+              <div className="p-8">
+                <h1 className="text-2xl font-bold">Gestión de Pedidos</h1>
+                <p className="text-gray-600 mt-2">Administración de pedidos</p>
               </div>
             </ProtectedRoute>
           }
