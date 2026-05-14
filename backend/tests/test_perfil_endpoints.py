@@ -42,9 +42,9 @@ class TestPerfilEndpoints:
         assert data["rol"] == "CLIENT"
 
     def test_get_perfil_unauthenticated(self, client: TestClient):
-        """GET /perfil sin token debe devolver 401."""
+        """GET /perfil sin token debe devolver 403 (HTTPBearer)."""
         response = client.get("/api/v1/perfil")
-        assert response.status_code == 401
+        assert response.status_code == 403
 
     def test_update_perfil(self, client: TestClient):
         """PUT /perfil debe actualizar nombre y teléfono."""

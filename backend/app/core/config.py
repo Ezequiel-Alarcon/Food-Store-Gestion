@@ -85,10 +85,10 @@ class Settings(BaseSettings):
         default=100,
         description="Requests por minuto para endpoints autenticados"
     )
-    RATE_LIMIT_AUTH: int = Field(
-        default=5,
-        description="Requests por minuto para endpoints de auth por IP"
-    )
+RATE_LIMIT_AUTH: int = Field(
+    default=5,
+    description="Requests por IP en ventana de 15 minutos para endpoints de auth"
+)
 
     @property
     def cors_origins_list(self) -> List[str]:

@@ -44,7 +44,7 @@ def get_current_user(
     """Resuelve el usuario/principal actual desde JWT.
 
     Reglas:
-    - Si falta token o es inválido/expirado -> 401
+    - Si falta token -> HTTPBearer devuelve 403
     - Si el token tiene `type` y no es `access` -> 401
     - Si existe el modelo `Usuario`, intenta resolverlo por `sub`.
       Si no existe, retorna el payload del JWT como principal.
