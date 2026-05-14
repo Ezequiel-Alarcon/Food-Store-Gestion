@@ -80,7 +80,7 @@
 | 18 | `cart-frontend` | Carrito Zustand + persistencia | EPIC 08 | 6 | ~6 | ✅ Archivado 2026-05-13 |
 | 19 | `orders-list-client` | Ver mis pedidos (cliente) | EPIC 13 | 2 | ~3 | ✅ Archivado 2026-05-14 |
 | 20 | `orders-list-gestor-frontend` | 🆕 Panel pedidos frontend (gestor/ADMIN) | EPIC 13 | — | ~3 | Frontend | ✅ Archivado 2026-05-14 |
-| 21 | `users-admin-frontend` | 🆕 Panel admin usuarios frontend | EPIC 15 | — | ~3 | Frontend |
+| 21 | `users-admin-frontend` | 🆕 Panel admin usuarios frontend | EPIC 15 | — | ~3 | Frontend | ✅ Archivado 2026-05-14 |
 | 22 | `admin-metrics-frontend` | 🆕 Dashboard KPIs frontend (recharts) | EPIC 17 | — | ~4 | Frontend |
 
 > **Regla FASE 3:** Cada change de frontend requiere consulta explícita al usuario.  

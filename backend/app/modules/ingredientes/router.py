@@ -18,7 +18,7 @@ from app.modules.ingredientes.schemas import (
 )
 from app.modules.ingredientes.service import IngredienteService
 
-router = APIRouter()
+router = APIRouter(prefix="/ingredientes", tags=["ingredientes"])
 
 
 @router.post(
