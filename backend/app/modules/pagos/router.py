@@ -7,12 +7,14 @@ POST   /api/v1/pagos/webhook                - IPN MercadoPago (publico)
 GET    /api/v1/pagos/{pedido_id}            - consultar pago (auth)
 POST   /api/v1/pagos/{pedido_id}/reintentar  - reintentar pago (CLIENT)
 """
-from fastapi import APIRouter, Depends, Request, status
+from fastapi import APIRouter, BackgroundTasks, Depends, HTTPException, Request, status
+from app.core.config import get_settings
 from app.core.deps import get_current_user, require_role
+from app.core.limiter import limiter
 from app.modules.pagos.schemas import PagoCreate, PagoResponse, WebhookPayload
-from app.modules.pagos.service import PagoService
+from app.modules.pagos.service import PagoService, _validate_webhook_signature
 
-router = APIRouter()
+router = APIRouter(tags=["Pagos"])
 
 
 @router.post(
@@ -36,18 +38,43 @@ def crear_pago(
     summary="Webhook IPN MercadoPago",
     description="Endpoint publico para notificaciones IPN de MercadoPago. Responde 200 inmediatamente (RN-PA03).",
 )
-async def webhook_mercadopago(request: Request) -> dict:
+@limiter.limit("60/minute")
+async def webhook_mercadopago(request: Request, background_tasks: BackgroundTasks) -> dict:
+    settings = get_settings()
+
+    if settings.MP_WEBHOOK_SECRET:
+        data_id = request.query_params.get("data.id", "")
+        if not data_id:
+            raise HTTPException(status_code=400, detail="Falta data.id en query params")
+
+        if not _validate_webhook_signature(request, settings.MP_WEBHOOK_SECRET):
+            raise HTTPException(status_code=401, detail="Firma del webhook invalida")
+
     try:
         body = await request.json()
     except Exception:
         body = {}
     payload = WebhookPayload(**body)
-    service = PagoService()
-    service.procesar_webhook(
-        topic=payload.topic or payload.type,
-        resource_id=payload.resource_id or payload.id,
-    )
+
+    topic = payload.topic or payload.type
+    resource_id = payload.resource_id or payload.id
+
+    if not resource_id:
+        return {"status": "ignored", "reason": "Falta resource_id"}
+
+    background_tasks.add_task(_process_webhook_task, topic, resource_id)
     return {"status": "ok"}
+
+
+def _process_webhook_task(topic: str | None, resource_id: str) -> None:
+    """Procesa webhook en background con su propia sesion de BD."""
+    service = PagoService()
+    try:
+        service.procesar_webhook(topic=topic, resource_id=resource_id)
+    except Exception:
+        import logging
+        logger = logging.getLogger(__name__)
+        logger.exception(f"Error en background webhook task: topic={topic}, resource_id={resource_id}")
 
 
 @router.get(

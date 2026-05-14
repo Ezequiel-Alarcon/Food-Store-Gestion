@@ -10,6 +10,7 @@ from pydantic import BaseModel
 class PagoCreate(BaseModel):
     """Schema para crear un pago."""
     pedido_id: int
+    payment_method_id: str = "account_money"
 
 
 class PagoResponse(BaseModel):
