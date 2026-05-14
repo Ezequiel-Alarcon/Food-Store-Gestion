@@ -73,7 +73,7 @@
 │  1️⃣8️⃣ LUCAS → cart-frontend (✅ Archivado 2026-05-13)                            │
 │  1️⃣9️⃣ MATI → orders-list-client (✅ Archivado 2026-05-14)               │
 │  2️⃣0️⃣ LUCAS → orders-list-gestor-frontend (✅ Archivado 2026-05-14) 🆕           │
-│  2️⃣1️⃣ MATI → users-admin-frontend 🔒 (⏳ espera 16) 🆕                   │
+│  2️⃣1️⃣ LUCAS → users-admin-frontend (✅ Archivado 2026-05-14) 🆕                   │
 │  2️⃣2️⃣ LUCAS → admin-metrics-frontend 🔒 (⏳ espera 17) 🆕                │
 │                                                                           │
 └──────────────────────────────────────────────────────────────────────────┘
@@ -125,7 +125,7 @@
 | 18 | **15º** | Lucas | `cart-frontend` | 12 | ✅ Archivado 2026-05-13 | 1 día |
 | 19 | **15º** | Mati | `orders-list-client` | 13 | ✅ Archivado 2026-05-14 | 0.5 días |
 | 20 | **16º** | Lucas | `orders-list-gestor-frontend` 🆕 | 15 | ✅ Archivado 2026-05-14 | 0.5 días |
-| 21 | **16º** | Mati | `users-admin-frontend` 🆕 🔒 | 16 | 🔒 | 1 día |
+| 21 | **16º** | Lucas | `users-admin-frontend` 🆕 | 16 | ✅ Archivado 2026-05-14 | 1 día |
 | 22 | **17º** | Lucas | `admin-metrics-frontend` 🆕 🔒 | 17 | 🔒 | 1 día |
 
 > 🔒 = **NO implementar sin consulta explícita al usuario.**  
@@ -186,8 +186,8 @@
 | Integrante | Changes | Total HU | Cambios nuevos | Rol |
 |-----------|---------|----------|---------------|-----|
 | **Eze** | 1, 6, 11, 11b, 14, 17b, 17c, 17e | 12 + docker + fixes + auth-frontend | `docker-setup` 🆕, `fix-backend-startup` 🆕, `auth-audit` 🆕, `bugfix-modules` 🆕, `auth-frontend-fix` 🆕 | Infra + Auth + Docker + Pagos + Fixes |
-| **Mati** | 2, 7, 12, 19, 21 | 21 | `users-admin-frontend` 🆕 | Backend + Auth-FE + Productos + Orders-client + Admin-FE |
-| **Lucas** | 3, 8, 18, 20, 22, 17d | 10 + 1 fix | `orders-list-gestor-frontend` 🆕, `admin-metrics-frontend` 🆕, `verification-fixes` 🆕 | Frontend + Categorías + Carrito + Admin-FE + Fixes |
+| **Mati** | 2, 7, 12, 19 | 21 | — | Backend + Auth-FE + Productos + Orders-client |
+| **Lucas** | 3, 8, 18, 20, 21, 22, 17d | 10 + 1 fix | `users-admin-frontend` 🆕, `admin-metrics-frontend` 🆕, `verification-fixes` 🆕 | Frontend + Categorías + Carrito + Admin-FE + Fixes |
 | **Edgar** | 5, 9, 16, 17 | 16 | — | Errores + Ingredientes + Users-admin + Metrics |
 | **Leandro** | 4, 10, 13, 15 | 15 | `orders-list-gestor` (backend) 🔀 | Patrones + Direcciones + FSM + Admin-pedidos |
 

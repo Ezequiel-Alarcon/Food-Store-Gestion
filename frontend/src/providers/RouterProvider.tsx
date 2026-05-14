@@ -14,6 +14,7 @@ import { ToastContainer } from '../features/layout/ToastContainer'
 import { OrdersPage } from '../pages/OrdersPage'
 import { OrdersListPage } from '../features/admin/orders/ui/OrdersListPage'
 import { OrderDetailPage } from '../features/admin/orders/ui/OrderDetailPage'
+import { UsersPage } from '../features/admin/users/ui/UsersPage'
 
 interface RouterProviderProps {
   children: ReactNode
@@ -70,10 +71,7 @@ export function RouterProvider({ children }: RouterProviderProps) {
           path="/admin/usuarios"
           element={
             <ProtectedRoute allowedRoles={['ADMIN']}>
-              <div className="p-8">
-                <h1 className="text-2xl font-bold">Gestión de Usuarios</h1>
-                <p className="text-gray-600 mt-2">Administración de usuarios</p>
-              </div>
+              <UsersPage />
             </ProtectedRoute>
           }
         />
