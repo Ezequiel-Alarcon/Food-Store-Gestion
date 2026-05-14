@@ -94,13 +94,14 @@ categorias	app/modules/categorias/	Categorías jerárquicas con CTE recursiva. S
 productos	app/modules/productos/	Catálogo con Ingrediente (es_alergeno). Stock como campo en Producto.
 pedidos	app/modules/pedidos/	Dominio central: máquina de estados FSM, audit trail, historial append-only.
 pagos	app/modules/pagos/	Integración MercadoPago: crear pago, webhook IPN, registro de transacciones.
+sucursales	app/modules/sucursales/	CRUD completo de sucursales para gestión de múltiples locales.
 admin	app/modules/admin/	Dashboard con métricas, gestión de stock y usuarios desde el panel.
  
 3. Modelo de Datos — ERD v5
-El esquema aplica Tercera Forma Normal (3FN), Soft Delete (deleted_at TIMESTAMPTZ), Snapshot Pattern en pedidos y Audit Trail append-only en HistorialEstadoPedido. La versión 5 incorpora todas las correcciones de auditoría: RefreshToken, Ingrediente, ProductoIngrediente, Pago completo y correcciones de tipos.
+El esquema aplica Tercera Forma Normal (3FN), Soft Delete (eliminado_en TIMESTAMPTZ), Snapshot Pattern en pedidos y Audit Trail append-only en HistorialEstadoPedido.
 3.1 Dominio 1 — Identidad y Acceso
 Entidad	Campo clave	Tipo	Restricción	Notas
-Usuario	id	BIGSERIAL	PK	Soft-delete vía deleted_at
+Usuario	id	BIGSERIAL	PK	Soft-delete vía eliminado_en
 Usuario	email	VARCHAR(254)	UQ, NN	Validar con EmailStr (Pydantic v2)
 Usuario	password_hash	CHAR(60)	NN	bcrypt cost≥12. NUNCA almacenar plaintext
 Rol	codigo	VARCHAR(20)	PK (semántica)	ADMIN | STOCK | PEDIDOS | CLIENT
@@ -195,7 +196,7 @@ Todos los endpoints usan el prefijo /api/v1. Los errores siguen RFC 7807 (Proble
 Convenciones globales:
   Error estándar RFC 7807: { "detail": "mensaje", "code": "ERROR_CODE", "field": "campo_opcional" }
   Paginación: GET /recursos?page=1&size=20 → { "items": [...], "total": N, "page": 1, "size": 20, "pages": P }
-  Soft delete: todos los GET filtran WHERE deleted_at IS NULL. Los registros eliminados no son visibles.
+  Soft delete: todos los GET filtran WHERE eliminado_en IS NULL. Los registros eliminados no son visibles.
 
 5.1 Módulo Auth
 Método	Endpoint	Body / Params	Response	Auth requerida
@@ -275,7 +276,7 @@ list_all(skip: int, limit: int) → list[T]	Listado simple sin filtros. Para lis
 count() → int	Cantidad total de registros. Útil para paginación.
 create(entity: T) → T	Agrega a sesión + flush() + refresh(). Retorna entidad con ID asignado.
 update(entity: T) → T	Agrega entidad modificada a sesión + flush() + refresh().
-soft_delete(entity: T) → None	Asigna deleted_at = now(). Solo para entidades con soft-delete.
+soft_delete(entity: T) → None	Asigna eliminado_en = now(). Solo para entidades con soft-delete.
 hard_delete(entity: T) → None	Hard delete. Solo se usa cuando el modelo no tiene soft-delete.
  
 8. Integración MercadoPago
@@ -351,7 +352,7 @@ Repository Pattern	Backend	Abstracción del acceso a BD. BaseRepository[T] gené
 Unit of Work	Backend	Gestión de transacciones atómicas. El Service opera dentro del contexto UoW sin gestionar la sesión directamente.
 Service Layer	Backend	Lógica de negocio centralizada, stateless. Consume el UoW. Independiente del framework.
 Snapshot Pattern	Backend/BD	Precios y nombres de producto inmutables al crear el pedido. Garantiza integridad histórica.
-Soft Delete	Backend/BD	deleted_at TIMESTAMPTZ — registros lógicamente eliminados. Nunca DELETE físico en entidades de negocio.
+Soft Delete	Backend/BD	eliminado_en TIMESTAMPTZ — registros lógicamente eliminados. Nunca DELETE físico en entidades de negocio.
 Audit Trail Append-Only	Backend/BD	HistorialEstadoPedido: solo INSERT, nunca UPDATE/DELETE (RN-03). Trazabilidad completa.
 State Machine (FSM)	Backend	Transiciones del pedido validadas en la capa de servicio contra el mapa de transiciones permitidas.
 Idempotent Payments	Backend	UUID como idempotency_key enviado a MercadoPago. Evita cobros duplicados por reintentos.
