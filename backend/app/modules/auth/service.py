@@ -8,7 +8,7 @@ from __future__ import annotations
 from datetime import datetime, timedelta, timezone
 from typing import TYPE_CHECKING
 
-from fastapi import HTTPException, status
+from app.core.exceptions import ConflictError, UnauthorizedError
 from sqlmodel import Session
 
 from app.core.config import get_settings
@@ -48,10 +48,7 @@ class AuthService:
         """Registra un nuevo usuario y devuelve tokens."""
         # Verificar email único
         if self.auth_repo.get_user_by_email(request.email):
-            raise HTTPException(
-                status_code=status.HTTP_409_CONFLICT,
-                detail="El email ya está registrado",
-            )
+            raise ConflictError("El email ya está registrado")
         
         # Hashear password
         password_hash = hash_password(request.password)
@@ -79,17 +76,10 @@ class AuthService:
 
         # Verificar credenciales: todos los fallos devuelven el mismo mensaje
         if not usuario or not verify_password(request.password, usuario.password_hash):
-            raise HTTPException(
-                status_code=status.HTTP_401_UNAUTHORIZED,
-                detail="Credenciales inválidas",
-            )
+            raise UnauthorizedError("Credenciales inválidas")
 
-        # Verificar si está activo — mismo mensaje genérico (RN-AU08)
         if not usuario.activo:
-            raise HTTPException(
-                status_code=status.HTTP_401_UNAUTHORIZED,
-                detail="Credenciales inválidas",
-            )
+            raise UnauthorizedError("Credenciales inválidas")
 
         return self._create_token_pair(usuario)
     
@@ -99,45 +89,24 @@ class AuthService:
         try:
             payload = decode_token(request.refresh_token)
         except ValueError:
-            raise HTTPException(
-                status_code=status.HTTP_401_UNAUTHORIZED,
-                detail="Refresh token inválido",
-            )
+            raise UnauthorizedError("Refresh token inválido")
 
         if payload.get("type") != "refresh":
-            raise HTTPException(
-                status_code=status.HTTP_401_UNAUTHORIZED,
-                detail="Token inválido",
-            )
+            raise UnauthorizedError("Token inválido")
 
-        # Verificar que el token existe y es válido en DB
         stored_token = self.refresh_repo.get_valid_token(request.refresh_token)
         if not stored_token:
-            raise HTTPException(
-                status_code=status.HTTP_401_UNAUTHORIZED,
-                detail="Refresh token expirado o revocado",
-            )
+            raise UnauthorizedError("Refresh token expirado o revocado")
 
-        # Verificar usuario ANTES de revocar (BUG #14 — orden correcto)
         usuario = self.auth_repo.get_by_id(stored_token.user_id)
         if not usuario:
-            raise HTTPException(
-                status_code=status.HTTP_401_UNAUTHORIZED,
-                detail="Usuario no encontrado",
-            )
+            raise UnauthorizedError("Usuario no encontrado")
 
-        # Verificar que el usuario esté activo (BUG #8)
         if not usuario.activo:
-            raise HTTPException(
-                status_code=status.HTTP_401_UNAUTHORIZED,
-                detail="Credenciales inválidas",
-            )
+            raise UnauthorizedError("Credenciales inválidas")
 
-        # Revocar token actual (token rotation)
-        self.refresh_repo.revoke(stored_token)
-
-        # Generar nuevo par de tokens
-        return self._create_token_pair(usuario)
+        # Revocar token actual y generar nuevo par (token rotation atómico)
+        return self._rotate_token_pair(stored_token, usuario)
     
     def logout(self, refresh_token: str) -> None:
         """Cierra sesión revocando el refresh token."""
@@ -174,3 +143,12 @@ class AuthService:
             token_type="bearer",
             expires_in=settings.ACCESS_TOKEN_EXPIRE_MINUTES * 60,
         )
+
+    def _rotate_token_pair(self, stored_token, usuario):
+        """Atomically rotate token pair with rollback on failure."""
+        self.refresh_repo.revoke(stored_token)
+        try:
+            return self._create_token_pair(usuario)
+        except Exception:
+            self.session.rollback()
+            raise

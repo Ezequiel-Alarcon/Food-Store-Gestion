@@ -26,6 +26,32 @@ class PedidosRepository(BaseRepository[Pedido]):
     def get_by_id_with_items(self, pedido_id: int) -> Pedido | None:
         return self.session.get(Pedido, pedido_id)
 
+    def list_pedidos_for_admin(
+        self,
+        *,
+        page: int,
+        size: int,
+        estado: str | None = None,
+        q: str | None = None,
+    ) -> tuple[list[tuple[Pedido, str]], int]:
+        stmt = select(Pedido, Usuario.email).join(Usuario, Usuario.id == Pedido.cliente_id)
+
+        if estado is not None:
+            stmt = stmt.where(Pedido.estado_codigo == estado)
+
+        if q:
+            like = f"%{q.strip()}%"
+            stmt = stmt.where(Usuario.email.ilike(like))
+
+        count_stmt = select(func.count()).select_from(stmt.subquery())
+        total = int(self.session.exec(count_stmt).one())
+
+        offset = (page - 1) * size
+        stmt = stmt.order_by(Pedido.creado_en.desc()).offset(offset).limit(size)
+
+        rows = list(self.session.exec(stmt).all())
+        return rows, total
+
     def get_historial(self, pedido_id: int) -> list[HistorialEstadoPedido]:
         stmt = (
             select(HistorialEstadoPedido)
