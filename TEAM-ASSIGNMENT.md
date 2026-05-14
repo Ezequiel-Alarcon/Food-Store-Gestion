@@ -60,14 +60,17 @@
 │  1️⃣7️⃣🅲️ EZE → bugfix-modules (✅ 2026-05-13) 🆕                            │
 │             ↓ (CTE text(), categoria_padre_id, producto delete msg)       │
 │                                                                           │
-│  1️⃣7️⃣🅳️ LUCAS → verification-fixes (🔲 PENDIENTE) 🆕                       │
+│  1️⃣7️⃣🅳️ LUCAS → verification-fixes (✅ Archivado 2026-05-13) 🆕                       │
 │             ↓ (401→403 tests, categorias hierarchy, rate limit, pagos)    │
+│                                                                           │
+│  1️⃣7️⃣🅴️ EZE → auth-frontend-fix (✅ Archivado 2026-05-13) 🆕                      │
+│             ↓ (snake_case auth, apellido register, perfil fetch, cart UI) │
 │                                                                           │
 ├──────────────────────────────────────────────────────────────────────────┤
 │                FASE 3: FRONTEND (🔒 CONSULTAR USUARIO)                   │
 ├──────────────────────────────────────────────────────────────────────────┤
 │                                                                           │
-│  1️⃣8️⃣ LUCAS → cart-frontend 🔒 (⏳ espera 12)                            │
+│  1️⃣8️⃣ LUCAS → cart-frontend (✅ Archivado 2026-05-13)                            │
 │  1️⃣9️⃣ MATI → orders-list-client 🔒 (⏳ espera 13)                       │
 │  2️⃣0️⃣ LUCAS → orders-list-gestor-frontend 🔒 (⏳ espera 15) 🆕           │
 │  2️⃣1️⃣ MATI → users-admin-frontend 🔒 (⏳ espera 16) 🆕                   │
@@ -109,7 +112,8 @@
 | 17 | **14º** | Edgar | `admin-metrics` 🔀 | 13,16 | ✅ Archivado 2026-05-13 | 1 día |
 | 17b | **14º** | Eze | `auth-audit` 🆕 | 6 | ✅ Archivado 2026-05-13 | 1 día |
 | 17c | **14º** | Eze | `bugfix-modules` 🆕 | 8,9,12 | ✅ Archivado 2026-05-13 | 0.5 días |
-| 17d | **15º** | Lucas | `verification-fixes` 🆕 | 17b,17c | 🔲 Pendiente | 0.5 días |
+| 17d | **15º** | Lucas | `verification-fixes` 🆕 | 17b,17c | ✅ Archivado 2026-05-13 | 0.5 días |
+| 17e | **15º** | Eze | `auth-frontend-fix` 🆕 | 17d | ✅ Archivado 2026-05-13 | 0.5 días |
 
 > 📦 = Puede ejecutarse en paralelo con el cambio anterior (mismo padre terminado)  
 > 🔀 = Cambio partido — solo backend en esta fase
@@ -118,7 +122,7 @@
 
 | # | Orden | Integrante | Change | Depende de | Estado | ETA |
 |---|-------|-----------|--------|-----------|--------|-----|
-| 18 | **15º** | Lucas | `cart-frontend` 🔒 | 12 | 🔒 | 1 día |
+| 18 | **15º** | Lucas | `cart-frontend` | 12 | ✅ Archivado 2026-05-13 | 1 día |
 | 19 | **15º** | Mati | `orders-list-client` 🔒 | 13 | 🔒 | 0.5 días |
 | 20 | **16º** | Lucas | `orders-list-gestor-frontend` 🆕 🔒 | 15 | 🔒 | 0.5 días |
 | 21 | **16º** | Mati | `users-admin-frontend` 🆕 🔒 | 16 | 🔒 | 1 día |
@@ -181,47 +185,27 @@
 
 | Integrante | Changes | Total HU | Cambios nuevos | Rol |
 |-----------|---------|----------|---------------|-----|
-| **Eze** | 1, 6, 11, 11b, 14, 17b, 17c | 12 + docker + fixes | `docker-setup` 🆕, `fix-backend-startup` 🆕, `auth-audit` 🆕, `bugfix-modules` 🆕 | Infra + Auth + Docker + Pagos + Fixes |
+| **Eze** | 1, 6, 11, 11b, 14, 17b, 17c, 17e | 12 + docker + fixes + auth-frontend | `docker-setup` 🆕, `fix-backend-startup` 🆕, `auth-audit` 🆕, `bugfix-modules` 🆕, `auth-frontend-fix` 🆕 | Infra + Auth + Docker + Pagos + Fixes |
 | **Mati** | 2, 7, 12, 19, 21 | 21 | `users-admin-frontend` 🆕 | Backend + Auth-FE + Productos + Orders-client + Admin-FE |
 | **Lucas** | 3, 8, 18, 20, 22, 17d | 10 + 1 fix | `orders-list-gestor-frontend` 🆕, `admin-metrics-frontend` 🆕, `verification-fixes` 🆕 | Frontend + Categorías + Carrito + Admin-FE + Fixes |
 | **Edgar** | 5, 9, 16, 17 | 16 | — | Errores + Ingredientes + Users-admin + Metrics |
 | **Leandro** | 4, 10, 13, 15 | 15 | `orders-list-gestor` (backend) 🔀 | Patrones + Direcciones + FSM + Admin-pedidos |
 
-**Total:** 25 changes, 77 HU, ~4-5 semanas (Fase 2: ~2 semanas, Fase 3: ~2 semanas)
+**Total:** 26 changes, 77 HU, ~4-5 semanas (Fase 2: ~2 semanas, Fase 3: ~2 semanas)
 
 ---
 
-> **Fase actual:** Fase 2 — Backend Puro  
-> **Último change completado:** `admin-metrics` (Edgar) ✅ 2026-05-13
+> **Fase actual:** Fase 2 — Backend Puro (✅ COMPLETADA)  
+> **Último change completado:** `auth-frontend-fix` (Eze) ✅ 2026-05-13
 > **Regla de oro:** Backend first, frontend after — siempre consultar antes de tocar frontend.
 
 ---
 
-## 📝 Notas para el equipo (2026-05-08)
-
-### Cambios aplicados en `fix-backend-startup` (Eze)
-
-1. **`from __future__ import annotations` eliminado de TODOS los `router.py`** (8 archivos: auth, sucursales, ingredientes, direcciones, categorias, usuarios, perfil, patterns_example). Causaba que Pydantic v2 no resolviera los tipos al decorar rutas FastAPI → `NameError: name 'LoginRequest' is not defined`.
-
-2. **`db/seed.py` con imports condicionales.** Los modelos `Rol`, `UsuarioRol`, `EstadoPedido`, `FormaPago` se importan con `try/except ImportError`. Si el modelo no existe aún (changes futuros no implementados), el seed omite esa parte sin crashear.
-
-3. **`requirements.txt` corregido** (parte de docker-setup): eliminado `python-cors==1.3.5` (no existe en PyPI), actualizado `python-multipart==0.0.6` → `0.0.7` (requerido por FastAPI 0.111).
-
-4. **Migraciones corregidas** (parte de docker-setup): dos revisiones `003` duplicadas → una renumerada a `004`.
-
-### Para el próximo que implemente (`products-module` — Mati)
-
-- El backend arranca con `docker compose up`. Probar después de hacer `git pull`.
-- Los modelos `Usuario` y `UsuarioRol` YA existen en `app/modules/auth/model.py`. Al implementar `Rol`, el seed lo va a poblar automáticamente.
-- Si necesitás tocar `seed.py` para agregar productos de ejemplo, seguí el patrón de imports condicionales.
-
----
-
-## 🔧 Pendientes de Verificación y Corrección (2026-05-13)
+## 🔧 Pendientes de Verificación y Corrección — ✅ COMPLETADO
 
 > **Asignado a: Lucas**  
 > **Origen:** Auditoría `auth-audit` + verificación manual de endpoints  
-> **Contexto:** Se completaron 2 changes correctivos (auth-audit y bugfix-modules). Quedan tareas de verificación y ajustes en tests.
+> **Estado:** TODAS las tareas completadas el 2026-05-13.
 
 ### 1. Actualizar tests con expectativas 401 → 403
 

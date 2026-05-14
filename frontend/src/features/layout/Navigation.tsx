@@ -1,5 +1,7 @@
 import { Link, useNavigate } from 'react-router-dom'
 import { useAuthStore } from '../../stores/authStore'
+import { useCartStore } from '../../stores/cartStore'
+import { useUIStore } from '../../stores/uiStore'
 
 // Definición de menú por rol
 const MENU_BY_ROLE: Record<string, Array<{ label: string; href: string }>> = {
@@ -30,6 +32,9 @@ export function Navigation() {
   const user = useAuthStore((state) => state.user)
   const logout = useAuthStore((state) => state.logout)
 
+  const cartItems = useCartStore((state) => state.items)
+  const toggleCart = useUIStore((state) => state.toggleCart)
+
   const handleLogout = () => {
     logout()
     navigate('/')
@@ -38,6 +43,8 @@ export function Navigation() {
   // Obtener el primer rol del usuario para el menú
   const userRole = user?.roles?.[0] as keyof typeof MENU_BY_ROLE | undefined
   const menuItems = userRole ? MENU_BY_ROLE[userRole] || [] : []
+
+  const totalCartItems = cartItems.reduce((sum, item) => sum + item.cantidad, 0)
 
   return (
     <nav className="bg-white shadow">
@@ -68,7 +75,17 @@ export function Navigation() {
           </div>
 
           {/* Right side */}
-          <div className="flex items-center">
+          <div className="flex items-center gap-3">
+            <button onClick={toggleCart} className="relative p-2 text-gray-600 hover:text-indigo-600 rounded-full hover:bg-gray-100 transition-colors" title="Ver carrito">
+              <svg className="h-6 w-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 3h2l.4 2M7 13h10l4-8H5.4M7 13L5.4 5M7 13l-2.293 2.293c-.63.63-.184 1.707.707 1.707H17m0 0a2 2 0 100 4 2 2 0 000-4zm-8 2a2 2 0 100 4 2 2 0 000-4z" />
+              </svg>
+              {totalCartItems > 0 && (
+                <span className="absolute -top-0.5 -right-0.5 bg-indigo-600 text-white text-xs font-bold rounded-full h-5 w-5 flex items-center justify-center">
+                  {totalCartItems > 99 ? '99+' : totalCartItems}
+                </span>
+              )}
+            </button>
             {!isAuthenticated ? (
               <div className="flex space-x-4">
                 <Link

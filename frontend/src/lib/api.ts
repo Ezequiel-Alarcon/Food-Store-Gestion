@@ -90,10 +90,10 @@ api.interceptors.response.use(
     try {
       // Intentar refresh del token
       const response = await api.post('/auth/refresh', {
-        refreshToken,
+        refresh_token: refreshToken,
       })
 
-      const { accessToken: newAccessToken, refreshToken: newRefreshToken } = response.data
+      const { access_token: newAccessToken, refresh_token: newRefreshToken } = response.data
 
       // Actualizar tokens en el store
       useAuthStore.getState().updateTokens({
@@ -129,31 +129,36 @@ export interface LoginRequest {
 }
 
 export interface LoginResponse {
-  accessToken: string
-  refreshToken: string
-  user: {
-    id: number
-    nombre: string
-    email: string
-    roles: string[]
-  }
+  access_token: string
+  refresh_token: string
+  token_type: string
+  expires_in: number
 }
 
 export interface RegisterRequest {
   nombre: string
+  apellido: string
   email: string
   password: string
 }
 
 export interface RefreshRequest {
-  refreshToken: string
+  refresh_token: string
 }
 
 export interface RefreshResponse {
-  accessToken: string
-  refreshToken: string
+  access_token: string
+  refresh_token: string
 }
 
 export interface ErrorResponse {
   detail: string
+}
+
+export interface PerfilResponse {
+  id: number
+  nombre: string
+  apellido: string
+  email: string
+  rol: string
 }

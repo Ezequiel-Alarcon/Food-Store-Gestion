@@ -59,7 +59,7 @@
 | 9 | `ingredients-module` | CRUD ingredientes + alérgenos | EPIC 04 | 4 | ~5 | ✅ Archivado |
 | 10 | `addresses-module` | CRUD direcciones de entrega | EPIC 07 | 5 | ~6 | ✅ Archivado |
 
-### FASE 2 — Docker + Backend Puro (🔄 EN PROGRESO)
+### FASE 2 — Docker + Backend Puro (✅ COMPLETADA)
 
 | # | ID | Change | Descripción | Épica | HU | Archivos~ | Capa |
 |---|-----|--------|-------------|-------|-----|-----------|------|
@@ -70,12 +70,14 @@
 | 15 | `orders-list-gestor` | Panel pedidos (gestor/ADMIN) — solo backend | EPIC 13 | 2 | ~4 | ✅ Archivado 2026-05-13 |
 | 16 | `users-admin` | CRUD usuarios + asignación roles — solo backend | EPIC 15 | 3 | ~5 | ✅ Archivado 2026-05-13 |
 | 17 | `admin-metrics` | Dashboard KPIs endpoints — solo backend | EPIC 17 | 4 | ~6 | ✅ Archivado 2026-05-13 |
+| 17d | `verification-fixes` | Corrección tests: 401→403, hierarchy, rate limit | EPIC 00 | — | ~6 | ✅ Archivado 2026-05-13 |
+| 17e | `auth-frontend-fix` | Fix frontend auth: snake_case, apellido, perfil, cart UI | EPIC 02 | — | ~7 | ✅ Archivado 2026-05-13 |
 
 ### FASE 3 — Frontend (🔒 CONSULTAR antes de cada uno)
 
 | # | ID | Change | Descripción | Épica | HU | Archivos~ | Capa |
 |---|-----|--------|-------------|-------|-----|-----------|------|
-| 18 | `cart-frontend` | Carrito Zustand + persistencia | EPIC 08 | 6 | ~6 | Frontend |
+| 18 | `cart-frontend` | Carrito Zustand + persistencia | EPIC 08 | 6 | ~6 | ✅ Archivado 2026-05-13 |
 | 19 | `orders-list-client` | Ver mis pedidos (cliente) | EPIC 13 | 2 | ~3 | Frontend |
 | 20 | `orders-list-gestor-frontend` | 🆕 Panel pedidos frontend (gestor/ADMIN) | EPIC 13 | — | ~3 | Frontend |
 | 21 | `users-admin-frontend` | 🆕 Panel admin usuarios frontend | EPIC 15 | — | ~3 | Frontend |
@@ -677,8 +679,8 @@
 | **Sprint 4** | 12 (`products-module`) | EPIC 05 | 9 | ✅ Completado |
 | **Sprint 5** | 13 (`orders-fsm`) | EPIC 10,12 | 8 | ✅ Completado |
 | **Sprint 6** | 14 (`payments-integration`) | EPIC 11 | 4 | ✅ Archivado 2026-05-12 |
-| **Sprint 7** | 15-17 (admin backend) | EPIC 13,15,17 | 9 | 🔲 Backend |
-| **Sprint 8** | 18 (`cart-frontend`) 🔒 | EPIC 08 | 6 | 🔒 Frontend |
+| **Sprint 7** | 15-17 (admin backend) + 17d-17e (fixes) | EPIC 13,15,17 | 9 | ✅ Completado |
+| **Sprint 8** | 18 (`cart-frontend`) | EPIC 08 | 6 | ✅ Archivado 2026-05-13 |
 | **Sprint 9** | 19-22 (resto frontend) 🔒 | EPIC 13,15,17 | — | 🔒 Frontend |
 
 **Total: 22 cambios en ~9-10 sprints. Fase backend puro: sprints 3-7 (5 sprints).**
