@@ -1,5 +1,5 @@
 import { api } from '../../lib/api'
-import type { PedidoListItem, PedidoDetalle, PaginatedPedidos } from './types'
+import type { PedidoDetalle, PaginatedPedidos } from './types'
 
 export interface PedidoFilters {
   page?: number

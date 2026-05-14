@@ -1,6 +1,5 @@
 import { api } from '../../lib/api'
 import type {
-  OrderAdminItem,
   OrderAdminDetail,
   OrderAdminFilters,
   PaginatedOrdersAdmin,
