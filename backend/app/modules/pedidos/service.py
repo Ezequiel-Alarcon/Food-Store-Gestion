@@ -6,7 +6,7 @@ Flujo: Router → Service → UnitOfWork → Repository → Model
 """
 from __future__ import annotations
 
-from datetime import datetime
+from datetime import datetime, timezone
 from typing import Any
 
 from fastapi import HTTPException, status
@@ -153,8 +153,8 @@ class PedidosService:
                 direccion_referencias=direccion.referencias,
                 total=total,
                 costo_envio=0.0,
-                creado_en=datetime.utcnow(),
-                actualizado_en=datetime.utcnow(),
+                creado_en=datetime.now(timezone.utc),
+                actualizado_en=datetime.now(timezone.utc),
             )
             session.add(pedido)
             session.flush()  # obtener pedido.id
@@ -183,7 +183,7 @@ class PedidosService:
                 actor_id=cliente_id,
                 actor_tipo=ActorTipo.USUARIO.value,
                 motivo=None,
-                creado_en=datetime.utcnow(),
+                creado_en=datetime.now(timezone.utc),
             )
             session.add(historial_entry)
             session.flush()
@@ -268,7 +268,7 @@ class PedidosService:
 
             # (c) Actualizar estado del pedido
             pedido.estado_codigo = estado_destino
-            pedido.actualizado_en = datetime.utcnow()
+            pedido.actualizado_en = datetime.now(timezone.utc)
             session.add(pedido)
 
             # (d) Registrar en historial
@@ -279,7 +279,7 @@ class PedidosService:
                 actor_id=user_id,
                 actor_tipo=ActorTipo.USUARIO.value,
                 motivo=data.motivo,
-                creado_en=datetime.utcnow(),
+                creado_en=datetime.now(timezone.utc),
             )
             session.add(historial_entry)
             session.flush()
@@ -408,6 +408,52 @@ class PedidosService:
                         total=pedido.total,
                         created_at=pedido.creado_en,
                         cliente_email=email if include_email else None,
+                    )
+                )
+
+            pages = (total + size - 1) // size if total > 0 else 0
+            return PaginatedPedidosResponse(
+                items=items,
+                total=total,
+                page=page,
+                size=size,
+                pages=pages,
+            )
+
+    # ------------------------------------------------------------------
+    # Admin: listado de pedidos (sin RBAC por cliente)
+    # ------------------------------------------------------------------
+
+    def list_pedidos_for_admin(
+        self,
+        *,
+        page: int,
+        size: int,
+        estado: str | None,
+        q: str | None,
+    ) -> PaginatedPedidosResponse:
+        with self.uow as uow:
+            assert uow.session is not None
+            session: Session = uow.session
+
+            repo = PedidosRepository(session)
+            rows, total = repo.list_pedidos_for_admin(
+                page=page,
+                size=size,
+                estado=estado,
+                q=q,
+            )
+
+            items: list[PedidoListItem] = []
+            for pedido, email in rows:
+                items.append(
+                    PedidoListItem(
+                        id=pedido.id,
+                        user_id=pedido.cliente_id,
+                        estado_codigo=pedido.estado_codigo,
+                        total=pedido.total,
+                        created_at=pedido.creado_en,
+                        cliente_email=email,
                     )
                 )
 

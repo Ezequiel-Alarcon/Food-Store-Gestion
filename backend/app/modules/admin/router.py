@@ -6,11 +6,10 @@ Acceso restringido a ADMIN, STOCK y PEDIDOS.
 from __future__ import annotations
 
 from fastapi import APIRouter, Depends, HTTPException
-from pydantic import BaseModel
 from typing import Any
 from sqlmodel import select
 
-from app.core.deps import get_current_user, require_role
+from app.core.deps import require_role
 from app.core.database import SessionLocal
 from app.modules.admin.schemas import (
     GeneralMetricsResponse,
@@ -19,7 +18,9 @@ from app.modules.admin.schemas import (
     TopProductEntry,
 )
 from app.modules.admin.service import AdminService
-from app.modules.pedidos.model import Pedido, HistorialEstadoPedido
+from app.modules.pedidos.schemas import PaginatedPedidosResponse
+from app.modules.pedidos.service import PedidosService
+from app.modules.pedidos.model import DetallePedido, HistorialEstadoPedido, Pedido
 from app.modules.auth.model import Usuario
 
 
@@ -99,17 +100,9 @@ def get_orders_by_status(
 
 # ── GET /admin/pedidos/ ─────────────────────────────────────────────────
 
-class PaginatedAdminPedidosResponse(BaseModel):
-    items: list[dict]
-    total: int
-    page: int
-    size: int
-    pages: int
-
-
 @router.get(
     "/pedidos/",
-    response_model=PaginatedAdminPedidosResponse,
+    response_model=PaginatedPedidosResponse,
     summary="Listar todos los pedidos",
     description="Lista todos los pedidos del sistema con filtros opcionales.",
 )
@@ -119,56 +112,15 @@ def list_pedidos(
     estado: str | None = None,
     q: str | None = None,
     current_user: Any = Depends(require_role("ADMIN", "PEDIDOS")),
-) -> PaginatedAdminPedidosResponse:
+) -> PaginatedPedidosResponse:
     """GET /admin/pedidos/ — listar pedidos con filtros."""
-    with SessionLocal() as session:
-        statement = select(Pedido)
-        
-        # Filtrar por estado
-        if estado:
-            statement = statement.where(Pedido.estado_codigo == estado)
-        
-        # Buscar por email del cliente (q)
-        if q:
-            statement = statement.where(Pedido.cliente_id.in_(
-                select(Usuario.id).where(Usuario.email.ilike(f"%{q}%"))
-            ))
-        
-        # Contar total
-        from sqlmodel import func
-        count_statement = select(func.count()).select_from(statement.subquery())
-        total = session.exec(count_statement).one()
-        
-        # Paginación
-        offset = (page - 1) * size
-        statement = statement.order_by(Pedido.creado_en.desc()).offset(offset).limit(size)
-        pedidos = session.exec(statement).all()
-        
-        # Armar respuesta
-        items = []
-        for p in pedidos:
-            # Obtener email del cliente
-            cliente_stmt = select(Usuario.email).where(Usuario.id == p.cliente_id)
-            email = session.exec(cliente_stmt).first()
-            
-            items.append({
-                "id": p.id,
-                "user_id": p.cliente_id,
-                "estado_codigo": p.estado_codigo,
-                "total": p.total,
-                "created_at": p.creado_en.isoformat() if p.creado_en else None,
-                "cliente_email": email,
-            })
-        
-        pages = (total + size - 1) // size if total > 0 else 1
-        
-        return PaginatedAdminPedidosResponse(
-            items=items,
-            total=total,
-            page=page,
-            size=size,
-            pages=pages,
-        )
+    service = PedidosService()
+    return service.list_pedidos_for_admin(
+        page=page,
+        size=size,
+        estado=estado,
+        q=q,
+    )
 
 
 # ── GET /admin/pedidos/{id}/ ────────────────────────────────────────────

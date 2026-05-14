@@ -31,8 +31,8 @@ class AuthRepository(BaseRepository[Usuario]):
         return self.session.exec(stmt).first()
     
     def get_user_by_email_optional(self, email: str) -> Optional[Usuario]:
-        """Busca usuario por email sin normalizar (para login)."""
-        stmt = select(Usuario).where(Usuario.email == email)
+        """Busca usuario por email (case-insensitive)."""
+        stmt = select(Usuario).where(Usuario.email == email.lower())
         return self.session.exec(stmt).first()
     
     def create_user(
