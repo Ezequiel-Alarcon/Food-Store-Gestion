@@ -226,7 +226,7 @@
 | 34 | Edgar | `backend-datetime-fix` 🆕 | 21 `datetime.utcnow()` → `datetime.now(timezone.utc)` | 🟡 Media |
 | 35 | Edgar | `backend-pydantic-modernize` 🆕 | `class Config:` → `model_config` en 5 schemas | 🟡 Media |
 | 36 | Lucas | `frontend-home-page` 🆕 | HomePage con catálogo, hero, categorías | 🔴 Alta |
-| 37 | Lucas | `frontend-shared-ui` 🆕 | Button, Input, Modal, Card en `shared/ui/` | 🔴 Alta |
+| 37 | Lucas | `frontend-shared-ui` 🆕 | Button, Input, Modal, Card en `shared/ui/` | ✅ Archivado 2026-05-15 |
 | 38 | Mati | `frontend-profile-page` 🆕 | ProfilePage para editar perfil | 🟡 Media |
 | 43 | Mati | `frontend-orders-feature` 🆕 | Mover OrdersPage a `features/orders/` | 🟢 Baja |
 | 40 | Eze | `backend-refreshtokens` 🆕 | Completar router.py, schemas.py, main.py | 🟢 Baja |
