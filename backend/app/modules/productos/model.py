@@ -3,7 +3,7 @@ app.modules.productos.model
 
 Modelo SQLModel para productos del catálogo.
 """
-from datetime import datetime
+from datetime import datetime, timezone
 from typing import Optional
 
 from sqlmodel import Field, SQLModel

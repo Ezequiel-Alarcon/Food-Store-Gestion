@@ -3,7 +3,7 @@
 Modelo SQLModel para sucursales (puntos de retiro).
 """
 
-from datetime import datetime
+from datetime import datetime, timezone
 from typing import Optional
 
 from sqlmodel import Field, SQLModel

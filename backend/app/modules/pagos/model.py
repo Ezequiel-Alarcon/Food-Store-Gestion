@@ -3,7 +3,7 @@
 Modelo SQLModel para pagos con MercadoPago.
 Relación 1:N Pedido→Pago (múltiples intentos permitidos).
 """
-from datetime import datetime
+from datetime import datetime, timezone
 from typing import Optional
 from sqlmodel import Field, SQLModel
 
