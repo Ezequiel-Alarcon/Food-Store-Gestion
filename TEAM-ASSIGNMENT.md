@@ -1,7 +1,7 @@
 # Food Store — Asignación por Team (Pipeline Backend-First)
 
 > **Proyecto:** Food Store E-Commerce
-> **Fecha:** 2026-05-14
+> **Fecha:** 2026-05-16
 > **Distribución:** 43 changes entre 5 integrantes
 > **Método:** Secuencial con fases Backend → Frontend → Deuda Técnica
 > **Versión:** 3.0 (sync 33 changes + Fase 4 pendientes)
@@ -224,7 +224,7 @@
 | # | Integrante | Change | Qué hacer | Prioridad |
 |---|-----------|--------|-----------|-----------|
 | 34 | Edgar | `backend-datetime-fix` 🆕 | 21 `datetime.utcnow()` → `datetime.now(timezone.utc)` | ✅ Archivado 2026-05-16 |
-| 35 | Edgar | `backend-pydantic-modernize` 🆕 | `class Config:` → `model_config` en 5 schemas | 🟡 Media |
+| 35 | Edgar | `backend-pydantic-modernize` 🆕 | `class Config:` → `model_config` en 5 schemas | ✅ Archivado 2026-05-16 |
 | 36 | Lucas | `frontend-home-page` 🆕 | HomePage con catálogo, hero, categorías | 🔴 Alta |
 | 37 | Lucas | `frontend-shared-ui` 🆕 | Button, Input, Modal, Card en `shared/ui/` | ✅ Archivado 2026-05-15 |
 | 38 | Mati | `frontend-profile-page` 🆕 | ProfilePage para editar perfil | 🟡 Media |
@@ -297,7 +297,7 @@
 | **Eze** | 1, 6, 11, 11b, 14, 17b, 17c, 17e, 23, 24, 25, 26, 28, 29, 30, 31, 32, 33, 40 | 41 (`backend-admin-model`) | 20 ✅ + 0 🔲 \|
 | **Mati** | 2, 7, 12, 19 | 38 (`frontend-profile-page`), 43 (`frontend-orders-feature`) | 4 ✅ + 0 🔲 \|
 | **Lucas** | 3, 8, 18, 20, 21, 22, 27 | 36 (`frontend-home-page`), 37 (`frontend-shared-ui`) | 7 ✅ + 2 🔲 |
-| **Edgar** | 5, 9, 16, 17 | 34 (`backend-datetime-fix`), 35 (`backend-pydantic-modernize`) | 4 ✅ + 0 🔲 \|
+| **Edgar** | 5, 9, 16, 17, 34, 35 | — | 6 ✅ + 0 🔲 |
 | **Leandro** | 4, 10, 13, 15 | 42 (`frontend-addresses-barrel`), 39 (`frontend-fsd-restructure`) | 4 ✅ + 0 🔲 \|
 
 **Total:** 43 changes — 33 completados + 10 pendientes. **2 changes por persona, todos en paralelo.**
@@ -306,8 +306,8 @@
 
 > **Fase actual:** ✅ FASES 0-3 COMPLETADAS + FASE 4 EN CURSO (34/43 changes)  
 > **Fase pendiente:** 🔲 FASE 4 — Deuda Técnica (9 changes restantes)  
-> **Último change completado:** `backend-datetime-fix` (Edgar) ✅ 2026-05-16  
-> **Última actualización:** 2026-05-16 — Sync archive backend-datetime-fix
+> **Último change completado:** `backend-pydantic-modernize` (Edgar) ✅ 2026-05-16  
+> **Última actualización:** 2026-05-16 — Sync archive backend-pydantic-modernize
 
 ---
 

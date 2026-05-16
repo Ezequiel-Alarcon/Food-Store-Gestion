@@ -1,7 +1,7 @@
 # Food Store — Mapa de Changes CORREGIDO
 
 > **Proyecto:** Food Store E-Commerce
-> **Fecha:** 2026-05-14
+> **Fecha:** 2026-05-16
 > **Metodología:** Spec-Driven Development (SDD) + Feature-First
 > **Versión:** 3.0 (sync de 33 changes + Fase 4 pendientes)
 
@@ -110,7 +110,7 @@
 | # | ID | Change | Descripción | Épica | HU | Archivos~ | Capa | Asignado |
 |---|-----|--------|-------------|-------|-----|-----------|------|----------|
 | 34 | `backend-datetime-fix` | Reemplazar 21 `datetime.utcnow()` → `datetime.now(timezone.utc)` | EPIC 00 | — | ~4 | Backend | ✅ Archivado 2026-05-16 Edgar |
-| 35 | `backend-pydantic-modernize` | Migrar `class Config:` → `model_config = ConfigDict(...)` | EPIC 00 | — | ~5 | Backend | 🔲 Edgar |
+| 35 | `backend-pydantic-modernize` | Migrar `class Config:` → `model_config = ConfigDict(...)` | EPIC 00 | — | ~5 | Backend | ✅ Archivado 2026-05-16 Edgar |
 | 36 | `frontend-home-page` | Crear HomePage con catálogo destacado, hero, categorías | EPIC 05 | 3 | ~4 | Frontend | 🔲 Lucas |
 | 37 | `frontend-shared-ui` | Crear componentes base: Button, Input, Modal, Card | EPIC 00 | — | ~8 | Frontend | ✅ Archivado 2026-05-15 Lucas |
 | 38 | `frontend-profile-page` | Crear ProfilePage para editar perfil y cambiar contraseña | EPIC 02 | 2 | ~4 | Frontend | 🔲 Mati |
