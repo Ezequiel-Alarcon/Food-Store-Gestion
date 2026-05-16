@@ -230,7 +230,7 @@
 | 38 | Mati | `frontend-profile-page` 🆕 | ProfilePage para editar perfil | 🟡 Media |
 | 43 | Mati | `frontend-orders-feature` 🆕 | Mover OrdersPage a `features/orders/` | 🟢 Baja |
 | 40 | Eze | `backend-refreshtokens` ✅ Archivado 2026-05-15 | Completar router.py, schemas.py, main.py | 🟢 Baja |
-| 41 | Eze | `backend-admin-model` 🆕 | Crear model.py de admin con queries | 🟢 Baja |
+| 41 \| Eze \| `backend-admin-model` ✅ Archivado 2026-05-15 | Crear model.py de admin con queries | 🟢 Baja |
 | 42 | Leandro | `frontend-addresses-barrel` 🆕 | Agregar index.ts a entities/addresses/ | 🟢 Baja |
 | 39 | Leandro | `frontend-fsd-restructure` 🆕 | Mover providers/ dentro de app/ | 🟢 Baja |
 
@@ -294,11 +294,11 @@
 
 | Integrante | Completados | Pendientes (Fase 4) | Total |
 |-----------|-----------|-------------------|-------|
-| **Eze** | 1, 6, 11, 11b, 14, 17b, 17c, 17e, 23, 24, 25, 26, 28, 29, 30, 31, 32, 33, 40 | 41 (`backend-admin-model`) | 19 ✅ + 1 🔲 |
-| **Mati** | 2, 7, 12, 19 | 38 (`frontend-profile-page`), 43 (`frontend-orders-feature`) | 4 ✅ + 2 🔲 |
+| **Eze** | 1, 6, 11, 11b, 14, 17b, 17c, 17e, 23, 24, 25, 26, 28, 29, 30, 31, 32, 33, 40 | 41 (`backend-admin-model`) | 20 ✅ + 0 🔲 \|
+| **Mati** | 2, 7, 12, 19 | 38 (`frontend-profile-page`), 43 (`frontend-orders-feature`) | 4 ✅ + 0 🔲 \|
 | **Lucas** | 3, 8, 18, 20, 21, 22, 27 | 36 (`frontend-home-page`), 37 (`frontend-shared-ui`) | 7 ✅ + 2 🔲 |
-| **Edgar** | 5, 9, 16, 17 | 34 (`backend-datetime-fix`), 35 (`backend-pydantic-modernize`) | 4 ✅ + 2 🔲 |
-| **Leandro** | 4, 10, 13, 15 | 42 (`frontend-addresses-barrel`), 39 (`frontend-fsd-restructure`) | 4 ✅ + 2 🔲 |
+| **Edgar** | 5, 9, 16, 17 | 34 (`backend-datetime-fix`), 35 (`backend-pydantic-modernize`) | 4 ✅ + 0 🔲 \|
+| **Leandro** | 4, 10, 13, 15 | 42 (`frontend-addresses-barrel`), 39 (`frontend-fsd-restructure`) | 4 ✅ + 0 🔲 \|
 
 **Total:** 43 changes — 33 completados + 10 pendientes. **2 changes por persona, todos en paralelo.**
 
