@@ -58,11 +58,11 @@ class Producto(SQLModel, table=True):
         description="Timestamp de soft-delete (NULL = no eliminado)",
     )
     creado_en: datetime = Field(
-        default_factory=datetime.utcnow,
+        default_factory=lambda: datetime.now(timezone.utc),
         description="Fecha de creación",
     )
     actualizado_en: datetime = Field(
-        default_factory=datetime.utcnow,
+        default_factory=lambda: datetime.now(timezone.utc),
         description="Fecha de última modificación",
     )
 

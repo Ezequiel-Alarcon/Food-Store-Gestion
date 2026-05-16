@@ -3,7 +3,7 @@ app.modules.productos.repository
 
 Repository para operaciones de productos.
 """
-from datetime import datetime
+from datetime import datetime, timezone
 from typing import Optional
 
 from sqlmodel import Session, select, func
@@ -179,7 +179,7 @@ class ProductoRepository(BaseRepository[Producto]):
             return None
 
         producto.stock = nueva_cantidad
-        producto.actualizado_en = datetime.utcnow()
+        producto.actualizado_en = datetime.now(timezone.utc)
         self.session.add(producto)
         self.session.flush()
         return producto
@@ -191,7 +191,7 @@ class ProductoRepository(BaseRepository[Producto]):
             return None
 
         producto.stock += cantidad
-        producto.actualizado_en = datetime.utcnow()
+        producto.actualizado_en = datetime.now(timezone.utc)
         self.session.add(producto)
         self.session.flush()
         return producto
@@ -206,7 +206,7 @@ class ProductoRepository(BaseRepository[Producto]):
             return None  # No hay suficiente stock
 
         producto.stock -= cantidad
-        producto.actualizado_en = datetime.utcnow()
+        producto.actualizado_en = datetime.now(timezone.utc)
         self.session.add(producto)
         self.session.flush()
         return producto
@@ -222,9 +222,9 @@ class ProductoRepository(BaseRepository[Producto]):
         if producto is None:
             return None
 
-        producto.eliminado_en = datetime.utcnow()
+        producto.eliminado_en = datetime.now(timezone.utc)
         producto.activo = False
-        producto.actualizado_en = datetime.utcnow()
+        producto.actualizado_en = datetime.now(timezone.utc)
         self.session.add(producto)
         self.session.flush()
         return producto
@@ -242,7 +242,7 @@ class ProductoRepository(BaseRepository[Producto]):
 
         producto.eliminado_en = None
         producto.activo = True
-        producto.actualizado_en = datetime.utcnow()
+        producto.actualizado_en = datetime.now(timezone.utc)
         self.session.add(producto)
         self.session.flush()
         return producto

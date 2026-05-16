@@ -3,7 +3,7 @@
 Modelos SQLModel para direcciones de usuario y de sucursal.
 """
 
-from datetime import datetime
+from datetime import datetime, timezone
 from typing import Optional
 
 from sqlmodel import Field, SQLModel
@@ -27,8 +27,8 @@ class UserAddress(SQLModel, table=True):
 
     is_default: bool = Field(default=False)
     activa: bool = Field(default=True, index=True)
-    created_at: datetime = Field(default_factory=datetime.utcnow)
-    updated_at: datetime = Field(default_factory=datetime.utcnow)
+    created_at: datetime = Field(default_factory=lambda: datetime.now(timezone.utc))
+    updated_at: datetime = Field(default_factory=lambda: datetime.now(timezone.utc))
 
 
 class BranchAddress(SQLModel, table=True):
@@ -47,5 +47,5 @@ class BranchAddress(SQLModel, table=True):
     referencias: Optional[str] = Field(default=None, max_length=500)
 
     activa: bool = Field(default=True, index=True)
-    created_at: datetime = Field(default_factory=datetime.utcnow)
-    updated_at: datetime = Field(default_factory=datetime.utcnow)
+    created_at: datetime = Field(default_factory=lambda: datetime.now(timezone.utc))
+    updated_at: datetime = Field(default_factory=lambda: datetime.now(timezone.utc))

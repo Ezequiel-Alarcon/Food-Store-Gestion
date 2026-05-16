@@ -2,7 +2,7 @@
 
 Modelos SQLModel para pedidos, items y FSM de estados.
 """
-from datetime import datetime
+from datetime import datetime, timezone
 from enum import Enum
 from typing import Optional
 
@@ -53,8 +53,8 @@ class Pedido(SQLModel, table=True):
     total: float = Field(description="Suma de subtotales + costo_envio")
     costo_envio: float = Field(default=0.0)
 
-    creado_en: datetime = Field(default_factory=datetime.utcnow)
-    actualizado_en: datetime = Field(default_factory=datetime.utcnow)
+    creado_en: datetime = Field(default_factory=lambda: datetime.now(timezone.utc))
+    actualizado_en: datetime = Field(default_factory=lambda: datetime.now(timezone.utc))
 
     def __repr__(self) -> str:
         return f"<Pedido(id={self.id}, cliente_id={self.cliente_id}, estado='{self.estado_codigo}')>"
@@ -90,4 +90,4 @@ class HistorialEstadoPedido(SQLModel, table=True):
     actor_id: Optional[int] = Field(default=None, foreign_key="usuarios.id")
     actor_tipo: str = Field(default=ActorTipo.USUARIO.value, max_length=20)
     motivo: Optional[str] = Field(default=None)
-    creado_en: datetime = Field(default_factory=datetime.utcnow)
+    creado_en: datetime = Field(default_factory=lambda: datetime.now(timezone.utc))
