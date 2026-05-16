@@ -152,6 +152,7 @@ from app.modules.ingredientes.router import router as ingredientes_router
 from app.modules.pedidos.router import router as pedidos_router
 from app.modules.pagos.router import router as pagos_router
 from app.modules.admin.router import router as admin_router
+from app.modules.refreshtokens.router import router as refreshtokens_router
 
 # Registro de routers con prefijo /api/v1
 app.include_router(auth_router, prefix="/api/v1/auth", tags=["auth"])
@@ -168,6 +169,7 @@ app.include_router(productos_router, prefix="/api/v1/productos", tags=["producto
 app.include_router(pedidos_router, prefix="/api/v1/pedidos", tags=["pedidos"])
 app.include_router(pagos_router, prefix="/api/v1/pagos", tags=["pagos"])
 app.include_router(admin_router, prefix="/api/v1", tags=["admin"])
+app.include_router(refreshtokens_router, prefix="/api/v1", tags=["refreshtokens"])
 
 
 # Exportar limiter para usar en routers
