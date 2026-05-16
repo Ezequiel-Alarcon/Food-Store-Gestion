@@ -109,7 +109,7 @@
 
 | # | ID | Change | Descripción | Épica | HU | Archivos~ | Capa | Asignado |
 |---|-----|--------|-------------|-------|-----|-----------|------|----------|
-| 34 | `backend-datetime-fix` | Reemplazar 21 `datetime.utcnow()` → `datetime.now(timezone.utc)` | EPIC 00 | — | ~4 | Backend | 🔲 Edgar |
+| 34 | `backend-datetime-fix` | Reemplazar 21 `datetime.utcnow()` → `datetime.now(timezone.utc)` | EPIC 00 | — | ~4 | Backend | ✅ Archivado 2026-05-16 Edgar |
 | 35 | `backend-pydantic-modernize` | Migrar `class Config:` → `model_config = ConfigDict(...)` | EPIC 00 | — | ~5 | Backend | 🔲 Edgar |
 | 36 | `frontend-home-page` | Crear HomePage con catálogo destacado, hero, categorías | EPIC 05 | 3 | ~4 | Frontend | 🔲 Lucas |
 | 37 | `frontend-shared-ui` | Crear componentes base: Button, Input, Modal, Card | EPIC 00 | — | ~8 | Frontend | ✅ Archivado 2026-05-15 Lucas |
@@ -742,7 +742,7 @@
 | **Sprint 7** | 15-17 + 24-28 (fixes) | EPIC 13,15,17,00 | — | ✅ Completado |
 | **Sprint 8** | 18 (`cart-frontend`) | EPIC 08 | 6 | ✅ Completado |
 | **Sprint 9** | 19-23 + 29-33 (frontend + fixes) | EPIC 08,11,13,15,17 | — | ✅ Completado 2026-05-14 |
-| **Sprint 10** | 34-43 (deuda técnica, paralelo) | EPIC 00,01,02,05,07,13,17 | — | 🔲 Pendiente |
+| **Sprint 10** | 34 (`backend-datetime-fix`), 35-43 | EPIC 00,01,02,05,07,13,17 | — | 🔄 En curso |
 
 **Total: 43 changes. 33 completados + 10 pendientes (Fase 4: 2 por persona, todos en paralelo).**
 

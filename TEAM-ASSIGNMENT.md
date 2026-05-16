@@ -223,7 +223,7 @@
 
 | # | Integrante | Change | Qué hacer | Prioridad |
 |---|-----------|--------|-----------|-----------|
-| 34 | Edgar | `backend-datetime-fix` 🆕 | 21 `datetime.utcnow()` → `datetime.now(timezone.utc)` | 🟡 Media |
+| 34 | Edgar | `backend-datetime-fix` 🆕 | 21 `datetime.utcnow()` → `datetime.now(timezone.utc)` | ✅ Archivado 2026-05-16 |
 | 35 | Edgar | `backend-pydantic-modernize` 🆕 | `class Config:` → `model_config` en 5 schemas | 🟡 Media |
 | 36 | Lucas | `frontend-home-page` 🆕 | HomePage con catálogo, hero, categorías | 🔴 Alta |
 | 37 | Lucas | `frontend-shared-ui` 🆕 | Button, Input, Modal, Card en `shared/ui/` | ✅ Archivado 2026-05-15 |
@@ -304,10 +304,10 @@
 
 ---
 
-> **Fase actual:** ✅ FASES 0-3 COMPLETADAS (33/43 changes)  
-> **Fase pendiente:** 🔲 FASE 4 — Deuda Técnica (10 changes)  
-> **Último change completado:** `docs-sync` (Eze) ✅ 2026-05-14  
-> **Última actualización:** 2026-05-14 — Sync de documentación v3.0
+> **Fase actual:** ✅ FASES 0-3 COMPLETADAS + FASE 4 EN CURSO (34/43 changes)  
+> **Fase pendiente:** 🔲 FASE 4 — Deuda Técnica (9 changes restantes)  
+> **Último change completado:** `backend-datetime-fix` (Edgar) ✅ 2026-05-16  
+> **Última actualización:** 2026-05-16 — Sync archive backend-datetime-fix
 
 ---
 
