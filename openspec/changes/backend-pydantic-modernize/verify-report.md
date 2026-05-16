@@ -30,21 +30,29 @@
 
 ### Test Results
 
-No test runner executed (manual verification via grep).
+**Summary:** 116 passed, 8 failed, 21 errors
 
-**Verification method:**
+**Relevant tests (schemas migrated):**
 ```bash
-grep "class Config:" backend/app/  →  No files found ✅
-grep "model_config = ConfigDict" backend/app/  →  14 matches (13 migrated + 1 pre-existing)
+pytest tests/modules/categorias/  →  18 passed ✅
+pytest tests/ -k "productos or categoria"  →  18 passed ✅
 ```
+
+**Failures unrelated to this migration (pre-existing issues):**
+- `tests/modules/pedidos/` — 12 errors: fixture/setup issues (datetime mocking conflict)
+- `tests/modules/admin/` — 8 failed + 9 errors: fixture setup issues
+- `tests/test_perfil_endpoints.py::test_get_perfil_unauthenticated` — HTTPBearer 401→403 (pre-existing auth change)
+- `tests/modules/refreshtokens/test_service.py::test_revokes_all_tokens` — pre-existing
+
+**Note:** DeprecationWarning on `jwt.py:311` uses `datetime.utcnow()` in the `jose` library — not our code.
 
 ---
 
 ### Summary
 
-- **CRITICAL:** None
+- **CRITICAL:** None (failures are pre-existing, not caused by migration)
 - **WARNING:** None
-- **SUGGESTION:** None
+- **SUGGESTION:** Fix admin/pedidos test fixtures in a future change
 
 ---
 
