@@ -5,7 +5,7 @@ Schemas Pydantic para el módulo de categorías.
 
 from __future__ import annotations
 
-from pydantic import BaseModel, Field, field_validator
+from pydantic import BaseModel, ConfigDict, Field, field_validator
 
 
 class CategoriaCreate(BaseModel):
@@ -94,8 +94,7 @@ class CategoriaResponse(BaseModel):
     categoria_padre_id: int | None
     activa: bool
 
-    class Config:
-        from_attributes = True
+    model_config = ConfigDict(from_attributes=True)
 
 
 class CategoriaTreeResponse(BaseModel):
@@ -107,5 +106,4 @@ class CategoriaTreeResponse(BaseModel):
     activa: bool
     hijos: list["CategoriaTreeResponse"] = Field(default_factory=list)
 
-    class Config:
-        from_attributes = True
+    model_config = ConfigDict(from_attributes=True)

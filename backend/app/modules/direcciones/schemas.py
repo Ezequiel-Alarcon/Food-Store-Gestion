@@ -2,7 +2,7 @@
 
 from __future__ import annotations
 
-from pydantic import BaseModel, Field, field_validator
+from pydantic import BaseModel, ConfigDict, Field, field_validator
 
 
 def _strip_or_none(v: str | None) -> str | None:
@@ -81,8 +81,7 @@ class UserAddressResponse(BaseModel):
     is_default: bool
     activa: bool
 
-    class Config:
-        from_attributes = True
+    model_config = ConfigDict(from_attributes=True)
 
 
 class BranchAddressCreate(BaseModel):
@@ -148,5 +147,4 @@ class BranchAddressResponse(BaseModel):
     referencias: str | None
     activa: bool
 
-    class Config:
-        from_attributes = True
+    model_config = ConfigDict(from_attributes=True)

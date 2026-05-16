@@ -8,7 +8,7 @@ from datetime import datetime
 from decimal import Decimal
 from typing import Optional
 
-from pydantic import BaseModel, Field, field_validator
+from pydantic import BaseModel, ConfigDict, Field, field_validator
 
 
 class ProductoCreate(BaseModel):
@@ -135,8 +135,7 @@ class CategoriaSimple(BaseModel):
     id: int
     nombre: str
 
-    class Config:
-        from_attributes = True
+    model_config = ConfigDict(from_attributes=True)
 
 
 class IngredienteSimple(BaseModel):
@@ -145,8 +144,7 @@ class IngredienteSimple(BaseModel):
     id: int
     nombre: str
 
-    class Config:
-        from_attributes = True
+    model_config = ConfigDict(from_attributes=True)
 
 
 class ProductoResponse(BaseModel):
@@ -164,8 +162,7 @@ class ProductoResponse(BaseModel):
     categorias: list[CategoriaSimple] = Field(default_factory=list)
     ingredientes: list[IngredienteSimple] = Field(default_factory=list)
 
-    class Config:
-        from_attributes = True
+    model_config = ConfigDict(from_attributes=True)
 
 
 class ProductoListResponse(BaseModel):
@@ -180,8 +177,7 @@ class ProductoListResponse(BaseModel):
     activo: bool
     categorias: list[CategoriaSimple] = Field(default_factory=list)
 
-    class Config:
-        from_attributes = True
+    model_config = ConfigDict(from_attributes=True)
 
 
 class ProductoStockUpdate(BaseModel):
@@ -210,8 +206,7 @@ class ProductoCatalogoResponse(BaseModel):
     disponible: bool
     categorias: list[CategoriaSimple] = Field(default_factory=list)
 
-    class Config:
-        from_attributes = True
+    model_config = ConfigDict(from_attributes=True)
 
 
 class PaginatedProductoResponse(BaseModel):
