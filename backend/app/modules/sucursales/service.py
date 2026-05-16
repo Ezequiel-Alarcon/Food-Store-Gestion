@@ -5,7 +5,7 @@ Servicio minimo para sucursales.
 
 from __future__ import annotations
 
-from datetime import datetime
+from datetime import datetime, timezone
 
 from fastapi import HTTPException, status
 from sqlmodel import Session
@@ -27,8 +27,8 @@ class SucursalesService:
         suc = Sucursal(
             nombre=data.nombre,
             activa=True,
-            created_at=datetime.utcnow(),
-            updated_at=datetime.utcnow(),
+            created_at=datetime.now(timezone.utc),
+            updated_at=datetime.now(timezone.utc),
         )
         self.repo.add(suc)
         self.session.flush()
@@ -42,7 +42,7 @@ class SucursalesService:
             suc.nombre = data.nombre
         if data.activa is not None:
             suc.activa = data.activa
-        suc.updated_at = datetime.utcnow()
+        suc.updated_at = datetime.now(timezone.utc)
         self.session.add(suc)
         self.session.flush()
         return suc

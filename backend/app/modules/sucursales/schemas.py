@@ -5,7 +5,7 @@ Schemas Pydantic para sucursales.
 
 from __future__ import annotations
 
-from pydantic import BaseModel, Field, field_validator
+from pydantic import BaseModel, ConfigDict, Field, field_validator
 
 
 class SucursalCreate(BaseModel):
@@ -40,5 +40,4 @@ class SucursalResponse(BaseModel):
     nombre: str
     activa: bool
 
-    class Config:
-        from_attributes = True
+    model_config = ConfigDict(from_attributes=True)

@@ -3,7 +3,7 @@ app.modules.categorias.model
 
 Modelo SQLModel para categorías jerárquicas.
 """
-from datetime import datetime
+from datetime import datetime, timezone
 from typing import Optional
 
 from sqlmodel import Field, SQLModel, Relationship
@@ -54,11 +54,11 @@ class Categoria(SQLModel, table=True):
         description="Flag de soft-delete",
     )
     created_at: datetime = Field(
-        default_factory=datetime.utcnow,
+        default_factory=lambda: datetime.now(timezone.utc),
         description="Fecha de creación",
     )
     updated_at: datetime = Field(
-        default_factory=datetime.utcnow,
+        default_factory=lambda: datetime.now(timezone.utc),
         description="Fecha de última modificación",
     )
 

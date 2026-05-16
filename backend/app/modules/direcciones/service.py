@@ -5,7 +5,7 @@ Servicios para direcciones (usuarios y sucursales).
 
 from __future__ import annotations
 
-from datetime import datetime
+from datetime import datetime, timezone
 from typing import Any
 
 from fastapi import HTTPException, status
@@ -65,8 +65,8 @@ class UserAddressesService:
                 referencias=data.referencias,
                 is_default=False,
                 activa=True,
-                created_at=datetime.utcnow(),
-                updated_at=datetime.utcnow(),
+                created_at=datetime.now(timezone.utc),
+                updated_at=datetime.now(timezone.utc),
             )
             repo.add(addr)
             uow.session.flush()
@@ -100,7 +100,7 @@ class UserAddressesService:
                 value = getattr(data, field)
                 if value is not None:
                     setattr(addr, field, value)
-            addr.updated_at = datetime.utcnow()
+            addr.updated_at = datetime.now(timezone.utc)
             uow.session.add(addr)
             uow.session.flush()
             return addr
@@ -117,7 +117,7 @@ class UserAddressesService:
                 raise HTTPException(status_code=status.HTTP_403_FORBIDDEN, detail="No autorizado")
             addr.activa = False
             addr.is_default = False
-            addr.updated_at = datetime.utcnow()
+            addr.updated_at = datetime.now(timezone.utc)
             uow.session.add(addr)
             uow.session.flush()
             return None
@@ -138,7 +138,7 @@ class UserAddressesService:
             # atomic: unset others then set this
             repo.unset_default_for_user(user_id)
             addr.is_default = True
-            addr.updated_at = datetime.utcnow()
+            addr.updated_at = datetime.now(timezone.utc)
             uow.session.add(addr)
             uow.session.flush()
             return addr
@@ -165,7 +165,7 @@ class BranchAddressesService:
             existing = repo.get_active_by_branch(branch_id)
             if existing is not None:
                 existing.activa = False
-                existing.updated_at = datetime.utcnow()
+                existing.updated_at = datetime.now(timezone.utc)
                 uow.session.add(existing)
 
             addr = BranchAddress(
@@ -179,8 +179,8 @@ class BranchAddressesService:
                 pais=data.pais,
                 referencias=data.referencias,
                 activa=True,
-                created_at=datetime.utcnow(),
-                updated_at=datetime.utcnow(),
+                created_at=datetime.now(timezone.utc),
+                updated_at=datetime.now(timezone.utc),
             )
             repo.add(addr)
             uow.session.flush()
@@ -206,7 +206,7 @@ class BranchAddressesService:
                 value = getattr(data, field)
                 if value is not None:
                     setattr(addr, field, value)
-            addr.updated_at = datetime.utcnow()
+            addr.updated_at = datetime.now(timezone.utc)
             uow.session.add(addr)
             uow.session.flush()
             return addr
@@ -219,7 +219,7 @@ class BranchAddressesService:
             if not addr:
                 raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="Dirección de sucursal no encontrada")
             addr.activa = False
-            addr.updated_at = datetime.utcnow()
+            addr.updated_at = datetime.now(timezone.utc)
             uow.session.add(addr)
             uow.session.flush()
             return None

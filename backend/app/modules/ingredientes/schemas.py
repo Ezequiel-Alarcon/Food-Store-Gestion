@@ -5,7 +5,7 @@ Schemas Pydantic para el módulo de ingredientes.
 """
 from __future__ import annotations
 
-from pydantic import BaseModel, Field, field_validator
+from pydantic import BaseModel, ConfigDict, Field, field_validator
 
 
 class IngredienteCreate(BaseModel):
@@ -90,8 +90,7 @@ class IngredienteResponse(BaseModel):
     creado_en: str
     actualizado_en: str | None
 
-    class Config:
-        from_attributes = True
+    model_config = ConfigDict(from_attributes=True)
 
 
 class IngredienteListResponse(BaseModel):
@@ -104,5 +103,4 @@ class IngredienteListResponse(BaseModel):
     creado_en: str
     actualizado_en: str | None
 
-    class Config:
-        from_attributes = True
+    model_config = ConfigDict(from_attributes=True)

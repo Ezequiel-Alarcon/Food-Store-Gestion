@@ -3,7 +3,7 @@
 Modelo SQLModel para pagos con MercadoPago.
 Relación 1:N Pedido→Pago (múltiples intentos permitidos).
 """
-from datetime import datetime
+from datetime import datetime, timezone
 from typing import Optional
 from sqlmodel import Field, SQLModel
 
@@ -21,5 +21,5 @@ class Pago(SQLModel, table=True):
     status_detail: Optional[str] = Field(default=None, max_length=100, description="Detalle textual de MP")
     payment_method_id: Optional[str] = Field(default=None, max_length=30, description="visa, master, rapipago, etc.")
     transaction_amount: float = Field(description="Monto de la transacción")
-    creado_en: datetime = Field(default_factory=datetime.utcnow)
-    actualizado_en: datetime = Field(default_factory=datetime.utcnow)
+    creado_en: datetime = Field(default_factory=lambda: datetime.now(timezone.utc))
+    actualizado_en: datetime = Field(default_factory=lambda: datetime.now(timezone.utc))

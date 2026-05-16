@@ -7,7 +7,7 @@ from __future__ import annotations
 
 from typing import Any, Optional
 
-from pydantic import BaseModel, Field
+from pydantic import BaseModel, ConfigDict, Field
 
 
 class ProblemDetail(BaseModel):
@@ -31,8 +31,8 @@ class ProblemDetail(BaseModel):
         description="URI reference that identifies the specific occurrence"
     )
 
-    class Config:
-        json_schema_extra = {
+    model_config = ConfigDict(
+        json_schema_extra={
             "example": {
                 "type": "https://httpstatuses.com/404",
                 "title": "Not Found",
@@ -41,6 +41,7 @@ class ProblemDetail(BaseModel):
                 "instance": "/api/v1/usuarios/123"
             }
         }
+    )
 
 
 class ValidationErrorDetail(BaseModel):

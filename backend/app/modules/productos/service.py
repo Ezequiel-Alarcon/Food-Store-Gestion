@@ -3,7 +3,7 @@ app.modules.productos.service
 
 Servicio para operaciones de productos.
 """
-from datetime import datetime
+from datetime import datetime, timezone
 from typing import Optional
 
 from fastapi import HTTPException, status
@@ -350,7 +350,7 @@ class ProductoService:
         if data.activo is not None:
             producto.activo = data.activo
 
-        producto.actualizado_en = datetime.utcnow()
+        producto.actualizado_en = datetime.now(timezone.utc)
         self.session.add(producto)
         self.session.flush()
 
@@ -406,7 +406,7 @@ class ProductoService:
                 )
             producto.stock -= data.stock
 
-        producto.actualizado_en = datetime.utcnow()
+        producto.actualizado_en = datetime.now(timezone.utc)
         self.session.add(producto)
         self.session.flush()
 
