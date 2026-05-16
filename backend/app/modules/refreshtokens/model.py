@@ -25,7 +25,7 @@ class RefreshToken(SQLModel, table=True):
 
     id: Optional[int] = Field(default=None, primary_key=True)
     user_id: int = Field(foreign_key="usuarios.id", description="FK al usuario")
-    token: str = Field(description="JWT refresh token")
+    token: str = Field(index=True, description="JWT refresh token")
     revocado: bool = Field(default=False, description="Token revocado")
     expires_at: datetime = Field(description="Fecha de expiración")
     created_at: datetime = Field(default_factory=lambda: datetime.now(timezone.utc), description="Fecha de creación")
