@@ -294,20 +294,20 @@
 
 | Integrante | Completados | Pendientes (Fase 4) | Total |
 |-----------|-----------|-------------------|-------|
-| **Eze** | 1, 6, 11, 11b, 14, 17b, 17c, 17e, 23, 24, 25, 26, 28, 29, 30, 31, 32, 33, 40 | 41 (`backend-admin-model`) | 20 ✅ + 0 🔲 \|
-| **Mati** | 2, 7, 12, 19, 38 | 43 (`frontend-orders-feature`) | 5 ✅ + 0 🔲 \|
-| **Lucas** | 3, 8, 18, 20, 21, 22, 27 | 36 (`frontend-home-page`), 37 (`frontend-shared-ui`) | 7 ✅ + 2 🔲 |
+| **Eze** | 1, 6, 11, 11b, 14, 17b, 17c, 17e, 23, 24, 25, 26, 28, 29, 30, 31, 32, 33, 40, 41 | — | 20 ✅ + 0 🔲 |
+| **Mati** | 2, 7, 12, 19, 38 | 43 (`frontend-orders-feature`) | 5 ✅ + 1 🔲 |
+| **Lucas** | 3, 8, 18, 20, 21, 22, 27, 37 | 36 (`frontend-home-page`) | 8 ✅ + 1 🔲 |
 | **Edgar** | 5, 9, 16, 17, 34, 35 | — | 6 ✅ + 0 🔲 |
-| **Leandro** | 4, 10, 13, 15 | 42 (`frontend-addresses-barrel`), 39 (`frontend-fsd-restructure`) | 4 ✅ + 0 🔲 \|
+| **Leandro** | 4, 10, 13, 15 | 42 (`frontend-addresses-barrel`), 39 (`frontend-fsd-restructure`) | 4 ✅ + 2 🔲 |
 
-**Total:** 43 changes — 33 completados + 10 pendientes. **2 changes por persona, todos en paralelo.**
+**Total:** 43 changes — 39 completados + 4 pendientes. **Fase 4: 1-2 changes por persona, todos en paralelo.**
 
 ---
 
-> **Fase actual:** ✅ FASES 0-3 COMPLETADAS + FASE 4 EN CURSO (34/43 changes)  
-> **Fase pendiente:** 🔲 FASE 4 — Deuda Técnica (9 changes restantes)  
+> **Fase actual:** ✅ FASES 0-3 COMPLETADAS + FASE 4 EN CURSO (39/43 changes)  
+> **Fase pendiente:** 🔲 FASE 4 — Deuda Técnica (4 changes restantes)  
 > **Último change completado:** `backend-pydantic-modernize` (Edgar) ✅ 2026-05-16  
-> **Última actualización:** 2026-05-16 — Sync archive backend-pydantic-modernize
+> **Última actualización:** 2026-05-16 — Sync documentación (corrección conteo Fase 4)
 
 ---
 

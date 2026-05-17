@@ -115,8 +115,8 @@
 | 37 | `frontend-shared-ui` | Crear componentes base: Button, Input, Modal, Card | EPIC 00 | — | ~8 | Frontend | ✅ Archivado 2026-05-15 Lucas |
 | 38 | `frontend-profile-page` | Crear ProfilePage para editar perfil y cambiar contraseña | EPIC 02 | 2 | ~4 | Frontend | ✅ Archivado 2026-05-16 Mati |
 | 39 | `frontend-fsd-restructure` | Mover providers/ dentro de app/ | EPIC 00 | — | ~3 | Frontend | 🔲 Leandro |
-| 40 | `backend-refreshtokens` | Completar refreshtokens: router.py, schemas.py, main.py | EPIC 01 | — | ~4 | Backend | 🔲 Eze |
-| 41 | `backend-admin-model` | Crear model.py de admin con queries reutilizables | EPIC 17 | — | ~3 | Backend | 🔲 Eze |
+| 40 | `backend-refreshtokens` | Completar refreshtokens: router.py, schemas.py, main.py | EPIC 01 | — | ~4 | Backend | ✅ Archivado 2026-05-15 Eze |
+| 41 | `backend-admin-model` | Crear model.py de admin con queries reutilizables | EPIC 17 | — | ~3 | Backend | ✅ Archivado 2026-05-15 Eze |
 | 42 | `frontend-addresses-barrel` | Agregar index.ts barrel a entities/addresses/ | EPIC 07 | — | ~1 | Frontend | 🔲 Leandro |
 | 43 | `frontend-orders-feature` | Mover OrdersPage de pages/ a features/orders/ | EPIC 13 | — | ~3 | Frontend | 🔲 Mati |
 
@@ -744,7 +744,7 @@
 | **Sprint 9** | 19-23 + 29-33 (frontend + fixes) | EPIC 08,11,13,15,17 | — | ✅ Completado 2026-05-14 |
 | **Sprint 10** | 34 (`backend-datetime-fix`), 35-43 | EPIC 00,01,02,05,07,13,17 | — | 🔄 En curso |
 
-**Total: 43 changes. 33 completados + 10 pendientes (Fase 4: 2 por persona, todos en paralelo).**
+**Total: 43 changes. 39 completados + 4 pendientes (Fase 4: 1-2 por persona, todos en paralelo).**
 
 ---
 
@@ -777,6 +777,6 @@
 
 ---
 
-> **Estado actual:** 33/43 changes completados. 10 pendientes en Fase 4 (deuda técnica).
-> **Última actualización:** 2026-05-14 — Sync de documentación v3.0
+> **Estado actual:** 39/43 changes completados. 4 pendientes en Fase 4 (deuda técnica).
+> **Última actualización:** 2026-05-16 — Sync de documentación (corrección conteo Fase 4)
 > **Próximos changes a implementar:** Fase 4 — `backend-datetime-fix` (34), `backend-pydantic-modernize` (35), `frontend-home-page` (36)
