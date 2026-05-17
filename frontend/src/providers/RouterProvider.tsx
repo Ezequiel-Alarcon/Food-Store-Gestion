@@ -12,6 +12,7 @@ import { CartDrawer } from '../features/cart/CartDrawer'
 import { ConfirmModal } from '../features/layout/ConfirmModal'
 import { ToastContainer } from '../features/layout/ToastContainer'
 import { OrdersPage } from '../pages/OrdersPage'
+import { ProfilePage } from '../pages/ProfilePage'
 import CheckoutPage from '../pages/CheckoutPage'
 import { OrdersListPage } from '../features/admin/orders/ui/OrdersListPage'
 import { OrderDetailPage } from '../features/admin/orders/ui/OrderDetailPage'
@@ -118,6 +119,16 @@ export function RouterProvider({ children }: RouterProviderProps) {
           element={
             <ProtectedRoute allowedRoles={['PEDIDOS', 'ADMIN']}>
               <OrderDetailPage />
+            </ProtectedRoute>
+          }
+        />
+
+        {/* Perfil */}
+        <Route
+          path="/perfil"
+          element={
+            <ProtectedRoute allowedRoles={['CLIENT', 'ADMIN', 'STOCK', 'PEDIDOS', 'GESTOR']}>
+              <ProfilePage />
             </ProtectedRoute>
           }
         />

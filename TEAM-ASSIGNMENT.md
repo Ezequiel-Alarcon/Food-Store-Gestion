@@ -128,8 +128,8 @@
 │  └─────────────────────────────────────────────────────────────────────┘  │
 │                                                                           │
 │  ┌─ MATI (Frontend) ──────────────────────────────────────────────────┐  │
-│  │  3️⃣8️⃣ frontend-profile-page 🆕                                      │  │
-│  │     ↓ (ProfilePage para editar perfil y cambiar contraseña)        │  │
+│  │  3️⃣8️⃣ frontend-profile-page ✅                                     │  │
+│  │     ↓ (ProfilePage para editar perfil — Archivado 2026-05-16)      │  │
 │  │                                                                     │  │
 │  │  4️⃣3️⃣ frontend-orders-feature 🆕                                     │  │
 │  │     ↓ (Mover OrdersPage de pages/ a features/orders/)              │  │
@@ -227,7 +227,7 @@
 | 35 | Edgar | `backend-pydantic-modernize` 🆕 | `class Config:` → `model_config` en 5 schemas | ✅ Archivado 2026-05-16 |
 | 36 | Lucas | `frontend-home-page` 🆕 | HomePage con catálogo, hero, categorías | 🔴 Alta |
 | 37 | Lucas | `frontend-shared-ui` 🆕 | Button, Input, Modal, Card en `shared/ui/` | ✅ Archivado 2026-05-15 |
-| 38 | Mati | `frontend-profile-page` 🆕 | ProfilePage para editar perfil | 🟡 Media |
+| 38 | Mati | `frontend-profile-page` ✅ | ProfilePage para editar perfil | ✅ Archivado 2026-05-16 |
 | 43 | Mati | `frontend-orders-feature` 🆕 | Mover OrdersPage a `features/orders/` | 🟢 Baja |
 | 40 | Eze | `backend-refreshtokens` ✅ Archivado 2026-05-15 | Completar router.py, schemas.py, main.py | 🟢 Baja |
 | 41 \| Eze \| `backend-admin-model` ✅ Archivado 2026-05-15 | Crear model.py de admin con queries | 🟢 Baja |
@@ -295,7 +295,7 @@
 | Integrante | Completados | Pendientes (Fase 4) | Total |
 |-----------|-----------|-------------------|-------|
 | **Eze** | 1, 6, 11, 11b, 14, 17b, 17c, 17e, 23, 24, 25, 26, 28, 29, 30, 31, 32, 33, 40 | 41 (`backend-admin-model`) | 20 ✅ + 0 🔲 \|
-| **Mati** | 2, 7, 12, 19 | 38 (`frontend-profile-page`), 43 (`frontend-orders-feature`) | 4 ✅ + 0 🔲 \|
+| **Mati** | 2, 7, 12, 19, 38 | 43 (`frontend-orders-feature`) | 5 ✅ + 0 🔲 \|
 | **Lucas** | 3, 8, 18, 20, 21, 22, 27 | 36 (`frontend-home-page`), 37 (`frontend-shared-ui`) | 7 ✅ + 2 🔲 |
 | **Edgar** | 5, 9, 16, 17, 34, 35 | — | 6 ✅ + 0 🔲 |
 | **Leandro** | 4, 10, 13, 15 | 42 (`frontend-addresses-barrel`), 39 (`frontend-fsd-restructure`) | 4 ✅ + 0 🔲 \|

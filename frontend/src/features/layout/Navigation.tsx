@@ -9,6 +9,7 @@ const MENU_BY_ROLE: Record<string, Array<{ label: string; href: string }>> = {
     { label: 'Productos', href: '/productos' },
     { label: 'Mis Pedidos', href: '/pedidos' },
     { label: 'Mis Direcciones', href: '/direcciones' },
+    { label: 'Mi Perfil', href: '/perfil' },
     { label: 'Puntos de Retiro', href: '/puntos-retiro' },
   ],
   STOCK: [
