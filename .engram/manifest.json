@@ -312,6 +312,14 @@
       "sessions": 0,
       "memories": 0,
       "prompts": 6
+    },
+    {
+      "id": "c630f69b",
+      "created_by": "Gorditos",
+      "created_at": "2026-05-17T02:14:28Z",
+      "sessions": 2,
+      "memories": 1,
+      "prompts": 8
     }
   ]
 }
