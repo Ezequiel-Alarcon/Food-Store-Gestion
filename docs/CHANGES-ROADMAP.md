@@ -113,7 +113,7 @@
 | 35 | `backend-pydantic-modernize` | Migrar `class Config:` → `model_config = ConfigDict(...)` | EPIC 00 | — | ~5 | Backend | ✅ Archivado 2026-05-16 Edgar |
 | 36 | `frontend-home-page` | Crear HomePage con catálogo destacado, hero, categorías | EPIC 05 | 3 | ~4 | Frontend | 🔲 Lucas |
 | 37 | `frontend-shared-ui` | Crear componentes base: Button, Input, Modal, Card | EPIC 00 | — | ~8 | Frontend | ✅ Archivado 2026-05-15 Lucas |
-| 38 | `frontend-profile-page` | Crear ProfilePage para editar perfil y cambiar contraseña | EPIC 02 | 2 | ~4 | Frontend | 🔲 Mati |
+| 38 | `frontend-profile-page` | Crear ProfilePage para editar perfil y cambiar contraseña | EPIC 02 | 2 | ~4 | Frontend | ✅ Archivado 2026-05-16 Mati |
 | 39 | `frontend-fsd-restructure` | Mover providers/ dentro de app/ | EPIC 00 | — | ~3 | Frontend | 🔲 Leandro |
 | 40 | `backend-refreshtokens` | Completar refreshtokens: router.py, schemas.py, main.py | EPIC 01 | — | ~4 | Backend | 🔲 Eze |
 | 41 | `backend-admin-model` | Crear model.py de admin con queries reutilizables | EPIC 17 | — | ~3 | Backend | 🔲 Eze |
