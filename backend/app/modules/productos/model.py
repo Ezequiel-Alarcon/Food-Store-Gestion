@@ -86,6 +86,7 @@ class ProductoCategoria(SQLModel, table=True):
         primary_key=True,
         description="FK a la categoría",
     )
+    es_principal: bool = Field(default=False, description="Categoría principal del producto")
 
 
 class ProductoIngrediente(SQLModel, table=True):
@@ -104,3 +105,4 @@ class ProductoIngrediente(SQLModel, table=True):
         primary_key=True,
         description="FK al ingrediente",
     )
+    es_removible: bool = Field(default=False, description="Indica si el ingrediente se puede excluir del pedido")

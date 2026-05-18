@@ -27,6 +27,7 @@ class Ingrediente(SQLModel, table=True):
     id: Optional[int] = Field(default=None, primary_key=True, description="ID único")
     nombre: str = Field(
         max_length=100,
+        unique=True,
         index=True,
         description="Nombre del ingrediente",
     )

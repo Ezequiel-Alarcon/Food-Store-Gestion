@@ -20,7 +20,7 @@ class Categoria(SQLModel, table=True):
         - descripcion: Descripción opcional de la categoría
         - padre_id: FK auto-referencial al padre (NULL para categorías raíz)
         - orden: Campo para ordenamiento manual (drag & drop)
-        - activa: Flag de soft-delete (True = activa, False = eliminada)
+        - eliminado_en: Timestamp de soft-delete (NULL = activa)
         - created_at: Fecha de creación
         - updated_at: Fecha de última modificación
     """
@@ -49,9 +49,9 @@ class Categoria(SQLModel, table=True):
         default=0,
         description="Orden para sorting manual",
     )
-    activa: bool = Field(
-        default=True,
-        description="Flag de soft-delete",
+    eliminado_en: Optional[datetime] = Field(
+        default=None,
+        description="Timestamp de soft-delete (NULL = activa)",
     )
     created_at: datetime = Field(
         default_factory=lambda: datetime.now(timezone.utc),

@@ -101,7 +101,6 @@ class CategoriaService:
             descripcion=data.descripcion,
             padre_id=padre_id,
             orden=0,  # Por defecto
-            activa=True,
             created_at=datetime.now(timezone.utc),
             updated_at=datetime.now(timezone.utc),
         )
@@ -164,7 +163,7 @@ class CategoriaService:
             )
 
         # Verificar si es activa (no se puede editar una eliminada)
-        if not categoria.activa:
+        if categoria.eliminado_en is not None:
             raise HTTPException(
                 status_code=status.HTTP_400_BAD_REQUEST,
                 detail="No se puede editar una categoría eliminada",
@@ -217,7 +216,7 @@ class CategoriaService:
             categoria.padre_id = nuevo_padre_id
 
         if data.activa is not None:
-            categoria.activa = data.activa
+            categoria.eliminado_en = None if data.activa else datetime.now(timezone.utc)
 
         categoria.updated_at = datetime.now(timezone.utc)
         self.session.add(categoria)
@@ -242,7 +241,7 @@ class CategoriaService:
             )
 
         # No hacer nada si ya está inactiva
-        if not categoria.activa:
+        if categoria.eliminado_en is not None:
             return
 
         self.repo.soft_delete_with_descendants(category_id)
@@ -275,7 +274,7 @@ class CategoriaService:
                 id=categoria.id,
                 nombre=categoria.nombre,
                 descripcion=categoria.descripcion,
-                activa=categoria.activa,
+                activa=categoria.eliminado_en is None,
                 hijos=[build_node(child) for child in children],
             )
 
