@@ -20,6 +20,8 @@ export default function CheckoutPage() {
     const pedidoId = pedidoIdParam ? parseInt(pedidoIdParam, 10) : null;
 
     const items = useCartStore((s) => s.items);
+    const clearCart = useCartStore((s) => s.clearCart);
+    const addToast = useUIStore((s) => s.addToast);
     const { resetPayment, updatePaymentStatus, startCheckout } = usePaymentStore();
 
     // Obtener datos del pedido desde el backend (más robusto que depender del carrito)

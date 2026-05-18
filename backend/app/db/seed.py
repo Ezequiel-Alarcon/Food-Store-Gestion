@@ -248,7 +248,7 @@ def seed_productos(session: Session) -> None:
     from app.modules.ingredientes.model import Ingrediente
 
     # Obtener categorías por nombre
-    statement = select(Categoria).where(Categoria.activa == True)
+    statement = select(Categoria).where(Categoria.eliminado_en == None)
     categorias_existentes = {cat.nombre: cat.id for cat in session.exec(statement).all()}
 
     # Obtener ingredientes por nombre
@@ -270,7 +270,6 @@ def seed_productos(session: Session) -> None:
             nueva_cat = Categoria(
                 nombre=categoria_nombre,
                 slug=slug,
-                activa=True,
             )
             session.add(nueva_cat)
             session.flush()

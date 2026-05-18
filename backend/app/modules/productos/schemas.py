@@ -130,19 +130,21 @@ class ProductoUpdate(BaseModel):
 
 
 class CategoriaSimple(BaseModel):
-    """Schema simple para categoría relacionada."""
+    """Schema minimal de categoría para respuestas anidadas."""
 
     id: int
     nombre: str
+    es_principal: bool = False
 
     model_config = ConfigDict(from_attributes=True)
 
 
 class IngredienteSimple(BaseModel):
-    """Schema simple para ingrediente relacionado."""
+    """Schema minimal de ingrediente para respuestas anidadas."""
 
     id: int
     nombre: str
+    es_removible: bool = False
 
     model_config = ConfigDict(from_attributes=True)
 

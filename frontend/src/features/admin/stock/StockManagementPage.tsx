@@ -35,7 +35,7 @@ export function StockManagementPage() {
   const PAGE_SIZE = 15
 
   const { data, isLoading, isError, refetch } = useQuery({
-    queryKey: ['admin-productos'],
+    queryKey: ['admin-productos-stock'],
     queryFn: async (): Promise<ProductoAdmin[]> => {
       const response = await api.get<ProductoAdmin[]>('/productos')
       return response.data
@@ -55,7 +55,7 @@ export function StockManagementPage() {
       await api.patch(`/productos/${id}/stock`, { stock, activo })
     },
     onSuccess: (_data, variables) => {
-      queryClient.invalidateQueries({ queryKey: ['admin-productos'] })
+      queryClient.invalidateQueries({ queryKey: ['admin-productos-stock'] })
       addToast('success', `Producto #${variables.id} actualizado correctamente`)
     },
     onError: (err: unknown, variables) => {
