@@ -50,7 +50,7 @@ def _get_categorias_from_producto(session: Session, producto_id: int) -> list[Ca
         # Obtener la categoría
         from app.modules.categorias.model import Categoria
         cat = session.get(Categoria, rel.categoria_id)
-        if cat and cat.activa:
+        if cat and cat.eliminado_en is None:
             categorias.append(CategoriaSimple(id=cat.id, nombre=cat.nombre))
 
     return categorias
@@ -115,7 +115,7 @@ class ProductoService:
             from app.modules.categorias.model import Categoria
             for cat_id in data.categoria_ids:
                 cat = self.session.get(Categoria, cat_id)
-                if not cat or not cat.activa:
+                if not cat or cat.eliminado_en is not None:
                     raise HTTPException(
                         status_code=status.HTTP_404_NOT_FOUND,
                         detail=f"La categoría con ID {cat_id} no existe",
@@ -314,7 +314,7 @@ class ProductoService:
             from app.modules.categorias.model import Categoria
             for cat_id in data.categoria_ids:
                 cat = self.session.get(Categoria, cat_id)
-                if not cat or not cat.activa:
+                if not cat or cat.eliminado_en is not None:
                     raise HTTPException(
                         status_code=status.HTTP_404_NOT_FOUND,
                         detail=f"La categoría con ID {cat_id} no existe",

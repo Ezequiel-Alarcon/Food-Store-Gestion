@@ -42,7 +42,7 @@ def create_categoria(
         nombre=categoria.nombre,
         descripcion=categoria.descripcion,
         categoria_padre_id=categoria.padre_id,
-        activa=categoria.activa,
+        activa=categoria.eliminado_en is None,
     )
 
 
@@ -65,7 +65,7 @@ def list_categorias(
             nombre=cat.nombre,
             descripcion=cat.descripcion,
             categoria_padre_id=cat.padre_id,
-            activa=cat.activa,
+            activa=cat.eliminado_en is None,
         )
         for cat in categorias
     ]
@@ -119,7 +119,7 @@ def get_categoria(
         nombre=categoria.nombre,
         descripcion=categoria.descripcion,
         categoria_padre_id=categoria.padre_id,
-        activa=categoria.activa,
+        activa=categoria.eliminado_en is None,
     )
 
 
@@ -144,7 +144,7 @@ def get_subcategorias(
             nombre=cat.nombre,
             descripcion=cat.descripcion,
             categoria_padre_id=cat.padre_id,
-            activa=cat.activa,
+            activa=cat.eliminado_en is None,
         )
         for cat in subcategorias
     ]
@@ -170,7 +170,7 @@ def update_categoria(
         nombre=categoria.nombre,
         descripcion=categoria.descripcion,
         categoria_padre_id=categoria.padre_id,
-        activa=categoria.activa,
+        activa=categoria.eliminado_en is None,
     )
 
 
