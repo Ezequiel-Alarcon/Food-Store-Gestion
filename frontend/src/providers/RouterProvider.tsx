@@ -14,6 +14,7 @@ import { ToastContainer } from '../features/layout/ToastContainer'
 import { OrdersPage } from '../features/orders'
 import { ProfilePage } from '../pages/ProfilePage'
 import CheckoutPage from '../pages/CheckoutPage'
+import { HomePage } from '../pages/HomePage'
 import { OrdersListPage } from '../features/admin/orders/ui/OrdersListPage'
 import { OrderDetailPage } from '../features/admin/orders/ui/OrderDetailPage'
 import { UsersPage } from '../features/admin/users/ui/UsersPage'
@@ -33,7 +34,7 @@ export function RouterProvider({ children }: RouterProviderProps) {
       <CartDrawer /><ConfirmModal /><ToastContainer />
       <Routes>
         {/* Rutas públicas */}
-        <Route path="/" element={children} />
+        <Route path="/" element={<HomePage />} />
         <Route path="/login" element={<LoginForm />} />
         <Route path="/register" element={<RegisterForm />} />
 

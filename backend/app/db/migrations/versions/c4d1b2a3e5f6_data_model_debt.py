@@ -13,7 +13,7 @@ import sqlmodel
 
 # revision identifiers, used by Alembic.
 revision: str = 'c4d1b2a3e5f6'
-down_revision: Union[str, None] = '40a50a4d0f4c'
+down_revision: Union[str, None] = '008'
 branch_labels: Union[str, Sequence[str], None] = None
 depends_on: Union[str, Sequence[str], None] = None
 
@@ -21,13 +21,13 @@ depends_on: Union[str, Sequence[str], None] = None
 def upgrade() -> None:
     # 1. ProductoCategoria: agregar es_principal
     op.add_column(
-        'productos_categorias',
+        'producto_categorias',
         sa.Column('es_principal', sa.Boolean(), nullable=False, server_default=sa.text('false'))
     )
 
     # 2. ProductoIngrediente: agregar es_removible
     op.add_column(
-        'productos_ingredientes',
+        'producto_ingredientes',
         sa.Column('es_removible', sa.Boolean(), nullable=False, server_default=sa.text('false'))
     )
 
@@ -68,7 +68,7 @@ def downgrade() -> None:
     op.drop_column('categorias', 'eliminado_en')
 
     # 2. Revertir es_removible
-    op.drop_column('productos_ingredientes', 'es_removible')
+    op.drop_column('producto_ingredientes', 'es_removible')
 
     # 1. Revertir es_principal
-    op.drop_column('productos_categorias', 'es_principal')
+    op.drop_column('producto_categorias', 'es_principal')

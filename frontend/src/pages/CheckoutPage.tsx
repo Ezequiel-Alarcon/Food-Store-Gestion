@@ -24,11 +24,12 @@ export default function CheckoutPage() {
     const addToast = useUIStore((s) => s.addToast);
     const { resetPayment, updatePaymentStatus, startCheckout } = usePaymentStore();
 
-    // Obtener datos del pedido desde el backend (más robusto que depender del carrito)
-    const { data: pedido, isLoading: isPedidoLoading } = useQuery({
+    // Obtener datos del pedido desde el backend
+    const { data: pedido, isLoading: isPedidoLoading, isError: isPedidoError } = useQuery({
         queryKey: ['pedido', pedidoId],
         queryFn: () => pedidoApi.getById(pedidoId!),
         enabled: !!pedidoId && !isNaN(pedidoId),
+        retry: 1,
     });
 
     const [currentStep, setCurrentStep] = useState(1);
@@ -41,6 +42,14 @@ export default function CheckoutPage() {
             navigate('/carrito', { replace: true });
         }
     }, [pedidoId, navigate, addToast]);
+
+    // Si el pedido no existe en backend, redirigir
+    useEffect(() => {
+        if (isPedidoError || (!isPedidoLoading && !pedido)) {
+            addToast('error', 'El pedido no fue encontrado. Creá uno nuevo desde el carrito.');
+            navigate('/carrito', { replace: true });
+        }
+    }, [isPedidoError, isPedidoLoading, pedido, navigate, addToast]);
 
     // FIXED: No redirigir por carrito vacío — el checkout obtiene datos del pedido desde backend
 

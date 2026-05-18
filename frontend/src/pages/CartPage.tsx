@@ -28,6 +28,8 @@ export function CartPage() {
       return
     }
 
+    if (isCreating || items.length === 0) return
+
     try {
       const pedido = await createPedido({
         direccion_id: addresses[0].id,
@@ -38,6 +40,7 @@ export function CartPage() {
         })),
       })
 
+      clearCart() // Limpiar carrito después de crear el pedido para evitar duplicados
       addToast('success', '¡Pedido creado! Completá el pago para confirmarlo.')
       navigate(`/checkout?pedido=${pedido.id}`)
     } catch (err) {
