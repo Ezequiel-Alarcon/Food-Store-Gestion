@@ -1,9 +1,9 @@
 # Food Store — Mapa de Changes CORREGIDO
 
 > **Proyecto:** Food Store E-Commerce
-> **Fecha:** 2026-05-17
+> **Fecha:** 2026-05-18
 > **Metodología:** Spec-Driven Development (SDD) + Feature-First
-> **Versión:** 3.0 (sync de 33 changes + Fase 4 pendientes)
+> **Versión:** 3.0 (sync de 44 changes + Fase 4 pendientes)
 
 ---
 
@@ -26,7 +26,7 @@
 
 | Métrica | v1 (Original) | v2.0 (Corregido) | v2.1 (Backend-First) | v3.0 (Sync) |
 |---------|--------------|---------------|-------------------|-------------|
-| Total changes | 15 | 18 | 22 | 33 |
+| Total changes | 15 | 18 | 22 | 44 |
 | HU total | 65 (~85%) | 77 (100%) | 77 (100%) | 77 (100%) |
 | Changes >6 HU | 5 | 0 | 0 | 0 |
 | Dependencias circulares | 1 | 0 | 0 | 0 |
@@ -115,10 +115,11 @@
 | 37 | `frontend-shared-ui` | Crear componentes base: Button, Input, Modal, Card | EPIC 00 | — | ~8 | Frontend | ✅ Archivado 2026-05-15 Lucas |
 | 38 | `frontend-profile-page` | Crear ProfilePage para editar perfil y cambiar contraseña | EPIC 02 | 2 | ~4 | Frontend | ✅ Archivado 2026-05-16 Mati |
 | 39 | `frontend-fsd-restructure` | Mover providers/ dentro de app/ | EPIC 00 | — | ~3 | Frontend | 🔲 Leandro |
-| 40 | `backend-refreshtokens` | Completar refreshtokens: router.py, schemas.py, main.py | EPIC 01 | — | ~4 | Backend | 🔲 Eze |
-| 41 | `backend-admin-model` | Crear model.py de admin con queries reutilizables | EPIC 17 | — | ~3 | Backend | 🔲 Eze |
+| 40 | `backend-refreshtokens` | Completar refreshtokens: router.py, schemas.py, main.py | EPIC 01 | — | ~4 | Backend | ✅ Archivado 2026-05-15 |
+| 41 | `backend-admin-model` | Crear model.py de admin con queries reutilizables | EPIC 17 | — | ~3 | Backend | ✅ Archivado 2026-05-15 |
 | 42 | `frontend-addresses-barrel` | Agregar index.ts barrel a entities/addresses/ | EPIC 07 | — | ~1 | Frontend | 🔲 Leandro |
 | 43 | `frontend-orders-feature` | Mover OrdersPage de pages/ a features/orders/ | EPIC 13 | — | ~3 | Frontend | ✅ Archivado 2026-05-17 Mati |
+| 44 | `audit-bugfixes` | 37 fixes de auditoría de código + spec vs código | EPIC 00 | — | ~5 | Backend + Frontend | ✅ Archivado 2026-05-18 |
 
 > **Regla FASE 4:** 2 changes por persona, todos en paralelo. Sin dependencias entre ellos.
 
@@ -742,9 +743,9 @@
 | **Sprint 7** | 15-17 + 24-28 (fixes) | EPIC 13,15,17,00 | — | ✅ Completado |
 | **Sprint 8** | 18 (`cart-frontend`) | EPIC 08 | 6 | ✅ Completado |
 | **Sprint 9** | 19-23 + 29-33 (frontend + fixes) | EPIC 08,11,13,15,17 | — | ✅ Completado 2026-05-14 |
-| **Sprint 10** | 34 (`backend-datetime-fix`), 35-43 | EPIC 00,01,02,05,07,13,17 | — | 🔄 En curso |
+| **Sprint 10** | 34 (`backend-datetime-fix`), 35-44 | EPIC 00,01,02,05,07,13,17 | — | 🔄 En curso |
 
-**Total: 43 changes. 34 completados + 9 pendientes (Fase 4: 2 por persona, todos en paralelo).**
+**Total: 44 changes. 41 completados + 3 pendientes (Fase 4: 2 por persona, todos en paralelo).**
 
 ---
 
@@ -777,6 +778,6 @@
 
 ---
 
-> **Estado actual:** 34/43 changes completados. 9 pendientes en Fase 4 (deuda técnica).
-> **Última actualización:** 2026-05-14 — Sync de documentación v3.0
+> **Estado actual:** 41/44 changes completados. 3 pendientes en Fase 4 (deuda técnica).
+> **Última actualización:** 2026-05-18
 > **Próximos changes a implementar:** Fase 4 — `frontend-home-page` (36), `frontend-fsd-restructure` (39), `backend-admin-model` (41), `frontend-addresses-barrel` (42)

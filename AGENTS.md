@@ -299,7 +299,7 @@ Configuración en `.opencode/opencode.json`.
 | `docs/Descripcion.txt` | Descripción integral del sistema (15 secciones) |
 | `docs/Historias_de_usuario.txt` | Historias de usuario por actor |
 | `docs/CHANGES.md` | Guía de cambios y metodología OPSX |
-| `docs/CHANGES-ROADMAP.md` | **Source of truth del roadmap** — tracking de 22 cambios, fases, ruta crítica (actualizar tras cada archive) |
+| `docs/CHANGES-ROADMAP.md` | **Source of truth del roadmap** — tracking de 44 cambios, fases, ruta crítica (actualizar tras cada archive) |
 | `CONTRIBUTING.md` | Reglas de arquitectura, patrones de DB, code review checklist, naming conventions |
 | `AUDITORIA-ROADMAP.md` | Auditoría crítica del roadmap: 18 changes corregidos, HU huérfanas, dependencias circulares resueltas |
 | `TEAM-ASSIGNMENT.md` | Asignación de los 22 changes por integrante + pipeline visual (actualizar tras cada archive) |
