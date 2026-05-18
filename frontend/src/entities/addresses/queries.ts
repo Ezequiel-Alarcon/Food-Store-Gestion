@@ -1,10 +1,18 @@
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
-import { branchAddressesApi, userAddressesApi } from './api'
-import type { UserAddressCreate, UserAddressUpdate } from './types'
+import { branchAddressesApi, branchesApi, userAddressesApi } from './api'
+import type {
+  BranchAddressCreate,
+  BranchAddressUpdate,
+  BranchCreate,
+  BranchUpdate,
+  UserAddressCreate,
+  UserAddressUpdate,
+} from './types'
 
 const keys = {
   userAddresses: ['user-addresses'] as const,
   branchAddresses: ['branch-addresses'] as const,
+  branches: ['branches'] as const,
 }
 
 export function useUserAddresses() {
@@ -59,5 +67,84 @@ export function useBranchAddresses() {
   return useQuery({
     queryKey: keys.branchAddresses,
     queryFn: branchAddressesApi.list,
+  })
+}
+
+// --- Branch (Sucursales) ---
+
+export function useBranches() {
+  return useQuery({
+    queryKey: keys.branches,
+    queryFn: branchesApi.list,
+  })
+}
+
+export function useCreateBranch() {
+  const qc = useQueryClient()
+  return useMutation({
+    mutationFn: (payload: BranchCreate) => branchesApi.create(payload),
+    onSuccess: async () => {
+      await qc.invalidateQueries({ queryKey: keys.branches })
+    },
+  })
+}
+
+export function useUpdateBranch() {
+  const qc = useQueryClient()
+  return useMutation({
+    mutationFn: ({ id, payload }: { id: number; payload: BranchUpdate }) =>
+      branchesApi.update(id, payload),
+    onSuccess: async () => {
+      await qc.invalidateQueries({ queryKey: keys.branches })
+    },
+  })
+}
+
+export function useDeleteBranch() {
+  const qc = useQueryClient()
+  return useMutation({
+    mutationFn: (id: number) => branchesApi.remove(id),
+    onSuccess: async () => {
+      await qc.invalidateQueries({ queryKey: keys.branches })
+    },
+  })
+}
+
+// --- Branch Address mutations ---
+
+export function useCreateBranchAddress() {
+  const qc = useQueryClient()
+  return useMutation({
+    mutationFn: ({ branchId, payload }: { branchId: number; payload: BranchAddressCreate }) =>
+      branchAddressesApi.create(branchId, payload),
+    onSuccess: async () => {
+      await qc.invalidateQueries({ queryKey: keys.branchAddresses })
+    },
+  })
+}
+
+export function useUpdateBranchAddress() {
+  const qc = useQueryClient()
+  return useMutation({
+    mutationFn: ({
+      branchId,
+      payload,
+    }: {
+      branchId: number
+      payload: BranchAddressUpdate
+    }) => branchAddressesApi.update(branchId, payload),
+    onSuccess: async () => {
+      await qc.invalidateQueries({ queryKey: keys.branchAddresses })
+    },
+  })
+}
+
+export function useDeleteBranchAddress() {
+  const qc = useQueryClient()
+  return useMutation({
+    mutationFn: (branchId: number) => branchAddressesApi.remove(branchId),
+    onSuccess: async () => {
+      await qc.invalidateQueries({ queryKey: keys.branchAddresses })
+    },
   })
 }

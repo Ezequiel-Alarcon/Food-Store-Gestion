@@ -31,6 +31,7 @@ const MENU_BY_ROLE: Record<string, Array<{ label: string; href: string }>> = {
     { label: 'Categorías', href: '/admin/categorias' },
     { label: 'Stock', href: '/admin/stock' },
     { label: 'Usuarios', href: '/admin/usuarios' },
+    { label: 'Sucursales', href: '/admin/sucursales' },
     { label: 'Puntos de Retiro', href: '/puntos-retiro' },
   ],
 }

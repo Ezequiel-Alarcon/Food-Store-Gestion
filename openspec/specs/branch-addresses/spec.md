@@ -33,6 +33,11 @@ El sistema SHALL permitir que un usuario con rol ADMIN (o rol de gestión equiva
 - **WHEN** un usuario sin rol ADMIN intenta POST/PATCH/DELETE sobre `/api/v1/branches/{branchId}/address`
 - **THEN** el sistema devuelve 403 Forbidden
 
+#### Scenario: Admin manages branch address from admin UI
+- **WHEN** un ADMIN crea o edita una sucursal desde `/admin/sucursales`
+- **THEN** el sistema permite ingresar/editar los campos de dirección (calle, número, ciudad, provincia, país, CP, referencias)
+- **AND** los cambios se persisten via POST/PATCH a `/api/v1/branches/{branchId}/address`
+
 ---
 
 ### Requirement: Branch has at most one active pickup address

@@ -33,3 +33,15 @@ export type BranchAddressUpdate = Partial<BranchAddressCreate>
 
 export type UserAddressCreate = Omit<UserAddress, 'id' | 'user_id' | 'is_default' | 'activa'>
 export type UserAddressUpdate = Partial<UserAddressCreate>
+
+// --- Branch (Sucursal) types ---
+
+export interface Branch {
+  id: number
+  nombre: string
+  activa: boolean
+  direccion?: BranchAddress | null
+}
+
+export type BranchCreate = { nombre: string }
+export type BranchUpdate = { nombre?: string; activa?: boolean }

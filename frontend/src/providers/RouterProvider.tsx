@@ -22,6 +22,7 @@ import { DashboardPage } from '../features/admin/dashboard'
 import { StockManagementPage } from '../features/admin/stock'
 import { CategoriesPage } from '../features/admin/categories'
 import { ProductsPage } from '../features/admin/products'
+import { SucursalesPage } from '../features/admin/sucursales'
 import { ProductDetailPage } from '../pages/ProductDetailPage'
 
 interface RouterProviderProps {
@@ -122,6 +123,14 @@ export function RouterProvider({ children }: RouterProviderProps) {
           element={
             <ProtectedRoute allowedRoles={['ADMIN']}>
               <ProductsPage />
+            </ProtectedRoute>
+          }
+        />
+        <Route
+          path="/admin/sucursales"
+          element={
+            <ProtectedRoute allowedRoles={['ADMIN']}>
+              <SucursalesPage />
             </ProtectedRoute>
           }
         />
