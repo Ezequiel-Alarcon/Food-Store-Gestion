@@ -1,7 +1,7 @@
 # Food Store — Mapa de Changes CORREGIDO
 
 > **Proyecto:** Food Store E-Commerce
-> **Fecha:** 2026-05-16
+> **Fecha:** 2026-05-17
 > **Metodología:** Spec-Driven Development (SDD) + Feature-First
 > **Versión:** 3.0 (sync de 33 changes + Fase 4 pendientes)
 
@@ -118,7 +118,7 @@
 | 40 | `backend-refreshtokens` | Completar refreshtokens: router.py, schemas.py, main.py | EPIC 01 | — | ~4 | Backend | 🔲 Eze |
 | 41 | `backend-admin-model` | Crear model.py de admin con queries reutilizables | EPIC 17 | — | ~3 | Backend | 🔲 Eze |
 | 42 | `frontend-addresses-barrel` | Agregar index.ts barrel a entities/addresses/ | EPIC 07 | — | ~1 | Frontend | 🔲 Leandro |
-| 43 | `frontend-orders-feature` | Mover OrdersPage de pages/ a features/orders/ | EPIC 13 | — | ~3 | Frontend | 🔲 Mati |
+| 43 | `frontend-orders-feature` | Mover OrdersPage de pages/ a features/orders/ | EPIC 13 | — | ~3 | Frontend | ✅ Archivado 2026-05-17 Mati |
 
 > **Regla FASE 4:** 2 changes por persona, todos en paralelo. Sin dependencias entre ellos.
 
@@ -744,7 +744,7 @@
 | **Sprint 9** | 19-23 + 29-33 (frontend + fixes) | EPIC 08,11,13,15,17 | — | ✅ Completado 2026-05-14 |
 | **Sprint 10** | 34 (`backend-datetime-fix`), 35-43 | EPIC 00,01,02,05,07,13,17 | — | 🔄 En curso |
 
-**Total: 43 changes. 33 completados + 10 pendientes (Fase 4: 2 por persona, todos en paralelo).**
+**Total: 43 changes. 34 completados + 9 pendientes (Fase 4: 2 por persona, todos en paralelo).**
 
 ---
 
@@ -777,6 +777,6 @@
 
 ---
 
-> **Estado actual:** 33/43 changes completados. 10 pendientes en Fase 4 (deuda técnica).
+> **Estado actual:** 34/43 changes completados. 9 pendientes en Fase 4 (deuda técnica).
 > **Última actualización:** 2026-05-14 — Sync de documentación v3.0
-> **Próximos changes a implementar:** Fase 4 — `backend-datetime-fix` (34), `backend-pydantic-modernize` (35), `frontend-home-page` (36)
+> **Próximos changes a implementar:** Fase 4 — `frontend-home-page` (36), `frontend-fsd-restructure` (39), `backend-admin-model` (41), `frontend-addresses-barrel` (42)
