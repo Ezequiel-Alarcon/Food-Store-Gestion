@@ -53,7 +53,7 @@ export function Navigation() {
   const totalCartItems = cartItems.reduce((sum, item) => sum + item.cantidad, 0)
 
   return (
-    <nav className="bg-white shadow">
+    <nav className="bg-white shadow-sm border-b border-gray-100">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex justify-between h-16">
           <div className="flex">
@@ -71,7 +71,7 @@ export function Navigation() {
                   <Link
                     key={item.href}
                     to={item.href}
-                    className="inline-flex items-center px-1 pt-1 text-sm font-medium text-gray-900 hover:text-indigo-600"
+                    className="inline-flex items-center px-1 pt-1 text-sm font-medium text-gray-700 hover:text-indigo-600"
                   >
                     {item.label}
                   </Link>

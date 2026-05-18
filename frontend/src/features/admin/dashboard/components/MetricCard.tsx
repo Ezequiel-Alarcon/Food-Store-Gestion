@@ -15,7 +15,7 @@ interface MetricCardProps {
 export function MetricCard({ title, value, icon, description, isLoading }: MetricCardProps) {
   if (isLoading) {
     return (
-      <div className="bg-white rounded-lg shadow p-6 animate-pulse">
+      <div className="bg-white rounded-xl shadow-sm border border-gray-100 p-6 animate-pulse">
         <div className="flex items-center justify-between mb-4">
           <div className="h-4 bg-gray-200 rounded w-24" />
           <div className="h-8 w-8 bg-gray-200 rounded" />
@@ -27,7 +27,7 @@ export function MetricCard({ title, value, icon, description, isLoading }: Metri
   }
 
   return (
-    <div className="bg-white rounded-lg shadow p-6 hover:shadow-md transition-shadow">
+    <div className="bg-white rounded-xl shadow-sm border border-gray-100 p-6 hover:shadow-md transition-shadow">
       <div className="flex items-center justify-between mb-4">
         <h3 className="text-sm font-medium text-gray-500 uppercase tracking-wide">{title}</h3>
         <div className="text-gray-400">{icon}</div>
