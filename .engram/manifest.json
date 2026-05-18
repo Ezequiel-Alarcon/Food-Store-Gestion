@@ -344,6 +344,14 @@
       "sessions": 0,
       "memories": 1,
       "prompts": 10
+    },
+    {
+      "id": "08b5ee9f",
+      "created_by": "Gorditos",
+      "created_at": "2026-05-18T01:44:19Z",
+      "sessions": 0,
+      "memories": 1,
+      "prompts": 4
     }
   ]
 }
