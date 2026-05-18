@@ -17,9 +17,9 @@ from app.modules.refreshtokens.model import RefreshToken  # noqa: F401
 
 # Modelos pendientes — se activan cuando se implementen:
 # from app.modules.direcciones.model import DireccionEntrega  # noqa: F401
-# from app.modules.categorias.model import Categoria  # noqa: F401
-# from app.modules.productos.model import Producto, ProductoCategoria  # noqa: F401
-# from app.modules.ingredientes.model import Ingrediente, ProductoIngrediente  # noqa: F401
+from app.modules.categorias.model import Categoria  # noqa: F401
+from app.modules.productos.model import Producto, ProductoCategoria, ProductoIngrediente  # noqa: F401
+from app.modules.ingredientes.model import Ingrediente  # noqa: F401
 from app.modules.pedidos.model import Pedido, DetallePedido, HistorialEstadoPedido, EstadoPedido  # noqa: F401
 from app.modules.pagos.model import Pago  # noqa: F401
 

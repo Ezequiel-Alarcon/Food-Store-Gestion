@@ -5,6 +5,7 @@ Repository para operaciones de categorías jerárquicas.
 """
 from __future__ import annotations
 
+from datetime import datetime, timezone
 from typing import Optional
 
 from sqlmodel import Session, select
@@ -28,7 +29,7 @@ class CategoriaRepository(BaseRepository[Categoria]):
         """Busca una categoría por slug."""
         stmt = select(Categoria).where(
             Categoria.slug == slug,
-            Categoria.activa == True,
+            Categoria.eliminado_en == None,
         )
         return self.session.exec(stmt).first()
 
@@ -40,7 +41,7 @@ class CategoriaRepository(BaseRepository[Categoria]):
         """Obtiene categoría solo si está activa."""
         stmt = select(Categoria).where(
             Categoria.id == entity_id,
-            Categoria.activa == True,
+            Categoria.eliminado_en == None,
         )
         return self.session.exec(stmt).first()
 
@@ -48,7 +49,7 @@ class CategoriaRepository(BaseRepository[Categoria]):
         """Obtiene hijos directos de una categoría."""
         stmt = select(Categoria).where(
             Categoria.padre_id == parent_id,
-            Categoria.activa == True,
+            Categoria.eliminado_en == None,
         ).order_by(Categoria.orden, Categoria.nombre)
         return list(self.session.exec(stmt).all())
 
@@ -69,18 +70,18 @@ class CategoriaRepository(BaseRepository[Categoria]):
         if max_depth is not None:
             cte_query = text("""
             WITH RECURSIVE descendants AS (
-                SELECT id, nombre, slug, descripcion, padre_id, orden, activa, created_at, updated_at, 1 as depth
+                SELECT id, nombre, slug, descripcion, padre_id, orden, eliminado_en, created_at, updated_at, 1 as depth
                 FROM categorias
-                WHERE id = :category_id AND activa = true
+                WHERE id = :category_id AND eliminado_en IS NULL
 
                 UNION ALL
 
-                SELECT c.id, c.nombre, c.slug, c.descripcion, c.padre_id, c.orden, c.activa, c.created_at, c.updated_at, d.depth + 1
+                SELECT c.id, c.nombre, c.slug, c.descripcion, c.padre_id, c.orden, c.eliminado_en, c.created_at, c.updated_at, d.depth + 1
                 FROM categorias c
                 INNER JOIN descendants d ON c.padre_id = d.id
-                WHERE c.activa = true AND d.depth <= :max_depth
+                WHERE c.eliminado_en IS NULL AND d.depth <= :max_depth
             )
-            SELECT id, nombre, slug, descripcion, padre_id, orden, activa, created_at, updated_at
+            SELECT id, nombre, slug, descripcion, padre_id, orden, eliminado_en, created_at, updated_at
             FROM descendants
             WHERE id != :category_id_exclude
             """).bindparams(category_id=category_id, max_depth=max_depth, category_id_exclude=category_id)
@@ -88,18 +89,18 @@ class CategoriaRepository(BaseRepository[Categoria]):
         else:
             cte_query = text("""
             WITH RECURSIVE descendants AS (
-                SELECT id, nombre, slug, descripcion, padre_id, orden, activa, created_at, updated_at, 1 as depth
+                SELECT id, nombre, slug, descripcion, padre_id, orden, eliminado_en, created_at, updated_at, 1 as depth
                 FROM categorias
-                WHERE id = :category_id AND activa = true
+                WHERE id = :category_id AND eliminado_en IS NULL
 
                 UNION ALL
 
-                SELECT c.id, c.nombre, c.slug, c.descripcion, c.padre_id, c.orden, c.activa, c.created_at, c.updated_at, d.depth + 1
+                SELECT c.id, c.nombre, c.slug, c.descripcion, c.padre_id, c.orden, c.eliminado_en, c.created_at, c.updated_at, d.depth + 1
                 FROM categorias c
                 INNER JOIN descendants d ON c.padre_id = d.id
-                WHERE c.activa = true
+                WHERE c.eliminado_en IS NULL
             )
-            SELECT id, nombre, slug, descripcion, padre_id, orden, activa, created_at, updated_at
+            SELECT id, nombre, slug, descripcion, padre_id, orden, eliminado_en, created_at, updated_at
             FROM descendants
             WHERE id != :category_id_exclude
             """).bindparams(category_id=category_id, category_id_exclude=category_id)
@@ -119,7 +120,7 @@ class CategoriaRepository(BaseRepository[Categoria]):
                 descripcion=row[3],
                 padre_id=row[4],
                 orden=row[5],
-                activa=row[6],
+                eliminado_en=row[6],
                 created_at=row[7],
                 updated_at=row[8],
             )
@@ -164,18 +165,20 @@ class CategoriaRepository(BaseRepository[Categoria]):
         # Obtener todos los descendientes
         descendants = self.get_descendants_cte(category_id)
 
+        now = datetime.now(timezone.utc)
+
         # Marcar como inactivas usando SQL directo para evitar problemas de datetime con objetos ORM
         # Primero marcar descendientes
         if descendants:
             for desc in descendants:
                 self.session.exec(
-                    text("UPDATE categorias SET activa = 0 WHERE id = :id").bindparams(id=desc.id)
+                    text("UPDATE categorias SET eliminado_en = :now WHERE id = :id").bindparams(now=now, id=desc.id)
                 )
                 affected.append(desc)
 
         # Marcar la categoría principal como inactiva
         self.session.exec(
-            text("UPDATE categorias SET activa = 0 WHERE id = :id").bindparams(id=category_id)
+            text("UPDATE categorias SET eliminado_en = :now WHERE id = :id").bindparams(now=now, id=category_id)
         )
 
         self.session.flush()
@@ -193,12 +196,12 @@ class CategoriaRepository(BaseRepository[Categoria]):
             # Hermanos en la raíz
             stmt = select(Categoria).where(
                 Categoria.padre_id == None,
-                Categoria.activa == True,
+                Categoria.eliminado_en == None,
             )
         else:
             stmt = select(Categoria).where(
                 Categoria.padre_id == parent_id,
-                Categoria.activa == True,
+                Categoria.eliminado_en == None,
             )
 
         if exclude_id is not None:
@@ -210,7 +213,7 @@ class CategoriaRepository(BaseRepository[Categoria]):
     def get_all_active(self) -> list[Categoria]:
         """Obtiene todas las categorías activas."""
         stmt = select(Categoria).where(
-            Categoria.activa == True,
+            Categoria.eliminado_en == None,
         ).order_by(Categoria.padre_id, Categoria.orden, Categoria.nombre)
         return list(self.session.exec(stmt).all())
 
@@ -218,7 +221,7 @@ class CategoriaRepository(BaseRepository[Categoria]):
         """Obtiene categorías raíz (sin padre)."""
         stmt = select(Categoria).where(
             Categoria.padre_id == None,
-            Categoria.activa == True,
+            Categoria.eliminado_en == None,
         ).order_by(Categoria.orden, Categoria.nombre)
         return list(self.session.exec(stmt).all())
 
@@ -230,13 +233,13 @@ class CategoriaRepository(BaseRepository[Categoria]):
             stmt = select(Categoria).where(
                 Categoria.nombre == nombre,
                 Categoria.padre_id == None,
-                Categoria.activa == True,
+                Categoria.eliminado_en == None,
             )
         else:
             stmt = select(Categoria).where(
                 Categoria.nombre == nombre,
                 Categoria.padre_id == padre_id,
-                Categoria.activa == True,
+                Categoria.eliminado_en == None,
             )
 
         if exclude_id is not None:
