@@ -162,8 +162,8 @@ class CategoriaService:
                 detail="Categoría no encontrada",
             )
 
-        # Verificar si es activa (no se puede editar una eliminada)
-        if categoria.eliminado_en is not None:
+        # Verificar si está eliminada — solo bloquear si NO se está reactivando
+        if categoria.eliminado_en is not None and data.activa is not True:
             raise HTTPException(
                 status_code=status.HTTP_400_BAD_REQUEST,
                 detail="No se puede editar una categoría eliminada",

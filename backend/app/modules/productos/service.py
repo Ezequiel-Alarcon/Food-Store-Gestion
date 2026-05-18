@@ -25,16 +25,18 @@ from app.modules.productos.schemas import (
 
 class CategoriaSimple:
     """Helper para construir categoría simple desde modelo."""
-    def __init__(self, id: int, nombre: str):
+    def __init__(self, id: int, nombre: str, es_principal: bool = False):
         self.id = id
         self.nombre = nombre
+        self.es_principal = es_principal
 
 
 class IngredienteSimple:
     """Helper para construir ingrediente simple desde modelo."""
-    def __init__(self, id: int, nombre: str):
+    def __init__(self, id: int, nombre: str, es_removible: bool = False):
         self.id = id
         self.nombre = nombre
+        self.es_removible = es_removible
 
 
 def _get_categorias_from_producto(session: Session, producto_id: int) -> list[CategoriaSimple]:
@@ -51,7 +53,7 @@ def _get_categorias_from_producto(session: Session, producto_id: int) -> list[Ca
         from app.modules.categorias.model import Categoria
         cat = session.get(Categoria, rel.categoria_id)
         if cat and cat.eliminado_en is None:
-            categorias.append(CategoriaSimple(id=cat.id, nombre=cat.nombre))
+            categorias.append(CategoriaSimple(id=cat.id, nombre=cat.nombre, es_principal=rel.es_principal))
 
     return categorias
 
@@ -70,7 +72,7 @@ def _get_ingredientes_from_producto(session: Session, producto_id: int) -> list[
         from app.modules.ingredientes.model import Ingrediente
         ing = session.get(Ingrediente, rel.ingrediente_id)
         if ing and ing.eliminado_en is None:
-            ingredientes.append(IngredienteSimple(id=ing.id, nombre=ing.nombre))
+            ingredientes.append(IngredienteSimple(id=ing.id, nombre=ing.nombre, es_removible=rel.es_removible))
 
     return ingredientes
 
