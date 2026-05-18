@@ -12,7 +12,7 @@ from typing import Any
 from sqlmodel import Session, select
 
 from app.core.deps import require_role
-from app.core.database import get_session
+from app.core.database import get_session, SessionLocal
 from app.modules.admin.schemas import (
     GeneralMetricsResponse,
     OrdersByStatusEntry,

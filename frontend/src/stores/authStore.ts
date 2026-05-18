@@ -1,6 +1,7 @@
 import { create } from 'zustand'
 import { persist } from 'zustand/middleware'
 import { api, type LoginRequest, type LoginResponse, type RegisterRequest, type PerfilResponse } from '../lib/api'
+import { useCartStore } from './cartStore'
 
 export interface User {
   id: number
@@ -77,6 +78,8 @@ export const useAuthStore = create<AuthState>()(
       },
 
       logout: () => {
+        // Limpiar carrito antes de cerrar sesión
+        useCartStore.getState().clearCart()
         // Intentar revocar el refresh token en el backend
         const token = useAuthStore.getState().refreshToken
         if (token) {

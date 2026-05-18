@@ -1,3 +1,4 @@
+import { Link } from 'react-router-dom'
 import { type ProductoCatalogo } from '../../entities/producto'
 
 interface ProductCardProps {
@@ -12,7 +13,7 @@ export function ProductCard({ product, onAddToCart }: ProductCardProps) {
   return (
     <div className="bg-white rounded-xl shadow-sm border border-gray-100 overflow-hidden flex flex-col hover:shadow-md transition-shadow">
       {/* Imagen */}
-      <div className="h-48 bg-gray-100 overflow-hidden">
+      <Link to={`/productos/${product.id}`} className="h-48 bg-gray-100 overflow-hidden block">
         <img
           src={product.imagen_url || placeholderImage}
           alt={product.nombre}
@@ -21,13 +22,13 @@ export function ProductCard({ product, onAddToCart }: ProductCardProps) {
             (e.target as HTMLImageElement).src = placeholderImage
           }}
         />
-      </div>
+      </Link>
 
       {/* Contenido */}
       <div className="p-4 flex flex-col flex-1">
-        <h3 className="text-lg font-semibold text-gray-900 mb-1 line-clamp-2">
+        <Link to={`/productos/${product.id}`} className="text-lg font-semibold text-gray-900 mb-1 line-clamp-2 hover:text-indigo-600 transition-colors">
           {product.nombre}
-        </h3>
+        </Link>
 
         {product.descripcion && (
           <p className="text-sm text-gray-500 mb-3 line-clamp-2">

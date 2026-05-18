@@ -92,16 +92,16 @@ export function MisDireccionesPage() {
           </h2>
           <form onSubmit={onSubmit} className="mt-4 space-y-3">
             {createMut.error && (
-              <p className="text-red-600 text-sm">Error al crear la dirección: {createMut.error instanceof Error ? createMut.error.message : 'Error desconocido'}</p>
+              <p className="text-red-600 text-sm">Error al crear la dirección: {(createMut.error as { response?: { data?: { detail?: string } } })?.response?.data?.detail || 'Error desconocido'}</p>
             )}
             {updateMut.error && (
-              <p className="text-red-600 text-sm">Error al actualizar la dirección: {updateMut.error instanceof Error ? updateMut.error.message : 'Error desconocido'}</p>
+              <p className="text-red-600 text-sm">Error al actualizar la dirección: {(updateMut.error as { response?: { data?: { detail?: string } } })?.response?.data?.detail || 'Error desconocido'}</p>
             )}
             {deleteMut.error && (
-              <p className="text-red-600 text-sm">Error al eliminar la dirección: {deleteMut.error instanceof Error ? deleteMut.error.message : 'Error desconocido'}</p>
+              <p className="text-red-600 text-sm">Error al eliminar la dirección: {(deleteMut.error as { response?: { data?: { detail?: string } } })?.response?.data?.detail || 'Error desconocido'}</p>
             )}
             {defaultMut.error && (
-              <p className="text-red-600 text-sm">Error al cambiar la dirección predeterminada</p>
+              <p className="text-red-600 text-sm">Error al cambiar la dirección predeterminada: {(defaultMut.error as { response?: { data?: { detail?: string } } })?.response?.data?.detail || 'Error desconocido'}</p>
             )}
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
               <input
@@ -132,6 +132,9 @@ export function MisDireccionesPage() {
                 value={form.numero}
                 onChange={(e) => setForm((p) => ({ ...p, numero: e.target.value }))}
                 required
+                inputMode="numeric"
+                pattern="[0-9]*"
+                title="Solo números"
               />
             </div>
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
@@ -146,6 +149,9 @@ export function MisDireccionesPage() {
                 placeholder="Código postal (opcional)"
                 value={form.codigo_postal ?? ''}
                 onChange={(e) => setForm((p) => ({ ...p, codigo_postal: e.target.value || null }))}
+                inputMode="numeric"
+                pattern="[0-9]*"
+                title="Solo números"
               />
             </div>
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">

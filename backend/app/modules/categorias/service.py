@@ -169,13 +169,20 @@ class CategoriaService:
                 detail="No se puede editar una categoría eliminada",
             )
 
-        # Nuevo padre (0 = sin padre)
+        # Nuevo padre (0 = sin padre/raíz, None = sin cambios)
         nuevo_padre_id = data.categoria_padre_id
+        set_to_root = (nuevo_padre_id == 0)
         if nuevo_padre_id == 0:
             nuevo_padre_id = None
 
-        # Validar ciclo si se cambia el padre
+        # Validar ciclo si se cambia el padre (a un valor específico, no raíz)
         if nuevo_padre_id is not None and nuevo_padre_id != categoria.padre_id:
+            # Verificar self-parent
+            if nuevo_padre_id == category_id:
+                raise HTTPException(
+                    status_code=status.HTTP_400_BAD_REQUEST,
+                    detail="Una categoría no puede ser padre de sí misma",
+                )
             # Verificar que el nuevo padre existe y está activo
             nuevo_padre = self.repo.get_by_id_active(nuevo_padre_id)
             if not nuevo_padre:
@@ -192,8 +199,12 @@ class CategoriaService:
                 )
 
         # Verificar nombre único en el mismo nivel
-        # Usamos el nuevo padre_id o el actual
-        target_parent_id = nuevo_padre_id if nuevo_padre_id is not None else categoria.padre_id
+        if set_to_root:
+            target_parent_id = None
+        elif nuevo_padre_id is not None:
+            target_parent_id = nuevo_padre_id
+        else:
+            target_parent_id = categoria.padre_id
 
         if data.nombre is not None and data.nombre != categoria.nombre:
             if self.repo.exists_by_name_and_parent(data.nombre, target_parent_id, exclude_id=category_id):
@@ -212,7 +223,9 @@ class CategoriaService:
         if data.descripcion is not None:
             categoria.descripcion = data.descripcion
 
-        if nuevo_padre_id is not None:
+        if set_to_root:
+            categoria.padre_id = None
+        elif nuevo_padre_id is not None:
             categoria.padre_id = nuevo_padre_id
 
         if data.activa is not None:

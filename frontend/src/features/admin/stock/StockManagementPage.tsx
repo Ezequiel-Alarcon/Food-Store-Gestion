@@ -37,8 +37,8 @@ export function StockManagementPage() {
   const { data, isLoading, isError, refetch } = useQuery({
     queryKey: ['admin-productos-stock'],
     queryFn: async (): Promise<ProductoAdmin[]> => {
-      const response = await api.get<ProductoAdmin[]>('/productos')
-      return response.data
+      const response = await api.get<{ items: ProductoAdmin[]; total: number }>('/productos')
+      return response.data.items
     },
   })
 
@@ -52,7 +52,7 @@ export function StockManagementPage() {
       stock: number
       activo: boolean
     }) => {
-      await api.patch(`/productos/${id}/stock`, { stock, activo })
+      await api.patch(`/productos/${id}/stock`, { stock, operacion: 'set' })
     },
     onSuccess: (_data, variables) => {
       queryClient.invalidateQueries({ queryKey: ['admin-productos-stock'] })
