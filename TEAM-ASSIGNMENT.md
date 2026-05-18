@@ -1,7 +1,7 @@
 # Food Store — Asignación por Team (Pipeline Backend-First)
 
 > **Proyecto:** Food Store E-Commerce
-> **Fecha:** 2026-05-17
+> **Fecha:** 2026-05-18
 > **Distribución:** 43 changes entre 5 integrantes
 > **Método:** Secuencial con fases Backend → Frontend → Deuda Técnica
 > **Versión:** 3.0 (sync 33 changes + Fase 4 pendientes)
@@ -294,20 +294,21 @@
 
 | Integrante | Completados | Pendientes (Fase 4) | Total |
 |-----------|-----------|-------------------|-------|
-| **Eze** | 1, 6, 11, 11b, 14, 17b, 17c, 23, 24, 25, 26, 29, 30, 31, 32, 33, 40 | 41 (`backend-admin-model`) | 17 ✅ + 1 🔲 |
+| **Eze** | 1, 6, 11, 11b, 14, 17b, 17c, 23, 24, 25, 26, 29, 30, 31, 32, 33, 40, 41 | — | 18 ✅ + 0 🔲 |
 | **Mati** | 2, 7, 12, 17e, 18, 19, 38, 43 | — | 8 ✅ + 0 🔲 |
 | **Lucas** | 3, 8, 20, 21, 22, 27 | 36 (`frontend-home-page`), 37 (`frontend-shared-ui`) | 6 ✅ + 2 🔲 |
 | **Edgar** | 5, 9, 16, 17, 34, 35 | — | 6 ✅ + 0 🔲 |
-| **Leandro** | 4, 10, 13, 15 | 42 (`frontend-addresses-barrel`), 39 (`frontend-fsd-restructure`) | 4 ✅ + 0 🔲 \|
+| **Leandro** | 4, 10, 13, 15 | 42 (`frontend-addresses-barrel`), 39 (`frontend-fsd-restructure`) | 4 ✅ + 2 🔲 |
+| **Eze/Mati** | 44 (`audit-bugfixes`) | — | 1 ✅ + 0 🔲 |
 
-**Total:** 43 changes — 34 completados + 9 pendientes. **2 changes por persona, todos en paralelo.**
+**Total:** 44 changes — 41 completados + 3 pendientes. **2 changes por persona, todos en paralelo.**
 
 ---
 
-> **Fase actual:** ✅ FASES 0-3 COMPLETADAS + FASE 4 EN CURSO (34/43 changes)  
-> **Fase pendiente:** 🔲 FASE 4 — Deuda Técnica (9 changes restantes)  
-> **Último change completado:** `frontend-orders-feature` (Mati) ✅ 2026-05-17  
-> **Última actualización:** 2026-05-17 — Archive frontend-orders-feature + corrección asignaciones
+> **Fase actual:** ✅ FASES 0-3 COMPLETADAS + FASE 4 EN CURSO (41/44 changes)  
+> **Fase pendiente:** 🔲 FASE 4 — Deuda Técnica (3 changes restantes)  
+> **Último change completado:** `audit-bugfixes` (Eze/Mati) ✅ 2026-05-18  
+> **Última actualización:** 2026-05-18 — Archive backend-refreshtokens, backend-admin-model, audit-bugfixes
 
 ---
 

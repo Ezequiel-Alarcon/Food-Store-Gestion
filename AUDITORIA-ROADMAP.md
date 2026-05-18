@@ -1,3 +1,5 @@
+> ⚠️ OBSOLETO — Este documento analiza el roadmap v1.0 (abril 2026, 15 cambios). Ver CHANGES-ROADMAP.md para el estado actual (v3.0, 44 cambios).
+
 # Food Store — Análisis Crítico del Roadmap Original
 
 > **Fecha:** 2026-04-28  
