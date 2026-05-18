@@ -77,6 +77,13 @@ export const useAuthStore = create<AuthState>()(
       },
 
       logout: () => {
+        // Intentar revocar el refresh token en el backend
+        const token = useAuthStore.getState().refreshToken
+        if (token) {
+          api.post('/auth/logout', { refresh_token: token }).catch(() => {
+            // Silencioso: si falla (red caída, token ya revocado), limpiamos igual
+          })
+        }
         set({
           accessToken: null,
           refreshToken: null,
@@ -85,7 +92,6 @@ export const useAuthStore = create<AuthState>()(
           isLoading: false,
           error: null,
         })
-        // FIXME: Use React Router navigate instead of hard-refresh for SPA routing
         window.location.href = '/'
       },
 

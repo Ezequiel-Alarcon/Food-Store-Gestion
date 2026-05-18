@@ -38,7 +38,6 @@ export function CartPage() {
         })),
       })
 
-      clearCart()
       addToast('success', '¡Pedido creado! Completá el pago para confirmarlo.')
       navigate(`/checkout?pedido=${pedido.id}`)
     } catch (err) {
