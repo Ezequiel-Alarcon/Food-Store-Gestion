@@ -282,11 +282,11 @@ def seed_productos(session: Session) -> None:
         session.flush()
 
         # Asociar categoría
-        rel_cat = ProductoCategoria(producto_id=producto.id, categoria_id=categoria_id)
+        rel_cat = ProductoCategoria(producto_id=producto.id, categoria_id=categoria_id, es_principal=True)
         session.add(rel_cat)
 
         # Buscar o crear ingredientes y asociarlos
-        for ing_nombre in ingrediente_nombres:
+        for j, ing_nombre in enumerate(ingrediente_nombres):
             ingrediente_id = ingredientes_existentes.get(ing_nombre)
             if ingrediente_id is None:
                 # Crear ingrediente si no existe (parasimplificar)
@@ -305,6 +305,7 @@ def seed_productos(session: Session) -> None:
             rel_ing = ProductoIngrediente(
                 producto_id=producto.id,
                 ingrediente_id=ingrediente_id,
+                es_removible=(j % 2 == 0),
             )
             session.add(rel_ing)
 

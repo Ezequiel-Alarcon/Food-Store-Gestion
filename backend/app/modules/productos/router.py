@@ -84,7 +84,7 @@ def get_catalogo(
             "imagen_url": rel["producto"].imagen_url,
             "disponible": rel["producto"].stock > 0,
             "categorias": [
-                CategoriaSimple(id=c.id, nombre=c.nombre)
+                CategoriaSimple(id=c.id, nombre=c.nombre, es_principal=c.es_principal)
                 for c in rel["categorias"]
             ],
         })
@@ -112,7 +112,7 @@ def get_catalogo(
 def create_producto(
     data: ProductoCreate,
     session: Session = Depends(get_session),
-    current_user: dict = Depends(require_role("ADMIN")),
+    current_user: dict = Depends(require_role("ADMIN", "STOCK")),
 ) -> dict:
     """Crea un nuevo producto."""
     service = ProductoService(session)
@@ -132,11 +132,11 @@ def create_producto(
         "creado_en": result["producto"].creado_en,
         "actualizado_en": result["producto"].actualizado_en,
         "categorias": [
-            CategoriaSimple(id=c.id, nombre=c.nombre)
+            CategoriaSimple(id=c.id, nombre=c.nombre, es_principal=c.es_principal)
             for c in result["categorias"]
         ],
         "ingredientes": [
-            IngredienteSimple(id=i.id, nombre=i.nombre)
+            IngredienteSimple(id=i.id, nombre=i.nombre, es_removible=i.es_removible)
             for i in result["ingredientes"]
         ],
     }
@@ -175,7 +175,7 @@ def list_productos(
             "stock": rel["producto"].stock,
             "activo": rel["producto"].activo,
             "categorias": [
-                CategoriaSimple(id=c.id, nombre=c.nombre)
+                CategoriaSimple(id=c.id, nombre=c.nombre, es_principal=c.es_principal)
                 for c in rel["categorias"]
             ],
         })
@@ -214,11 +214,11 @@ def get_producto(
         "creado_en": result["producto"].creado_en,
         "actualizado_en": result["producto"].actualizado_en,
         "categorias": [
-            CategoriaSimple(id=c.id, nombre=c.nombre)
+            CategoriaSimple(id=c.id, nombre=c.nombre, es_principal=c.es_principal)
             for c in result["categorias"]
         ],
         "ingredientes": [
-            IngredienteSimple(id=i.id, nombre=i.nombre)
+            IngredienteSimple(id=i.id, nombre=i.nombre, es_removible=i.es_removible)
             for i in result["ingredientes"]
         ],
     }
@@ -234,7 +234,7 @@ def update_producto(
     producto_id: int,
     data: ProductoUpdate,
     session: Session = Depends(get_session),
-    current_user: dict = Depends(require_role("ADMIN")),
+    current_user: dict = Depends(require_role("ADMIN", "STOCK")),
 ) -> dict:
     """Actualiza un producto."""
     service = ProductoService(session)
@@ -254,11 +254,11 @@ def update_producto(
         "creado_en": result["producto"].creado_en,
         "actualizado_en": result["producto"].actualizado_en,
         "categorias": [
-            CategoriaSimple(id=c.id, nombre=c.nombre)
+            CategoriaSimple(id=c.id, nombre=c.nombre, es_principal=c.es_principal)
             for c in result["categorias"]
         ],
         "ingredientes": [
-            IngredienteSimple(id=i.id, nombre=i.nombre)
+            IngredienteSimple(id=i.id, nombre=i.nombre, es_removible=i.es_removible)
             for i in result["ingredientes"]
         ],
     }
@@ -294,11 +294,11 @@ def update_stock(
         "creado_en": result["producto"].creado_en,
         "actualizado_en": result["producto"].actualizado_en,
         "categorias": [
-            CategoriaSimple(id=c.id, nombre=c.nombre)
+            CategoriaSimple(id=c.id, nombre=c.nombre, es_principal=c.es_principal)
             for c in result["categorias"]
         ],
         "ingredientes": [
-            IngredienteSimple(id=i.id, nombre=i.nombre)
+            IngredienteSimple(id=i.id, nombre=i.nombre, es_removible=i.es_removible)
             for i in result["ingredientes"]
         ],
     }
@@ -351,11 +351,11 @@ def get_producto_publico(
         "imagen_url": result["producto"].imagen_url,
         "disponible": result["producto"].stock > 0,
         "categorias": [
-            CategoriaSimple(id=c.id, nombre=c.nombre)
+            CategoriaSimple(id=c.id, nombre=c.nombre, es_principal=c.es_principal)
             for c in result["categorias"]
         ],
         "ingredientes": [
-            IngredienteSimple(id=i.id, nombre=i.nombre)
+            IngredienteSimple(id=i.id, nombre=i.nombre, es_removible=i.es_removible)
             for i in result["ingredientes"]
         ],
     }
