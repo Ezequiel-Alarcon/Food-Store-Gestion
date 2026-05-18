@@ -18,6 +18,7 @@ import { OrdersListPage } from '../features/admin/orders/ui/OrdersListPage'
 import { OrderDetailPage } from '../features/admin/orders/ui/OrderDetailPage'
 import { UsersPage } from '../features/admin/users/ui/UsersPage'
 import { DashboardPage } from '../features/admin/dashboard'
+import { StockManagementPage } from '../features/admin/stock'
 
 interface RouterProviderProps {
   children: ReactNode
@@ -99,10 +100,7 @@ export function RouterProvider({ children }: RouterProviderProps) {
           path="/admin/stock"
           element={
             <ProtectedRoute allowedRoles={['STOCK', 'ADMIN']}>
-              <div className="p-8">
-                <h1 className="text-2xl font-bold">Gestión de Stock</h1>
-                <p className="text-gray-600 mt-2">Administración de inventario</p>
-              </div>
+              <StockManagementPage />
             </ProtectedRoute>
           }
         />

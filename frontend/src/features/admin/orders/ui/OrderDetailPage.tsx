@@ -3,6 +3,7 @@ import { useQuery } from '@tanstack/react-query'
 import { pedidoAdminApi } from '../../../../entities/pedido-admin/api'
 import type { OrderAdminDetail, OrderItemDetail, OrderHistoryItem } from '../../../../entities/pedido-admin/types'
 import { ESTADO_COLORS } from './constants'
+import { StateTransition } from './StateTransition'
 
 function formatDate(dateString: string): string {
   const date = new Date(dateString)
@@ -183,7 +184,7 @@ export function OrderDetailPage() {
   const { id } = useParams<{ id: string }>()
   const orderId = Number(id)
 
-  const { data: order, isLoading: orderLoading, isError: orderError } = useQuery({
+  const { data: order, isLoading: orderLoading, isError: orderError, refetch } = useQuery({
     queryKey: ['admin-order', orderId],
     queryFn: () => pedidoAdminApi.getOrderById(orderId),
     enabled: !!orderId,
@@ -236,6 +237,12 @@ export function OrderDetailPage() {
         <OrderItemsList items={order.items} costoEnvio={order.costo_envio} total={order.total} />
 
         <OrderTimeline history={history || []} />
+
+        <StateTransition
+          pedidoId={Number(id)}
+          estadoActual={order.estado_codigo}
+          onTransitionComplete={() => refetch()}
+        />
       </div>
     </div>
   )
