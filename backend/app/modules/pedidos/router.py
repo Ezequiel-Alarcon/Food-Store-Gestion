@@ -99,7 +99,7 @@ def get_pedido(
 def transicionar_estado(
     pedido_id: int,
     data: EstadoTransicionCreate,
-    current_user=Depends(require_role("ADMIN", "PEDIDOS")),
+    current_user=Depends(require_role("ADMIN", "PEDIDOS", "CLIENT")),
 ) -> PedidoRead:
     service = PedidosService()
     return service.transicionar_estado(pedido_id, data, current_user)

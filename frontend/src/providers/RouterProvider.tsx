@@ -123,6 +123,14 @@ export function RouterProvider({ children }: RouterProviderProps) {
           }
         />
         <Route
+          path="/admin/pedidos"
+          element={
+            <ProtectedRoute allowedRoles={['PEDIDOS', 'ADMIN']}>
+              <OrdersListPage />
+            </ProtectedRoute>
+          }
+        />
+        <Route
           path="/admin/pedidos/:id"
           element={
             <ProtectedRoute allowedRoles={['PEDIDOS', 'ADMIN']}>
