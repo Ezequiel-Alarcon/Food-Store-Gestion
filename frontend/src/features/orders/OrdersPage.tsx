@@ -1,5 +1,6 @@
-import { useState, useEffect, useCallback } from 'react'
-import { pedidoApi, type PedidoListItem, type PedidoDetalle } from '../../entities/pedido'
+import { useState, useCallback } from 'react'
+import { useQuery } from '@tanstack/react-query'
+import { pedidoApi, type PedidoDetalle } from '../../entities/pedido'
 
 const ESTADOS = ['PENDIENTE', 'CONFIRMADO', 'EN_PREP', 'EN_CAMINO', 'ENTREGADO', 'CANCELADO']
 
@@ -22,53 +23,39 @@ const ESTADO_LABELS: Record<string, string> = {
 }
 
 export function OrdersPage() {
-  const [orders, setOrders] = useState<PedidoListItem[]>([])
-  const [loading, setLoading] = useState(true)
-  const [error, setError] = useState<string | null>(null)
   const [page, setPage] = useState(1)
-  const [totalPages, setTotalPages] = useState(1)
-  const [total, setTotal] = useState(0)
   const [filterEstado, setFilterEstado] = useState('')
 
-  // Detalle drawer
+  const { data, isLoading, isError } = useQuery({
+    queryKey: ['mis-pedidos', page, filterEstado],
+    queryFn: () => pedidoApi.getMisPedidos({ page, size: 20, estado: filterEstado || undefined }),
+    refetchInterval: 30000,
+  })
+
+  const orders = data?.items ?? []
+  const totalPages = data?.pages ?? 1
+  const total = data?.total ?? 0
+
   const [selectedOrder, setSelectedOrder] = useState<PedidoDetalle | null>(null)
   const [loadingDetail, setLoadingDetail] = useState(false)
-
-  const fetchOrders = useCallback(async (p: number, estado: string) => {
-    setLoading(true)
-    setError(null)
-    try {
-      const data = await pedidoApi.getMisPedidos({ page: p, size: 10, estado: estado || undefined })
-      setOrders(data.items)
-      setTotalPages(data.pages)
-      setTotal(data.total)
-    } catch {
-      setError('No se pudieron cargar los pedidos.')
-    } finally {
-      setLoading(false)
-    }
-  }, [])
-
-  useEffect(() => { fetchOrders(page, filterEstado) }, [page, filterEstado, fetchOrders])
 
   const handleFilterChange = (estado: string) => {
     setFilterEstado(estado)
     setPage(1)
   }
 
-  const openDetail = async (id: number) => {
+  const openDetail = useCallback(async (id: number) => {
     setLoadingDetail(true)
-    setError(null)
     setSelectedOrder(null)
     try {
       const detail = await pedidoApi.getById(id)
       setSelectedOrder(detail)
     } catch {
-      setError('No se pudo cargar el detalle.')
+      setSelectedOrder(null)
     } finally {
       setLoadingDetail(false)
     }
-  }
+  }, [])
 
   const formatDate = (d: string) => new Date(d).toLocaleDateString('es-AR', { day: 'numeric', month: 'short', year: 'numeric' })
   const formatCurrency = (n: number) => `$${n.toFixed(2)}`
@@ -96,18 +83,22 @@ export function OrdersPage() {
         ))}
       </div>
 
-      {/* Loading */}
-      {loading && (
+      {/* Loading skeleton */}
+      {isLoading && (
         <div className="flex justify-center py-12">
           <div className="animate-spin rounded-full h-10 w-10 border-b-2 border-indigo-600" />
         </div>
       )}
 
       {/* Error */}
-      {error && <div className="bg-red-50 border border-red-200 text-red-700 px-4 py-3 rounded-lg mb-4">{error}</div>}
+      {isError && (
+        <div className="bg-red-50 border border-red-200 text-red-700 px-4 py-3 rounded-lg mb-4">
+          No se pudieron cargar los pedidos.
+        </div>
+      )}
 
       {/* Empty */}
-      {!loading && !error && orders.length === 0 && (
+      {!isLoading && !isError && orders.length === 0 && (
         <div className="text-center py-12 bg-white rounded-lg shadow">
           <p className="text-gray-500 text-lg">No tenés pedidos todavía</p>
           <p className="text-gray-400 mt-1">Tus pedidos aparecerán acá cuando hagas uno.</p>
@@ -115,7 +106,7 @@ export function OrdersPage() {
       )}
 
       {/* Orders list */}
-      {!loading && !error && orders.length > 0 && (
+      {!isLoading && !isError && orders.length > 0 && (
         <>
           <div className="bg-white rounded-lg shadow overflow-hidden">
             {/* Desktop table */}
