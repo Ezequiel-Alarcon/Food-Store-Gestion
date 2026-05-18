@@ -9,6 +9,7 @@ import type { UserAdmin } from '../../../../entities/usuario-admin/types'
 
 const ROL_COLORS: Record<string, string> = {
   ADMIN: 'bg-red-100 text-red-800',
+  GESTOR: 'bg-purple-100 text-purple-800',
   STOCK: 'bg-orange-100 text-orange-800',
   PEDIDOS: 'bg-blue-100 text-blue-800',
   CLIENT: 'bg-green-100 text-green-800',
@@ -36,7 +37,7 @@ function TableSkeleton() {
 }
 
 export function UsersPage() {
-  const [page] = useState(1)
+  const [page, setPage] = useState(1)
   const [search, setSearch] = useState('')
   const [roleFilter, setRoleFilter] = useState('')
   const [editingUser, setEditingUser] = useState<UserAdmin | null>(null)
@@ -178,16 +179,16 @@ export function UsersPage() {
                 </div>
                 <div className="flex gap-2">
                   <button
-                    onClick={() => window.scrollTo({ top: 0, behavior: 'smooth' })}
+                    onClick={() => setPage((p) => Math.max(1, p - 1))}
                     disabled={page === 1}
-                    className="px-3 py-1 border rounded text-sm disabled:opacity-50"
+                    className="px-3 py-1 border rounded text-sm disabled:opacity-50 disabled:cursor-not-allowed hover:bg-gray-50"
                   >
                     Anterior
                   </button>
                   <button
-                    onClick={() => window.scrollTo({ top: 0, behavior: 'smooth' })}
+                    onClick={() => setPage((p) => Math.min(pages, p + 1))}
                     disabled={page === pages}
-                    className="px-3 py-1 border rounded text-sm disabled:opacity-50"
+                    className="px-3 py-1 border rounded text-sm disabled:opacity-50 disabled:cursor-not-allowed hover:bg-gray-50"
                   >
                     Siguiente
                   </button>

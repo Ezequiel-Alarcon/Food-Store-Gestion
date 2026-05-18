@@ -67,30 +67,30 @@ class CategoriaRepository(BaseRepository[Categoria]):
         """
         # Usamos texto plano para el CTE ya que SQLModel no tiene soporte directo
         if max_depth is not None:
-            cte_query = text(f"""
+            cte_query = text("""
             WITH RECURSIVE descendants AS (
                 SELECT id, nombre, slug, descripcion, padre_id, orden, activa, created_at, updated_at, 1 as depth
                 FROM categorias
-                WHERE id = {category_id} AND activa = true
+                WHERE id = :category_id AND activa = true
 
                 UNION ALL
 
                 SELECT c.id, c.nombre, c.slug, c.descripcion, c.padre_id, c.orden, c.activa, c.created_at, c.updated_at, d.depth + 1
                 FROM categorias c
                 INNER JOIN descendants d ON c.padre_id = d.id
-                WHERE c.activa = true AND d.depth <= {max_depth}
+                WHERE c.activa = true AND d.depth <= :max_depth
             )
             SELECT id, nombre, slug, descripcion, padre_id, orden, activa, created_at, updated_at
             FROM descendants
-            WHERE id != {category_id}
-            """)
+            WHERE id != :category_id_exclude
+            """).bindparams(category_id=category_id, max_depth=max_depth, category_id_exclude=category_id)
             result = self.session.exec(cte_query)
         else:
-            cte_query = text(f"""
+            cte_query = text("""
             WITH RECURSIVE descendants AS (
                 SELECT id, nombre, slug, descripcion, padre_id, orden, activa, created_at, updated_at, 1 as depth
                 FROM categorias
-                WHERE id = {category_id} AND activa = true
+                WHERE id = :category_id AND activa = true
 
                 UNION ALL
 
@@ -101,8 +101,8 @@ class CategoriaRepository(BaseRepository[Categoria]):
             )
             SELECT id, nombre, slug, descripcion, padre_id, orden, activa, created_at, updated_at
             FROM descendants
-            WHERE id != {category_id}
-            """)
+            WHERE id != :category_id_exclude
+            """).bindparams(category_id=category_id, category_id_exclude=category_id)
             result = self.session.exec(cte_query)
         rows = result.fetchall()
 
@@ -169,13 +169,13 @@ class CategoriaRepository(BaseRepository[Categoria]):
         if descendants:
             for desc in descendants:
                 self.session.exec(
-                    text(f"UPDATE categorias SET activa = 0 WHERE id = {desc.id}")
+                    text("UPDATE categorias SET activa = 0 WHERE id = :id").bindparams(id=desc.id)
                 )
                 affected.append(desc)
 
         # Marcar la categoría principal como inactiva
         self.session.exec(
-            text(f"UPDATE categorias SET activa = 0 WHERE id = {category_id}")
+            text("UPDATE categorias SET activa = 0 WHERE id = :id").bindparams(id=category_id)
         )
 
         self.session.flush()

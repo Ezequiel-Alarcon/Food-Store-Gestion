@@ -112,7 +112,7 @@ def get_catalogo(
 def create_producto(
     data: ProductoCreate,
     session: Session = Depends(get_session),
-    current_user: dict = Depends(require_role("ADMIN", "STOCK")),
+    current_user: dict = Depends(require_role("ADMIN")),
 ) -> dict:
     """Crea un nuevo producto."""
     service = ProductoService(session)
@@ -234,7 +234,7 @@ def update_producto(
     producto_id: int,
     data: ProductoUpdate,
     session: Session = Depends(get_session),
-    current_user: dict = Depends(require_role("ADMIN", "STOCK")),
+    current_user: dict = Depends(require_role("ADMIN")),
 ) -> dict:
     """Actualiza un producto."""
     service = ProductoService(session)
@@ -319,7 +319,6 @@ def delete_producto(
     service = ProductoService(session)
     service.soft_delete(producto_id)
     return {"message": "Producto eliminado correctamente"}
-    return None
 
 
 # ============================================================

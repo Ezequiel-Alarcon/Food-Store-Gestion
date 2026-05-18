@@ -79,17 +79,17 @@ def get_current_user(
     # Mejor esfuerzo: si existe el modelo Usuario, lo resolvemos.
     try:
         from app.modules.auth.model import Usuario  # type: ignore
-
-        user = session.get(Usuario, sub)
-        if user is None:
-            raise HTTPException(
-                status_code=status.HTTP_401_UNAUTHORIZED,
-                detail="Usuario no encontrado",
-                headers={"WWW-Authenticate": "Bearer"},
-            )
-        return user
     except ImportError:
         return payload
+
+    user = session.get(Usuario, sub)
+    if user is None:
+        raise HTTPException(
+            status_code=status.HTTP_401_UNAUTHORIZED,
+            detail="Usuario no encontrado",
+            headers={"WWW-Authenticate": "Bearer"},
+        )
+    return user
 
 
 def require_role(*roles: str) -> Callable[[Any], Any]:

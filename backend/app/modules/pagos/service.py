@@ -25,6 +25,7 @@ from app.core.uow import UnitOfWork
 from app.modules.pagos.model import Pago
 from app.modules.pagos.repository import PagoRepository
 from app.modules.pagos.schemas import PagoCreate, PagoResponse
+from app.modules.pedidos.fsm import confirmar_pedido
 from app.modules.pedidos.model import ActorTipo, HistorialEstadoPedido, Pedido
 from app.modules.pedidos.repository import DetallePedidoRepository
 from app.modules.productos.model import Producto
@@ -281,8 +282,9 @@ class PagoService:
 
     def _confirmar_pedido_en_sesion(self, session: Session, pago: Pago) -> None:
         pedido = session.get(Pedido, pago.pedido_id)
-        if not pedido or pedido.estado_codigo != "PENDIENTE":
+        if not pedido:
             return
+        confirmar_pedido(pedido.estado_codigo)
 
         detalle_repo = DetallePedidoRepository(session)
         items = detalle_repo.get_by_pedido(pago.pedido_id)

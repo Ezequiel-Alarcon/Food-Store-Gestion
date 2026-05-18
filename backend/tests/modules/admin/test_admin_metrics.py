@@ -124,13 +124,13 @@ def test_general_metrics_admin_retorna_200(setup):
     assert "total_clientes" in data
 
 
-def test_general_metrics_gestor_retorna_200(setup):
-    """GET /admin/metrics/ como gestor retorna 200."""
+def test_general_metrics_gestor_retorna_403(setup):
+    """GET /admin/metrics/ como gestor (STOCK) retorna 403 — solo ADMIN."""
     ac = AuthClient(setup["test_client"], setup["stock"]["access_token"])
 
     resp = ac.get("/api/v1/admin/metrics/")
 
-    assert resp.status_code == 200, f"Expected 200, got {resp.status_code}: {resp.json()}"
+    assert resp.status_code == 403, f"Expected 403, got {resp.status_code}: {resp.json()}"
 
 
 def test_general_metrics_client_retorna_403(setup):

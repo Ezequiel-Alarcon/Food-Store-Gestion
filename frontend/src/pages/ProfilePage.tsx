@@ -1,5 +1,6 @@
 import { useState, useEffect } from 'react'
 import { usePerfil, useUpdatePerfil, useChangePassword } from '../entities/perfil/queries'
+import { useAuthStore } from '../stores/authStore'
 
 export function ProfilePage() {
   const { data, isLoading, error, refetch } = usePerfil()
@@ -44,10 +45,16 @@ export function ProfilePage() {
   const handleProfileSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
     try {
-      await updateMut.mutateAsync({
+      const data = await updateMut.mutateAsync({
         nombre: form.nombre || null,
         apellido: form.apellido || null,
         telefono: form.telefono || null,
+      })
+      useAuthStore.getState().setUser({
+        id: data.id,
+        nombre: data.nombre,
+        email: data.email,
+        roles: [data.rol],
       })
       setEditing(false)
       setProfileSuccess(true)

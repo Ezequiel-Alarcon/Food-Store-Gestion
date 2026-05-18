@@ -6,7 +6,7 @@ from __future__ import annotations
 
 from datetime import datetime
 from decimal import Decimal
-from typing import Optional
+from typing import Any, Optional
 
 from pydantic import BaseModel, ConfigDict, Field, field_validator
 
@@ -25,7 +25,7 @@ class ProductoCreate(BaseModel):
         description="Descripción del producto",
         max_length=2000,
     )
-    precio: float = Field(
+    precio: Decimal = Field(
         ...,
         description="Precio del producto (debe ser mayor a 0)",
         gt=0,
@@ -83,7 +83,7 @@ class ProductoUpdate(BaseModel):
         description="Descripción del producto",
         max_length=2000,
     )
-    precio: Optional[float] = Field(
+    precio: Optional[Decimal] = Field(
         default=None,
         description="Precio del producto (debe ser mayor a 0)",
         gt=0,
@@ -153,7 +153,7 @@ class ProductoResponse(BaseModel):
     id: int
     nombre: str
     descripcion: Optional[str]
-    precio: float
+    precio: Decimal
     imagen_url: Optional[str]
     stock: int
     activo: bool
@@ -171,7 +171,7 @@ class ProductoListResponse(BaseModel):
     id: int
     nombre: str
     descripcion: Optional[str]
-    precio: float
+    precio: Decimal
     imagen_url: Optional[str]
     stock: int
     activo: bool
@@ -201,7 +201,7 @@ class ProductoCatalogoResponse(BaseModel):
     id: int
     nombre: str
     descripcion: Optional[str]
-    precio: float
+    precio: Decimal
     imagen_url: Optional[str]
     disponible: bool
     categorias: list[CategoriaSimple] = Field(default_factory=list)
@@ -212,7 +212,7 @@ class ProductoCatalogoResponse(BaseModel):
 class PaginatedProductoResponse(BaseModel):
     """Schema para respuesta paginada de productos."""
 
-    items: list
+    items: list[Any]
     total: int
     skip: int
     limit: int

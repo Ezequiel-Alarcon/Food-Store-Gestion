@@ -148,11 +148,13 @@ class TestAuthEndpoints:
                 "apellido": "Test",
             },
         )
-        refresh_token = register_resp.json()["refresh_token"]
+        data = register_resp.json()
+        access_token = data["access_token"]
+        refresh_token = data["refresh_token"]
 
         response = client.post(
             "/api/v1/auth/logout",
             json={"refresh_token": refresh_token},
+            headers={"Authorization": f"Bearer {access_token}"},
         )
-        assert response.status_code == 200
-        assert response.json()["message"] == "Sesión cerrada correctamente"
+        assert response.status_code == 204

@@ -78,7 +78,7 @@ class IngredienteService:
             )
         return ingrediente
 
-    def list(
+    def list_all(
         self,
         skip: int = 0,
         limit: int = 20,

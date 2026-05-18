@@ -25,7 +25,14 @@ TRANSICIONES_VALIDAS: dict[str, list[str]] = {
 _CANCEL_ROLES: dict[str, set[str]] = {
     "PENDIENTE": {"CLIENT", "PEDIDOS", "ADMIN"},
     "CONFIRMADO": {"PEDIDOS", "ADMIN"},
-    "EN_PREP": {"ADMIN"},
+    "EN_PREP": {"ADMIN", "PEDIDOS"},
+}
+
+# Roles que pueden AVANZAR el pedido (transiciones no-cancel)
+_AVANCE_ROLES: dict[str, set[str]] = {
+    "CONFIRMADO": {"ADMIN", "PEDIDOS"},
+    "EN_PREP": {"ADMIN", "PEDIDOS"},
+    "EN_CAMINO": {"ADMIN", "PEDIDOS"},
 }
 
 
@@ -71,6 +78,15 @@ def check_cancel_permission(estado_actual: str, rol_actor: str) -> None:
     if rol_actor not in roles_permitidos:
         raise ForbiddenError(
             f"El rol '{rol_actor}' no tiene permiso para cancelar pedidos en estado '{estado_actual}'"
+        )
+
+
+def check_advance_permission(estado_actual: str, rol: str) -> None:
+    """Verifica que el rol tenga permiso para avanzar desde este estado (RN-FS08)."""
+    allowed = _AVANCE_ROLES.get(estado_actual, set())
+    if rol not in allowed:
+        raise ForbiddenError(
+            f"El rol '{rol}' no tiene permiso para avanzar pedidos desde '{estado_actual}'"
         )
 
 

@@ -4,15 +4,7 @@ import { Link } from 'react-router-dom'
 import { pedidoAdminApi } from '../../../../entities/pedido-admin/api'
 import { StatusFilter } from './StatusFilter'
 import { ClientSearch } from './ClientSearch'
-
-const ESTADO_COLORS: Record<string, string> = {
-  PENDIENTE: 'bg-yellow-100 text-yellow-800',
-  CONFIRMADO: 'bg-blue-100 text-blue-800',
-  EN_PREP: 'bg-purple-100 text-purple-800',
-  EN_CAMINO: 'bg-indigo-100 text-indigo-800',
-  ENTREGADO: 'bg-green-100 text-green-800',
-  CANCELADO: 'bg-red-100 text-red-800',
-}
+import { ESTADO_COLORS } from './constants'
 
 function formatDate(dateString: string): string {
   const date = new Date(dateString)

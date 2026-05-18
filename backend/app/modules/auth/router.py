@@ -4,11 +4,12 @@ app.modules.auth.router
 Router para endpoints de autenticación.
 """
 
-from fastapi import APIRouter, Depends, Request, status
+from fastapi import APIRouter, Depends, Request, Response, status
 from sqlmodel import Session
 
 from app.core.database import get_session
 from app.core.config import get_settings
+from app.core.deps import get_current_user
 from app.core.limiter import limiter
 from app.modules.auth.schemas import (
     LoginRequest,
@@ -92,15 +93,15 @@ async def refresh(
 
 @router.post(
     "/logout",
-    response_model=MessageResponse,
-    status_code=status.HTTP_200_OK,
+    status_code=204,
     summary="Cerrar sesión",
     description="Invalida el refresh token proporcionado.",
 )
 async def logout(
     body: RefreshRequest,
+    current_user: dict = Depends(get_current_user),
     session: Session = Depends(get_session),
-) -> dict:
+):
     """
     Cierra sesión revocando el refresh token.
     
@@ -108,4 +109,4 @@ async def logout(
     """
     service = AuthService(session)
     service.logout(body.refresh_token)
-    return {"message": "Sesión cerrada correctamente"}
+    return Response(status_code=204)

@@ -9,10 +9,10 @@ from datetime import datetime
 
 from fastapi import APIRouter, Depends, HTTPException
 from typing import Any
-from sqlmodel import select
+from sqlmodel import Session, select
 
 from app.core.deps import require_role
-from app.core.database import SessionLocal
+from app.core.database import get_session
 from app.modules.admin.schemas import (
     GeneralMetricsResponse,
     OrdersByStatusEntry,
@@ -31,8 +31,7 @@ from app.modules.auth.model import Usuario
 router = APIRouter(prefix="/admin", tags=["admin"])
 
 
-def _get_service() -> AdminService:
-    session = SessionLocal()
+def _get_service(session: Session = Depends(get_session)) -> AdminService:
     return AdminService(session)
 
 
@@ -48,7 +47,7 @@ def _get_service() -> AdminService:
 def get_general_metrics(
     desde: datetime | None = None,
     hasta: datetime | None = None,
-    current_user: Any = Depends(require_role("ADMIN", "STOCK", "PEDIDOS")),
+    current_user: Any = Depends(require_role("ADMIN")),
     service: AdminService = Depends(_get_service),
 ) -> GeneralMetricsResponse:
     """GET /admin/metrics/ — métricas generales del dashboard."""
@@ -68,7 +67,7 @@ def get_general_metrics(
 def get_sales_chart(
     desde: datetime | None = None,
     hasta: datetime | None = None,
-    current_user: Any = Depends(require_role("ADMIN", "STOCK", "PEDIDOS")),
+    current_user: Any = Depends(require_role("ADMIN")),
     service: AdminService = Depends(_get_service),
 ) -> SalesChartResponse:
     """GET /admin/metrics/sales-chart/ — datos del gráfico de ventas."""
@@ -88,7 +87,7 @@ def get_top_products(
     limit: int = 10,
     desde: datetime | None = None,
     hasta: datetime | None = None,
-    current_user: Any = Depends(require_role("ADMIN", "STOCK", "PEDIDOS")),
+    current_user: Any = Depends(require_role("ADMIN")),
     service: AdminService = Depends(_get_service),
 ) -> list[TopProductEntry]:
     """GET /admin/metrics/top-products/ — ranking de productos más vendidos."""
@@ -106,7 +105,7 @@ def get_top_products(
 def get_orders_by_status(
     desde: datetime | None = None,
     hasta: datetime | None = None,
-    current_user: Any = Depends(require_role("ADMIN", "STOCK", "PEDIDOS")),
+    current_user: Any = Depends(require_role("ADMIN")),
     service: AdminService = Depends(_get_service),
 ) -> list[OrdersByStatusEntry]:
     """GET /admin/metrics/orders-by-status/ — conteo de pedidos por estado."""
@@ -228,7 +227,7 @@ def get_pedido_historial(
                 estado_anterior_codigo=h.estado_anterior_codigo,
                 estado_nuevo_codigo=h.estado_nuevo_codigo,
                 actor_id=h.actor_id,
-                actor_tipo=h.actor_tipo.value if h.actor_tipo else None,
+                actor_tipo=h.actor_tipo if h.actor_tipo else None,
                 motivo=h.motivo,
                 creado_en=h.creado_en,
             )
