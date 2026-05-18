@@ -2,6 +2,8 @@ export interface PagoCreateRequest {
     pedido_id: number;
     payment_method_id: string;
     token?: string;
+    installments?: number;
+    issuer_id?: string;
 }
 
 export interface PagoResponse {

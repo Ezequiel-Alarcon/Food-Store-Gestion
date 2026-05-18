@@ -1,8 +1,8 @@
 import { useState, useEffect, useCallback, useMemo } from 'react';
-import { useNavigate, useSearchParams, useBlocker } from 'react-router-dom';
+import { useNavigate, useSearchParams } from 'react-router-dom';
 import { AddressSelector } from '../features/checkout/AddressSelector';
 import { CheckoutSummary } from '../features/checkout/CheckoutSummary';
-import { CardPaymentForm } from '../features/checkout/CardPaymentForm';
+import { PaymentForm } from '../features/checkout/CardPaymentForm';
 import { PaymentResult } from '../features/checkout/PaymentResult';
 import { useCartStore } from '../stores/cartStore';
 import { usePaymentStore } from '../stores/paymentStore';
@@ -53,23 +53,10 @@ export default function CheckoutPage() {
 
     // FIXED: No redirigir por carrito vacío — el checkout obtiene datos del pedido desde backend
 
-    const blocker = useBlocker(
-        ({ currentLocation, nextLocation }) =>
-            (currentStep === 3 || currentStep === 4) &&
-            currentLocation.pathname !== nextLocation.pathname
-    );
+    // FIXED: useBlocker was crashing the app because it requires a Data Router (createBrowserRouter).
+    // Con BrowserRouter tira un invariant error que rompe todo el árbol de React (pantalla blanca).
+    // Se removió el useBlocker temporalmente.
 
-    useEffect(() => {
-        if (blocker.state === 'blocked') {
-            const leave = window.confirm('Hay un pago en proceso. ¿Estás seguro de que querés salir?');
-            if (leave) {
-                resetPayment();
-                blocker.proceed();
-            } else {
-                blocker.reset();
-            }
-        }
-    }, [blocker, resetPayment]);
 
     useEffect(() => {
         return () => {
@@ -214,14 +201,14 @@ export default function CheckoutPage() {
 
                     {currentStep === 3 && (
                         <div>
-                            <h2 className="text-xl font-semibold text-gray-900 mb-4">Pago con tarjeta</h2>
+                            <h2 className="text-xl font-semibold text-gray-900 mb-4">Método de pago</h2>
                             {!hasValidAmount ? (
                                 <div className="bg-red-50 border border-red-200 text-red-700 px-4 py-3 rounded-lg">
                                     <p className="font-medium">No se puede procesar el pago</p>
                                     <p className="text-sm mt-1">El pedido no tiene un total válido. Volvé al carrito y reintentá.</p>
                                 </div>
                             ) : (
-                                <CardPaymentForm
+                                <PaymentForm
                                     pedidoId={pedidoId}
                                     amount={totalInCents}
                                     onSuccess={handlePaymentSuccess}

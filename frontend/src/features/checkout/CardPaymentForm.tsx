@@ -1,8 +1,8 @@
 import { useState } from 'react';
-import { CardPayment } from '@mercadopago/sdk-react';
+import { Payment } from '@mercadopago/sdk-react';
 import { useCreatePago } from '../../entities/pago/queries';
 import { useUIStore } from '../../stores/uiStore';
-import type { CardPaymentFormProps } from './types';
+import type { PaymentFormProps } from './types';
 
 function BrickErrorFallback({ error }: { error: Error }) {
     return (
@@ -13,7 +13,7 @@ function BrickErrorFallback({ error }: { error: Error }) {
     );
 }
 
-export function CardPaymentForm({ pedidoId, amount, onSuccess, onError }: CardPaymentFormProps) {
+export function PaymentForm({ pedidoId, amount, onSuccess, onError }: PaymentFormProps) {
     const [brickError, setBrickError] = useState<Error | null>(null);
     const { mutateAsync: createPago, isPending } = useCreatePago();
     const addToast = useUIStore((s) => s.addToast);
@@ -22,14 +22,30 @@ export function CardPaymentForm({ pedidoId, amount, onSuccess, onError }: CardPa
         return <BrickErrorFallback error={brickError} />;
     }
 
-    // MP SDK onSubmit receives ICardPaymentFormData — token and payment_method_id
-    // are direct properties. We use a permissive type to match the SDK signature.
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     const handleSubmit = async (formData: any) => {
         try {
-            const token = formData?.token as string | undefined;
-            const paymentMethodId = formData?.payment_method_id as string | undefined;
+            const paymentType = formData?.paymentType as string | undefined;
+            const data = formData?.formData;
 
+            // Wallet / Credits — el brick redirige a MercadoPago, onSubmit no debería llamarse
+            if (paymentType === 'wallet_purchase' || paymentType === 'onboarding_credits') {
+                addToast('info', 'Redirigiendo a MercadoPago...');
+                return;
+            }
+
+            // Ticket (Rapipago / Pago Fácil)
+            if (paymentType === 'ticket') {
+                const response = await createPago({
+                    pedido_id: pedidoId,
+                    payment_method_id: data?.payment_method_id || 'rapipago',
+                });
+                onSuccess(response);
+                return;
+            }
+
+            // Card (creditCard / debitCard)
+            const token = data?.token as string | undefined;
             if (!token) {
                 addToast('error', 'No se pudo tokenizar la tarjeta. Intentá de nuevo.');
                 return;
@@ -37,8 +53,10 @@ export function CardPaymentForm({ pedidoId, amount, onSuccess, onError }: CardPa
 
             const response = await createPago({
                 pedido_id: pedidoId,
-                payment_method_id: paymentMethodId || '',
+                payment_method_id: data?.payment_method_id || '',
                 token,
+                installments: data?.installments ? Number(data.installments) : 1,
+                issuer_id: data?.issuer_id || undefined,
             });
 
             onSuccess(response);
@@ -65,12 +83,18 @@ export function CardPaymentForm({ pedidoId, amount, onSuccess, onError }: CardPa
                     </div>
                 </div>
             )}
-            <CardPayment
+            <Payment
                 initialization={{ amount }}
-                onSubmit={handleSubmit}
-                onReady={() => {
-                    // Brick is ready — could hide loading state here
+                customization={{
+                    paymentMethods: {
+                        creditCard: 'all',
+                        debitCard: 'all',
+                        ticket: 'all',
+                        mercadoPago: 'all',
+                    },
                 }}
+                onSubmit={handleSubmit}
+                onReady={() => {}}
                 onError={handleBrickError}
             />
         </div>

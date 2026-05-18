@@ -12,6 +12,8 @@ class PagoCreate(BaseModel):
     pedido_id: int
     payment_method_id: str = "account_money"
     token: Optional[str] = Field(None, description="Token de tarjeta generado por MP SDK (solo para pagos con tarjeta)")
+    installments: Optional[int] = Field(None, description="Cuotas (requerido para pagos con tarjeta en MLA)")
+    issuer_id: Optional[str] = Field(None, description="ID del banco emisor (requerido para pagos con tarjeta en MLA)")
 
 
 class PagoResponse(BaseModel):

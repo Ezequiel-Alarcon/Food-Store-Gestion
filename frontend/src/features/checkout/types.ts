@@ -19,7 +19,7 @@ export interface CheckoutSummaryProps {
     pedidoTotal?: number
 }
 
-export interface CardPaymentFormProps {
+export interface PaymentFormProps {
     pedidoId: number;
     amount: number;
     onSuccess: (response: PagoResponse) => void;
