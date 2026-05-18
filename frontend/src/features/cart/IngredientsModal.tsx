@@ -1,13 +1,9 @@
 import { useState } from 'react'
-
-interface IngredientItem {
-  id: number
-  nombre: string
-}
+import type { IngredienteSimple } from '../../entities/producto/types'
 
 interface IngredientsModalProps {
   productName: string
-  ingredients: IngredientItem[]
+  ingredients: IngredienteSimple[]
   onConfirm: (excludedIds: number[]) => void
   onClose: () => void
 }
@@ -71,6 +67,11 @@ export function IngredientsModal({
                   }`}
                 >
                   {ing.nombre}
+                  {ing.es_alergeno && !excluded.has(ing.id) && (
+                    <span className="ml-1.5 inline-flex items-center px-1.5 py-0.5 rounded text-xs font-medium bg-red-100 text-red-800" title="Contiene alérgenos">
+                      ⚠️ ALÉRGENO
+                    </span>
+                  )}
                 </span>
               </label>
             ))}

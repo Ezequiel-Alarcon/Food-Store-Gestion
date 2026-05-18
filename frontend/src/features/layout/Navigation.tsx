@@ -26,8 +26,11 @@ const MENU_BY_ROLE: Record<string, Array<{ label: string; href: string }>> = {
   ],
   ADMIN: [
     { label: 'Dashboard', href: '/admin/dashboard' },
-    { label: 'Gestión de Pedidos', href: '/admin/pedidos' },
-    { label: 'Gestión de Usuarios', href: '/admin/usuarios' },
+    { label: 'Pedidos', href: '/admin/pedidos' },
+    { label: 'Productos', href: '/admin/productos' },
+    { label: 'Categorías', href: '/admin/categorias' },
+    { label: 'Stock', href: '/admin/stock' },
+    { label: 'Usuarios', href: '/admin/usuarios' },
     { label: 'Puntos de Retiro', href: '/puntos-retiro' },
   ],
 }
