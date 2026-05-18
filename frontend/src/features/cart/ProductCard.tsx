@@ -10,7 +10,7 @@ export function ProductCard({ product, onAddToCart }: ProductCardProps) {
     'https://placehold.co/400x300/e2e8f0/64748b?text=Sin+Imagen'
 
   return (
-    <div className="bg-white rounded-lg shadow-md overflow-hidden flex flex-col hover:shadow-lg transition-shadow">
+    <div className="bg-white rounded-xl shadow-sm border border-gray-100 overflow-hidden flex flex-col hover:shadow-md transition-shadow">
       {/* Imagen */}
       <div className="h-48 bg-gray-100 overflow-hidden">
         <img

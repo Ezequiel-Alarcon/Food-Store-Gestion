@@ -2,9 +2,10 @@
 
 ## PROYECTO: Food Store — Plataforma E-Commerce de Comida
 
-Stack objetivo: React 18 + TypeScript + Tailwind CSS 3 + Vite
-Librerías: TanStack Query 5, TanStack Form, Zustand 4, recharts 2, @mercadopago/sdk-react
+Stack objetivo: React 19 + TypeScript + Tailwind CSS v4 + Vite
+Librerías: TanStack Query 5, TanStack Form, Zustand 4, recharts 2, @mercadopago/sdk-react, class-variance-authority, clsx, tailwind-merge
 Metodología: Feature-Sliced Design (FSD)
+Configuración CSS: Tailwind v4 CSS-first con `@theme` + OKLCH tokens + `@custom-variant dark`
 
 ---
 
@@ -31,9 +32,10 @@ Metodología: Feature-Sliced Design (FSD)
 | **Overlay** | `black/40`, `black/50` | Modales, drawers, backdrop blur |
 
 ### Tipografía
-- Font family: default Tailwind (system sans-serif)
-- Escala: `text-xs` (labels), `text-sm` (cuerpo, inputs), `text-base` (texto general), `text-lg` (subtítulos), `text-xl` (títulos de sección), `text-2xl` (títulos de página), `text-3xl` (hero)
-- Font weights: `font-normal` (cuerpo), `font-medium` (links, botones), `font-semibold` (títulos de card), `font-bold` (títulos de página, precios)
+- Font family: Work Sans (headlines + body), system sans-serif fallback
+- Escala semántica con tokens CSS: `--text-xs` (labels), `--text-sm` (cuerpo), `--text-base` (general), `--text-lg` (subtítulos), `--text-xl` (títulos sección), `--text-2xl` (títulos página), `--text-3xl` (hero)
+- Font weights: `font-normal` (cuerpo), `font-medium` (links, botones), `font-semibold` (títulos card), `font-bold` (títulos página, precios)
+- Usar clases semánticas: `text-foreground`, `text-muted-foreground`, `text-primary` en vez de `text-gray-900`, `text-gray-500`
 
 ### Bordes y Sombras
 - Border radius: `rounded-md` (inputs, botones), `rounded-lg` (cards, modales, drawers), `rounded-full` (badges, avatares)
@@ -828,13 +830,216 @@ Reglas:
 
 ---
 
-## RESUMEN VISUAL RÁPIDO
+## 9. PATRONES DE CÓDIGO — Páginas Admin (dashboard-crud-page)
 
-- **Personalidad:** Moderno, limpio, cálido, profesional. App de comida sin caer en lo "fast food barato".
-- **Inspiración:** Rappi + PedidosYa + Uber Eats pero con identidad propia.
-- **Color dominante:** Indigo (confianza, profesionalismo) con acentos de color por estado.
-- **Tipografía:** Sans-serif limpia, buen espaciado, jerarquía clara.
-- **Espaciado:** Generoso, aire para respirar, sin saturar.
-- **Cards:** Bordes redondeados, sombras suaves, elevación en hover.
-- **Estados:** Siempre mostrar loading, empty, error, y success. Nunca pantalla en blanco.
-- **Feedback:** Cada acción del usuario tiene respuesta visual inmediata.
+Toda página admin de gestión (CRUD) debe seguir esta estructura de código. NO usar `useState` para estado de formularios ni modales.
+
+### Hook Trio Obligatorio
+
+| Necesidad | Hook | Import |
+|-----------|------|--------|
+| Estado de modal + form data | `useFormModal<FormData, Entity>` | `../hooks/useFormModal` |
+| Estado de confirmación delete | `useConfirmDialog<Entity>` | `../hooks/useConfirmDialog` |
+| Paginación | `usePagination(sortedItems)` | `../hooks/usePagination` |
+
+### React 19 Form Submission — `useActionState`
+
+Usar `useActionState` para TODOS los submits de formularios. NUNCA `useState` + handler manual:
+
+```tsx
+const submitAction = useCallback(
+  async (_prevState: FormState<EntityFormData>, formData: FormData) => {
+    const data = { name: formData.get('name') as string }
+    const validation = validateEntity(data)
+    if (!validation.isValid) return { errors: validation.errors, isSuccess: false }
+    try {
+      if (modal.selectedItem) await updateEntityAsync(modal.selectedItem.id, data)
+      else await createEntityAsync(data)
+      toast.success('Guardado correctamente')
+      return { isSuccess: true }
+    } catch (error) {
+      return { isSuccess: false, message: `Error: ${error}` }
+    }
+  },
+  [modal.selectedItem]
+)
+const [state, formAction, isPending] = useActionState(submitAction, { isSuccess: false })
+if (state.isSuccess && modal.isOpen) modal.close()
+```
+
+### Zustand — Selectores siempre, `useShallow` para arrays
+
+```tsx
+// ✅ Correcto: selector granular
+const items = useStore((s) => s.items)
+const addItem = useStore((s) => s.addItem)
+
+// ✅ Arrays filtrados con useShallow
+const filtered = useStore(useShallow((s) => s.items.filter(i => i.active)))
+
+// ❌ NUNCA: destructuring del store
+const { items, addItem } = useStore()
+```
+
+### Estructura de Página Admin (orden canónico)
+
+```
+useDocumentTitle → store selectors → permission checks
+→ useFormModal + useConfirmDialog → useMemo (sort/filter)
+→ usePagination → useActionState → columns (useMemo)
+→ JSX: PageContainer > Card > {isLoading ? Skeleton : Table} > Pagination
+       > Modal (form con HelpButton + fields) > ConfirmDialog
+```
+
+### Columnas con dependencias correctas
+
+```tsx
+const columns: TableColumn<Entity>[] = useMemo(() => [
+  { key: 'name', label: 'Nombre', render: (item) => <span className="font-medium">{item.name}</span> },
+  { key: 'status', label: 'Estado', render: (item) => (
+    <Badge variant={item.active ? 'success' : 'danger'}>
+      <span className="sr-only">Estado:</span> {item.active ? 'Activo' : 'Inactivo'}
+    </Badge>
+  )},
+  { key: 'actions', label: 'Acciones', render: (item) => (
+    <div className="flex items-center gap-1">
+      <Button variant="ghost" size="sm" onClick={() => openEdit(item)} aria-label={`Editar ${item.name}`}>
+        <Pencil className="w-4 h-4" aria-hidden="true" />
+      </Button>
+      <Button variant="ghost" size="sm" onClick={() => deleteDialog.open(item)} aria-label={`Eliminar ${item.name}`}>
+        <Trash2 className="w-4 h-4" aria-hidden="true" />
+      </Button>
+    </div>
+  )},
+], [openEdit, deleteDialog]) // ← deleteDialog (objeto), NO deleteDialog.open
+```
+
+---
+
+## 10. DESIGN SYSTEM — Tailwind CSS v4 + CVA
+
+Usar Tailwind CSS v4 con configuración CSS-first (`@theme`), tokens semánticos OKLCH, y `class-variance-authority` para componentes.
+
+### Configuración Base (`app.css`)
+
+```css
+@import "tailwindcss";
+
+@theme {
+  --color-background: oklch(100% 0 0);
+  --color-foreground: oklch(14.5% 0.025 264);
+  --color-primary: #4f46e5;       /* indigo-600 */
+  --color-primary-foreground: #ffffff;
+  --color-secondary: oklch(96% 0.01 264);
+  --color-muted: oklch(96% 0.01 264);
+  --color-muted-foreground: oklch(46% 0.02 264);
+  --color-destructive: oklch(53% 0.22 27);
+  --color-border: oklch(91% 0.01 264);
+  --color-ring: oklch(14.5% 0.025 264);
+  --color-card: oklch(100% 0 0);
+  --color-card-foreground: oklch(14.5% 0.025 264);
+  --radius-sm: 0.25rem;
+  --radius-md: 0.375rem;
+  --radius-lg: 0.5rem;
+  --radius-xl: 0.75rem;
+}
+```
+
+### Componentes con CVA (Class Variance Authority)
+
+```tsx
+import { cva, type VariantProps } from 'class-variance-authority'
+import { cn } from '@/lib/utils'
+
+const buttonVariants = cva(
+  'inline-flex items-center justify-center rounded-md text-sm font-medium transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring disabled:pointer-events-none disabled:opacity-50',
+  {
+    variants: {
+      variant: {
+        default: 'bg-primary text-primary-foreground hover:bg-primary/90',
+        destructive: 'bg-destructive text-destructive-foreground hover:bg-destructive/90',
+        outline: 'border border-border bg-background hover:bg-accent',
+        secondary: 'bg-secondary text-secondary-foreground hover:bg-secondary/80',
+        ghost: 'hover:bg-accent hover:text-accent-foreground',
+      },
+      size: {
+        default: 'h-10 px-4 py-2',
+        sm: 'h-9 rounded-md px-3',
+        lg: 'h-11 rounded-md px-8',
+        icon: 'size-10',
+      },
+    },
+    defaultVariants: { variant: 'default', size: 'default' },
+  }
+)
+
+// React 19: ref es prop normal, sin forwardRef
+export function Button({ className, variant, size, ref, ...props }: ButtonProps & { ref?: React.Ref<HTMLButtonElement> }) {
+  return <button className={cn(buttonVariants({ variant, size, className }))} ref={ref} {...props} />
+}
+```
+
+### Compound Components (Card)
+
+```tsx
+export function Card({ className, ref, ...props }: HTMLAttributes<HTMLDivElement> & { ref?: Ref<HTMLDivElement> }) {
+  return <div ref={ref} className={cn('rounded-lg border bg-card text-card-foreground shadow-sm', className)} {...props} />
+}
+export function CardHeader({ className, ref, ...props }) { return <div ref={ref} className={cn('flex flex-col space-y-1.5 p-6', className)} {...props} /> }
+export function CardTitle({ className, ref, ...props }) { return <h3 ref={ref} className={cn('text-2xl font-semibold leading-none tracking-tight', className)} {...props} /> }
+export function CardContent({ className, ref, ...props }) { return <div ref={ref} className={cn('p-6 pt-0', className)} {...props} /> }
+export function CardFooter({ className, ref, ...props }) { return <div ref={ref} className={cn('flex items-center p-6 pt-0', className)} {...props} /> }
+```
+
+### Responsive Grid
+
+```tsx
+const gridVariants = cva('grid', {
+  variants: {
+    cols: { 1: 'grid-cols-1', 2: 'grid-cols-1 sm:grid-cols-2', 3: 'grid-cols-1 sm:grid-cols-2 lg:grid-cols-3', 4: 'grid-cols-1 sm:grid-cols-2 lg:grid-cols-4' },
+    gap: { sm: 'gap-2', md: 'gap-4', lg: 'gap-6' },
+  },
+  defaultVariants: { cols: 3, gap: 'md' },
+})
+```
+
+### Toast Pattern
+
+```tsx
+// Zustand store para toasts
+const useUIStore = create((set) => ({
+  toasts: [] as Toast[],
+  addToast: (type: 'success' | 'error' | 'info' | 'warning', message: string) =>
+    set((s) => ({ toasts: [...s.toasts, { id: Date.now(), type, message }] })),
+  removeToast: (id: number) => set((s) => ({ toasts: s.toasts.filter(t => t.id !== id) })),
+}))
+```
+
+---
+
+## 11. CHECKLIST DE GENERACIÓN — Lo que Stitch DEBE producir
+
+Antes de generar cada pantalla, verificar:
+
+### Páginas Admin (CRUD)
+- [ ] `useFormModal` (NO `useState` para modal/form)
+- [ ] `useConfirmDialog` (NO `useState` para delete dialog)
+- [ ] `usePagination` con `<Pagination>`
+- [ ] `useActionState` para form submission (NO `handleSubmit` + `useState`)
+- [ ] Zustand selectores granulares (NO destructuring)
+- [ ] `useShallow` para arrays filtrados
+- [ ] `deleteDialog` (objeto) en deps de `useMemo`, NO `deleteDialog.open`
+- [ ] `<TableSkeleton>` mientras `isLoading`
+- [ ] `<Badge>` con `<span className="sr-only">Estado:</span>`
+- [ ] `aria-label` en botones de ícono, `aria-hidden` en íconos decorativos
+- [ ] Componentes con CVA (`buttonVariants`, `gridVariants`)
+- [ ] React 19: `ref` como prop normal, sin `forwardRef`
+
+### Todas las Páginas
+- [ ] Loading: skeleton o spinner, nunca pantalla en blanco
+- [ ] Empty: ícono + mensaje + CTA
+- [ ] Error: banner rojo con mensaje + botón reintentar
+- [ ] Estados de feedback: toast para toda acción del usuario
+- [ ] Mobile-first: 1 col → 2 sm → 3 lg → 4 xl
+- [ ] Focus visible en todo elemento interactivo
+- [ ] Transiciones suaves: `transition-colors duration-200`
