@@ -19,6 +19,8 @@ import { OrderDetailPage } from '../features/admin/orders/ui/OrderDetailPage'
 import { UsersPage } from '../features/admin/users/ui/UsersPage'
 import { DashboardPage } from '../features/admin/dashboard'
 import { StockManagementPage } from '../features/admin/stock'
+import { CategoriesPage } from '../features/admin/categories'
+import { ProductsPage } from '../features/admin/products'
 
 interface RouterProviderProps {
   children: ReactNode
@@ -105,10 +107,18 @@ export function RouterProvider({ children }: RouterProviderProps) {
           }
         />
         <Route
-          path="/admin/pedidos"
+          path="/admin/categorias"
           element={
-            <ProtectedRoute allowedRoles={['PEDIDOS', 'ADMIN']}>
-              <OrdersListPage />
+            <ProtectedRoute allowedRoles={['ADMIN']}>
+              <CategoriesPage />
+            </ProtectedRoute>
+          }
+        />
+        <Route
+          path="/admin/productos"
+          element={
+            <ProtectedRoute allowedRoles={['ADMIN']}>
+              <ProductsPage />
             </ProtectedRoute>
           }
         />

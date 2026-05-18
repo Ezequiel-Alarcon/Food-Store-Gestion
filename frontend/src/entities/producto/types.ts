@@ -12,6 +12,7 @@ export interface CategoriaSimple {
 export interface IngredienteSimple {
   id: number
   nombre: string
+  es_alergeno: boolean
 }
 
 /** Respuesta del catálogo público (lista) */
