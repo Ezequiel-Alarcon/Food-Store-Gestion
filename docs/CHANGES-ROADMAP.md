@@ -3,7 +3,7 @@
 > **Proyecto:** Food Store E-Commerce
 > **Fecha:** 2026-05-18
 > **Metodología:** Spec-Driven Development (SDD) + Feature-First
-> **Versión:** 3.0 (sync de 44 changes + Fase 4 pendientes)
+> **Versión:** 3.1 (sync de 45 changes + Fase 4 pendientes)
 
 ---
 
@@ -102,6 +102,7 @@
 | 31 | `payments-audit-fixes` | Webhook HMAC x-signature, async processing, payer data, rate limit | EPIC 11 | — | ~8 | Backend | ✅ Archivado 2026-05-14 |
 | 32 | `frontend-integration-fixes` | App.tsx children render, paymentStore redirect timeout | EPIC 11 | — | ~3 | Frontend | ✅ Archivado 2026-05-14 |
 | 33 | `docs-sync` | Unificar soft delete, FSM states, endpoint, sucursales en docs | EPIC 00 | — | ~10 | Docs | ✅ Archivado 2026-05-14 |
+| 44 | `admin-pickup-points-ui` | UI admin para gestión de sucursales y puntos de retiro | EPIC 00 | — | ~7 | Frontend | ✅ Archivado 2026-05-18 |
 
 ---
 
@@ -778,6 +779,6 @@
 
 ---
 
-> **Estado actual:** 41/44 changes completados. 3 pendientes en Fase 4 (deuda técnica).
+> **Estado actual:** 42/45 changes completados. 3 pendientes en Fase 4 (deuda técnica).
 > **Última actualización:** 2026-05-18
 > **Próximos changes a implementar:** Fase 4 — `frontend-home-page` (36), `frontend-fsd-restructure` (39), `backend-admin-model` (41), `frontend-addresses-barrel` (42)

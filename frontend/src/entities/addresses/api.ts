@@ -1,5 +1,8 @@
 import { api } from '../../lib/api'
 import type {
+  Branch,
+  BranchCreate,
+  BranchUpdate,
   UserAddress,
   UserAddressCreate,
   UserAddressUpdate,
@@ -45,5 +48,23 @@ export const branchAddressesApi = {
   },
   remove: async (branchId: number): Promise<void> => {
     await api.delete(`/branches/${branchId}/address`)
+  },
+}
+
+export const branchesApi = {
+  list: async (): Promise<Branch[]> => {
+    const res = await api.get<Branch[]>('/branches')
+    return res.data
+  },
+  create: async (payload: BranchCreate): Promise<Branch> => {
+    const res = await api.post<Branch>('/branches', payload)
+    return res.data
+  },
+  update: async (id: number, payload: BranchUpdate): Promise<Branch> => {
+    const res = await api.patch<Branch>(`/branches/${id}`, payload)
+    return res.data
+  },
+  remove: async (id: number): Promise<void> => {
+    await api.delete(`/branches/${id}`)
   },
 }

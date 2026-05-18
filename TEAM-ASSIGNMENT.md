@@ -2,7 +2,7 @@
 
 > **Proyecto:** Food Store E-Commerce
 > **Fecha:** 2026-05-18
-> **Distribución:** 43 changes entre 5 integrantes
+> **Distribución:** 44 changes entre 5 integrantes
 > **Método:** Secuencial con fases Backend → Frontend → Deuda Técnica
 > **Versión:** 3.0 (sync 33 changes + Fase 4 pendientes)
 
@@ -355,6 +355,8 @@ Marcados PENDIENTE en verificación manual. Probar flujo completo de pago con Me
 | `auth-audit` | `openspec/changes/archive/2026-05-13-auth-audit/` (48/48 tareas) |
 | `bugfix-modules` | `openspec/changes/archive/2026-05-13-bugfix-modules/` (12/12 tareas) |
 
+| `admin-pickup-points-ui` | `openspec/changes/archive/2026-05-18-admin-pickup-points-ui/` (23/23 tareas) |
+
 ---
 
-> **Última actualización:** 2026-05-14 — Eze (checkout-frontend)
+> **Última actualización:** 2026-05-18 — Eze (admin-pickup-points-ui)
