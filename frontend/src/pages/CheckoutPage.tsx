@@ -1,4 +1,4 @@
-import { useState, useEffect, useCallback } from 'react';
+import { useState, useEffect, useCallback, useMemo } from 'react';
 import { useNavigate, useSearchParams, useBlocker } from 'react-router-dom';
 import { AddressSelector } from '../features/checkout/AddressSelector';
 import { CheckoutSummary } from '../features/checkout/CheckoutSummary';
@@ -7,6 +7,8 @@ import { PaymentResult } from '../features/checkout/PaymentResult';
 import { useCartStore } from '../stores/cartStore';
 import { usePaymentStore } from '../stores/paymentStore';
 import { useUIStore } from '../stores/uiStore';
+import { pedidoApi } from '../entities/pedido/api';
+import { useQuery } from '@tanstack/react-query';
 import type { PagoResponse } from '../entities/pago';
 
 const STEPS = ['Dirección', 'Resumen', 'Pago', 'Resultado'] as const;
@@ -18,8 +20,14 @@ export default function CheckoutPage() {
     const pedidoId = pedidoIdParam ? parseInt(pedidoIdParam, 10) : null;
 
     const items = useCartStore((s) => s.items);
-    const addToast = useUIStore((s) => s.addToast);
     const { resetPayment, updatePaymentStatus, startCheckout } = usePaymentStore();
+
+    // Obtener datos del pedido desde el backend (más robusto que depender del carrito)
+    const { data: pedido, isLoading: isPedidoLoading } = useQuery({
+        queryKey: ['pedido', pedidoId],
+        queryFn: () => pedidoApi.getById(pedidoId!),
+        enabled: !!pedidoId && !isNaN(pedidoId),
+    });
 
     const [currentStep, setCurrentStep] = useState(1);
     const [selectedAddressId, setSelectedAddressId] = useState<number | null>(null);
@@ -32,12 +40,7 @@ export default function CheckoutPage() {
         }
     }, [pedidoId, navigate, addToast]);
 
-    useEffect(() => {
-        if (items.length === 0 && currentStep <= 2) {
-            addToast('error', 'Tu carrito está vacío. Agregá productos antes de pagar.');
-            navigate('/productos', { replace: true });
-        }
-    }, [items, currentStep, navigate, addToast]);
+    // FIXED: No redirigir por carrito vacío — el checkout obtiene datos del pedido desde backend
 
     const blocker = useBlocker(
         ({ currentLocation, nextLocation }) =>
@@ -66,8 +69,11 @@ export default function CheckoutPage() {
     const handlePaymentSuccess = useCallback((response: PagoResponse) => {
         setPagoResponse(response);
         updatePaymentStatus(response.status, response.status_detail ?? undefined);
+        if (response.status === 'approved') {
+            clearCart(); // Solo limpiar carrito cuando el pago es aprobado
+        }
         setCurrentStep(4);
-    }, [updatePaymentStatus]);
+    }, [updatePaymentStatus, clearCart]);
 
     const handlePaymentError = useCallback((error: Error) => {
         addToast('error', error.message || 'Error al procesar el pago');
@@ -78,13 +84,25 @@ export default function CheckoutPage() {
         setCurrentStep(3);
     }, []);
 
-    const totalInCents = Math.round(
-        items.reduce((sum, item) => sum + item.producto.precio * item.cantidad, 0) * 100
-    );
+    const totalInCents = useMemo(() => {
+        if (pedido?.total) return Math.round(pedido.total * 100);
+        return 0;
+    }, [pedido]);
 
     const progressPercent = ((currentStep - 1) / (STEPS.length - 1)) * 100;
 
     if (!pedidoId || isNaN(pedidoId)) return null;
+
+    if (isPedidoLoading) {
+        return (
+            <div className="min-h-screen bg-gray-50 flex items-center justify-center">
+                <div className="text-center">
+                    <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-indigo-600 mx-auto" />
+                    <p className="mt-4 text-gray-500">Cargando pedido...</p>
+                </div>
+            </div>
+        );
+    }
 
     return (
         <div className="min-h-screen bg-gray-50">
