@@ -14,6 +14,7 @@ export type PaymentStatus = 'pending' | 'approved' | 'rejected' | 'in_process' |
 interface PaymentState {
   checkoutStep: CheckoutStep
   preferenceId: string | null
+  pedidoId: number | null
   paymentStatus: PaymentStatus
   statusDetail: string | null
   error: string | null
@@ -27,19 +28,26 @@ interface PaymentState {
 export const usePaymentStore = create<PaymentState>()((set, get) => ({
   checkoutStep: 'idle',
   preferenceId: null,
+  pedidoId: null,
   paymentStatus: null,
   statusDetail: null,
   error: null,
   timeoutId: null,
-  startCheckout: () =>
+  startCheckout: (pedidoId) => {
+    const { timeoutId: prevTimeoutId } = get()
+    if (prevTimeoutId !== null) {
+      clearTimeout(prevTimeoutId)
+    }
     set({
       checkoutStep: 'creating',
       preferenceId: null,
+      pedidoId,
       paymentStatus: null,
       statusDetail: null,
       error: null,
       timeoutId: null,
-    }),
+    })
+  },
   setPreference: (preferenceId) => {
     const { timeoutId: prevTimeoutId } = get()
     if (prevTimeoutId !== null) {
@@ -79,6 +87,7 @@ export const usePaymentStore = create<PaymentState>()((set, get) => ({
     set({
       checkoutStep: 'idle',
       preferenceId: null,
+      pedidoId: null,
       paymentStatus: null,
       statusDetail: null,
       error: null,

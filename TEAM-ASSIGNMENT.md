@@ -1,7 +1,7 @@
 # Food Store — Asignación por Team (Pipeline Backend-First)
 
 > **Proyecto:** Food Store E-Commerce
-> **Fecha:** 2026-05-16
+> **Fecha:** 2026-05-17
 > **Distribución:** 43 changes entre 5 integrantes
 > **Método:** Secuencial con fases Backend → Frontend → Deuda Técnica
 > **Versión:** 3.0 (sync 33 changes + Fase 4 pendientes)
@@ -60,17 +60,17 @@
 │  1️⃣7️⃣🅲️ EZE → bugfix-modules (✅ 2026-05-13) 🆕                            │
 │             ↓ (CTE text(), categoria_padre_id, producto delete msg)       │
 │                                                                           │
-│  1️⃣7️⃣🅳️ LUCAS → verification-fixes (✅ Archivado 2026-05-13) 🆕                       │
+│  1️⃣7️⃣🅳️ MATI + LUCAS → verification-fixes (✅ Archivado 2026-05-13) 🆕                │
 │             ↓ (401→403 tests, categorias hierarchy, rate limit, pagos)    │
 │                                                                           │
-│  1️⃣7️⃣🅴️ EZE → auth-frontend-fix (✅ Archivado 2026-05-13) 🆕                      │
+│  1️⃣7️⃣🅴️ MATI → auth-frontend-fix (✅ Archivado 2026-05-13) 🆕                      │
 │             ↓ (snake_case auth, apellido register, perfil fetch, cart UI) │
 │                                                                           │
 ├──────────────────────────────────────────────────────────────────────────┤
 │                FASE 3: FRONTEND (🔒 CONSULTAR USUARIO)                   │
 ├──────────────────────────────────────────────────────────────────────────┤
 │                                                                           │
-│  1️⃣8️⃣ LUCAS → cart-frontend (✅ Archivado 2026-05-13)                            │
+│  1️⃣8️⃣ MATI → cart-frontend (✅ Archivado 2026-05-13)                            │
 │  1️⃣9️⃣ MATI → orders-list-client (✅ Archivado 2026-05-14)               │
 │  2️⃣0️⃣ LUCAS → orders-list-gestor-frontend (✅ Archivado 2026-05-14) 🆕           │
 │  2️⃣1️⃣ LUCAS → users-admin-frontend (✅ Archivado 2026-05-14) 🆕                   │
@@ -131,7 +131,7 @@
 │  │  3️⃣8️⃣ frontend-profile-page ✅                                     │  │
 │  │     ↓ (ProfilePage para editar perfil — Archivado 2026-05-16)      │  │
 │  │                                                                     │  │
-│  │  4️⃣3️⃣ frontend-orders-feature 🆕                                     │  │
+│  │  4️⃣3️⃣ frontend-orders-feature ✅                                     │  │
 │  │     ↓ (Mover OrdersPage de pages/ a features/orders/)              │  │
 │  └─────────────────────────────────────────────────────────────────────┘  │
 │                                                                           │
@@ -187,8 +187,8 @@
 | 17 | **14º** | Edgar | `admin-metrics` 🔀 | 13,16 | ✅ Archivado 2026-05-13 | 1 día |
 | 17b | **14º** | Eze | `auth-audit` 🆕 | 6 | ✅ Archivado 2026-05-13 | 1 día |
 | 17c | **14º** | Eze | `bugfix-modules` 🆕 | 8,9,12 | ✅ Archivado 2026-05-13 | 0.5 días |
-| 17d | **15º** | Lucas | `verification-fixes` 🆕 | 17b,17c | ✅ Archivado 2026-05-13 | 0.5 días |
-| 17e | **15º** | Eze | `auth-frontend-fix` 🆕 | 17d | ✅ Archivado 2026-05-13 | 0.5 días |
+| 17d | **15º** | Mati + Lucas | `verification-fixes` 🆕 | 17b,17c | ✅ Archivado 2026-05-13 | 0.5 días |
+| 17e | **15º** | Mati | `auth-frontend-fix` 🆕 | 17d | ✅ Archivado 2026-05-13 | 0.5 días |
 
 > 📦 = Puede ejecutarse en paralelo con el cambio anterior (mismo padre terminado)  
 > 🔀 = Cambio partido — solo backend en esta fase
@@ -197,7 +197,7 @@
 
 | # | Orden | Integrante | Change | Depende de | Estado | ETA |
 |---|-------|-----------|--------|-----------|--------|-----|
-| 18 | **15º** | Lucas | `cart-frontend` | 12 | ✅ Archivado 2026-05-13 | 1 día |
+| 18 | **15º** | Mati | `cart-frontend` | 12 | ✅ Archivado 2026-05-13 | 1 día |
 | 19 | **15º** | Mati | `orders-list-client` | 13 | ✅ Archivado 2026-05-14 | 0.5 días |
 | 20 | **16º** | Lucas | `orders-list-gestor-frontend` 🆕 | 15 | ✅ Archivado 2026-05-14 | 0.5 días |
 | 21 | **16º** | Lucas | `users-admin-frontend` 🆕 | 16 | ✅ Archivado 2026-05-14 | 1 día |
@@ -212,7 +212,7 @@
 | 25 | — | Eze | `auth-audit` 🆕 | 6 | ✅ Archivado 2026-05-13 |
 | 26 | — | Eze | `bugfix-modules` 🆕 | 8,9,12 | ✅ Archivado 2026-05-13 |
 | 27 | — | Lucas | `verification-fixes` 🆕 | 25,26 | ✅ Archivado 2026-05-13 |
-| 28 | — | Eze | `auth-frontend-fix` 🆕 | 27 | ✅ Archivado 2026-05-13 |
+| 28 | — | Mati | `auth-frontend-fix` 🆕 | 27 | ✅ Archivado 2026-05-13 |
 | 29 | — | Eze | `audit-fixes` 🆕 | 23 | ✅ Archivado 2026-05-14 |
 | 30 | — | Eze | `backend-security-fixes` 🆕 | 6 | ✅ Archivado 2026-05-14 |
 | 31 | — | Eze | `payments-audit-fixes` 🆕 | 14 | ✅ Archivado 2026-05-14 |
@@ -228,7 +228,7 @@
 | 36 | Lucas | `frontend-home-page` 🆕 | HomePage con catálogo, hero, categorías | 🔴 Alta |
 | 37 | Lucas | `frontend-shared-ui` 🆕 | Button, Input, Modal, Card en `shared/ui/` | ✅ Archivado 2026-05-15 |
 | 38 | Mati | `frontend-profile-page` ✅ | ProfilePage para editar perfil | ✅ Archivado 2026-05-16 |
-| 43 | Mati | `frontend-orders-feature` 🆕 | Mover OrdersPage a `features/orders/` | 🟢 Baja |
+| 43 | Mati | `frontend-orders-feature` ✅ Archivado 2026-05-17 | Mover OrdersPage a `features/orders/` | 🟢 Baja |
 | 40 | Eze | `backend-refreshtokens` ✅ Archivado 2026-05-15 | Completar router.py, schemas.py, main.py | 🟢 Baja |
 | 41 \| Eze \| `backend-admin-model` ✅ Archivado 2026-05-15 | Crear model.py de admin con queries | 🟢 Baja |
 | 42 | Leandro | `frontend-addresses-barrel` 🆕 | Agregar index.ts a entities/addresses/ | 🟢 Baja |
@@ -294,20 +294,20 @@
 
 | Integrante | Completados | Pendientes (Fase 4) | Total |
 |-----------|-----------|-------------------|-------|
-| **Eze** | 1, 6, 11, 11b, 14, 17b, 17c, 17e, 23, 24, 25, 26, 28, 29, 30, 31, 32, 33, 40, 41 | — | 20 ✅ + 0 🔲 |
-| **Mati** | 2, 7, 12, 19, 38 | 43 (`frontend-orders-feature`) | 5 ✅ + 1 🔲 |
-| **Lucas** | 3, 8, 18, 20, 21, 22, 27, 37 | 36 (`frontend-home-page`) | 8 ✅ + 1 🔲 |
+| **Eze** | 1, 6, 11, 11b, 14, 17b, 17c, 23, 24, 25, 26, 29, 30, 31, 32, 33, 40 | 41 (`backend-admin-model`) | 17 ✅ + 1 🔲 |
+| **Mati** | 2, 7, 12, 17e, 18, 19, 38, 43 | — | 8 ✅ + 0 🔲 |
+| **Lucas** | 3, 8, 20, 21, 22, 27 | 36 (`frontend-home-page`), 37 (`frontend-shared-ui`) | 6 ✅ + 2 🔲 |
 | **Edgar** | 5, 9, 16, 17, 34, 35 | — | 6 ✅ + 0 🔲 |
-| **Leandro** | 4, 10, 13, 15 | 42 (`frontend-addresses-barrel`), 39 (`frontend-fsd-restructure`) | 4 ✅ + 2 🔲 |
+| **Leandro** | 4, 10, 13, 15 | 42 (`frontend-addresses-barrel`), 39 (`frontend-fsd-restructure`) | 4 ✅ + 0 🔲 \|
 
-**Total:** 43 changes — 39 completados + 4 pendientes. **Fase 4: 1-2 changes por persona, todos en paralelo.**
+**Total:** 43 changes — 34 completados + 9 pendientes. **2 changes por persona, todos en paralelo.**
 
 ---
 
-> **Fase actual:** ✅ FASES 0-3 COMPLETADAS + FASE 4 EN CURSO (39/43 changes)  
-> **Fase pendiente:** 🔲 FASE 4 — Deuda Técnica (4 changes restantes)  
-> **Último change completado:** `backend-pydantic-modernize` (Edgar) ✅ 2026-05-16  
-> **Última actualización:** 2026-05-16 — Sync documentación (corrección conteo Fase 4)
+> **Fase actual:** ✅ FASES 0-3 COMPLETADAS + FASE 4 EN CURSO (34/43 changes)  
+> **Fase pendiente:** 🔲 FASE 4 — Deuda Técnica (9 changes restantes)  
+> **Último change completado:** `frontend-orders-feature` (Mati) ✅ 2026-05-17  
+> **Última actualización:** 2026-05-17 — Archive frontend-orders-feature + corrección asignaciones
 
 ---
 

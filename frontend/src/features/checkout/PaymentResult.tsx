@@ -66,9 +66,9 @@ export function PaymentResult({ pagoResponse: initialPago, pedidoId, onRetry }: 
                     Tu pago está siendo procesado. Podés ver el estado en la sección de pedidos.
                 </p>
                 <button
-                    onClick={() => navigate(`/pedidos/${pedidoId}`)}
+                    onClick={() => navigate('/pedidos')}
                     className="bg-indigo-600 text-white px-6 py-2 rounded-lg hover:bg-indigo-700 transition-colors"
-                >
+                  >
                     Ver estado del pedido
                 </button>
             </div>
@@ -103,10 +103,10 @@ export function PaymentResult({ pagoResponse: initialPago, pedidoId, onRetry }: 
                 </div>
                 <div className="flex gap-3 mt-6">
                     <button
-                        onClick={() => navigate(`/pedidos/${pedidoId}`)}
-                        className="flex-1 bg-indigo-600 text-white py-2 rounded-lg hover:bg-indigo-700 transition-colors"
+                      onClick={() => navigate('/pedidos')}
+                      className="flex-1 bg-indigo-600 text-white py-2 rounded-lg hover:bg-indigo-700 transition-colors"
                     >
-                        Ver pedido
+                      Ver pedido
                     </button>
                     <button
                         onClick={() => navigate('/productos')}
@@ -134,10 +134,10 @@ export function PaymentResult({ pagoResponse: initialPago, pedidoId, onRetry }: 
                         {isRetrying ? 'Reintentando...' : 'Reintentar con otra tarjeta'}
                     </button>
                     <button
-                        onClick={() => navigate(`/pedidos/${pedidoId}`)}
-                        className="flex-1 bg-white text-gray-700 border border-gray-300 py-2 rounded-lg hover:bg-gray-50 transition-colors"
+                      onClick={() => navigate('/pedidos')}
+                      className="flex-1 bg-white text-gray-700 border border-gray-300 py-2 rounded-lg hover:bg-gray-50 transition-colors"
                     >
-                        Cancelar
+                      Cancelar
                     </button>
                 </div>
             </div>

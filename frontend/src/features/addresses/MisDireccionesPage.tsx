@@ -41,13 +41,17 @@ export function MisDireccionesPage() {
 
   const onSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
-    if (editing) {
-      await updateMut.mutateAsync({ id: editing.id, payload: form })
-    } else {
-      await createMut.mutateAsync(form)
+    try {
+      if (editing) {
+        await updateMut.mutateAsync({ id: editing.id, payload: form })
+      } else {
+        await createMut.mutateAsync(form)
+      }
+      setEditing(null)
+      setForm(emptyForm)
+    } catch {
+      // error handled by mutation state
     }
-    setEditing(null)
-    setForm(emptyForm)
   }
 
   const startEdit = (a: UserAddress) => {
@@ -87,6 +91,18 @@ export function MisDireccionesPage() {
             {editing ? `Editar dirección #${editing.id}` : 'Nueva dirección'}
           </h2>
           <form onSubmit={onSubmit} className="mt-4 space-y-3">
+            {createMut.error && (
+              <p className="text-red-600 text-sm">Error al crear la dirección: {createMut.error instanceof Error ? createMut.error.message : 'Error desconocido'}</p>
+            )}
+            {updateMut.error && (
+              <p className="text-red-600 text-sm">Error al actualizar la dirección: {updateMut.error instanceof Error ? updateMut.error.message : 'Error desconocido'}</p>
+            )}
+            {deleteMut.error && (
+              <p className="text-red-600 text-sm">Error al eliminar la dirección: {deleteMut.error instanceof Error ? deleteMut.error.message : 'Error desconocido'}</p>
+            )}
+            {defaultMut.error && (
+              <p className="text-red-600 text-sm">Error al cambiar la dirección predeterminada</p>
+            )}
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
               <input
                 className="border rounded px-3 py-2"

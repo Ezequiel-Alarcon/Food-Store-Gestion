@@ -19,11 +19,6 @@ except ImportError:
     EstadoPedido = None  # type: ignore
 
 try:
-    from app.modules.pagos.model import FormaPago
-except ImportError:
-    FormaPago = None     # type: ignore
-
-try:
     from app.modules.productos.model import Producto, ProductoCategoria, ProductoIngrediente
 except ImportError:
     Producto = None      # type: ignore
@@ -42,9 +37,6 @@ def run_seed() -> None:
 
         # Seed de Estados de Pedido
         seed_estados_pedido(session)
-
-        # Seed de Formas de Pago
-        seed_formas_pago(session)
 
         # Seed de Usuario Admin
         seed_usuario_admin(session)
@@ -92,28 +84,6 @@ def seed_estados_pedido(session: Session) -> None:
             print(f"  ✓ Estado creado: {estado_data['codigo']}")
         else:
             print(f"  - Estado ya existe: {estado_data['codigo']}")
-
-
-def seed_formas_pago(session: Session) -> None:
-    """Inserta las 3 formas de pago."""
-    if FormaPago is None:
-        print("  ⚠ Seed formas de pago omitido — modelo FormaPago no disponible aún")
-        return
-
-    formas_data = [
-        {"codigo": "MERCADOPAGO", "nombre": "MercadoPago", "descripcion": "Pago con MercadoPago", "habilitado": True},
-        {"codigo": "EFECTIVO", "nombre": "Efectivo", "descripcion": "Pago en efectivo al recibir", "habilitado": True},
-        {"codigo": "TRANSFERENCIA", "nombre": "Transferencia", "descripcion": "Transferencia bancaria", "habilitado": True},
-    ]
-
-    for forma_data in formas_data:
-        existing = session.get(FormaPago, forma_data["codigo"])
-        if not existing:
-            forma = FormaPago(**forma_data)
-            session.add(forma)
-            print(f"  ✓ Forma de pago creada: {forma_data['codigo']}")
-        else:
-            print(f"  - Forma de pago ya existe: {forma_data['codigo']}")
 
 
 def seed_usuario_admin(session: Session) -> None:

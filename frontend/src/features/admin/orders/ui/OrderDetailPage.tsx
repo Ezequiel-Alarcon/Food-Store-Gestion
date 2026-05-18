@@ -1,15 +1,8 @@
 import { useParams, Link } from 'react-router-dom'
 import { useQuery } from '@tanstack/react-query'
 import { pedidoAdminApi } from '../../../../entities/pedido-admin/api'
-
-const ESTADO_COLORS: Record<string, string> = {
-  PENDIENTE: 'bg-yellow-100 text-yellow-800',
-  CONFIRMADO: 'bg-blue-100 text-blue-800',
-  EN_PREP: 'bg-purple-100 text-purple-800',
-  EN_CAMINO: 'bg-indigo-100 text-indigo-800',
-  ENTREGADO: 'bg-green-100 text-green-800',
-  CANCELADO: 'bg-red-100 text-red-800',
-}
+import type { OrderAdminDetail, OrderItemDetail, OrderHistoryItem } from '../../../../entities/pedido-admin/types'
+import { ESTADO_COLORS } from './constants'
 
 function formatDate(dateString: string): string {
   const date = new Date(dateString)
@@ -29,7 +22,7 @@ function formatCurrency(amount: number): string {
   }).format(amount)
 }
 
-function OrderInfoCard({ order }: { order: any }) {
+function OrderInfoCard({ order }: { order: OrderAdminDetail }) {
   return (
     <div className="bg-white rounded-lg shadow p-6">
       <h3 className="text-lg font-semibold text-gray-900 mb-4">Información del Pedido</h3>
@@ -64,7 +57,7 @@ function OrderInfoCard({ order }: { order: any }) {
   )
 }
 
-function OrderAddressCard({ order }: { order: any }) {
+function OrderAddressCard({ order }: { order: OrderAdminDetail }) {
   return (
     <div className="bg-white rounded-lg shadow p-6">
       <h3 className="text-lg font-semibold text-gray-900 mb-4">Dirección de Entrega</h3>
@@ -89,7 +82,7 @@ function OrderAddressCard({ order }: { order: any }) {
   )
 }
 
-function OrderItemsList({ items }: { items: any[] }) {
+function OrderItemsList({ items, costoEnvio, total }: { items: OrderItemDetail[]; costoEnvio: number; total: number }) {
   return (
     <div className="bg-white rounded-lg shadow p-6">
       <h3 className="text-lg font-semibold text-gray-900 mb-4">Items del Pedido</h3>
@@ -125,18 +118,18 @@ function OrderItemsList({ items }: { items: any[] }) {
       <div className="mt-4 pt-4 border-t flex justify-between">
         <div>
           <p className="text-sm text-gray-500">Costo de envío</p>
-          <p className="font-medium">{formatCurrency(0)}</p>
+          <p className="font-medium">{formatCurrency(costoEnvio)}</p>
         </div>
         <div className="text-right">
           <p className="text-sm text-gray-500">Total</p>
-          <p className="text-xl font-bold text-gray-900">{formatCurrency(0)}</p>
+          <p className="text-xl font-bold text-gray-900">{formatCurrency(total)}</p>
         </div>
       </div>
     </div>
   )
 }
 
-function OrderTimeline({ history }: { history: any[] }) {
+function OrderTimeline({ history }: { history: OrderHistoryItem[] }) {
   if (!history || history.length === 0) {
     return (
       <div className="bg-white rounded-lg shadow p-6">
@@ -240,7 +233,7 @@ export function OrderDetailPage() {
           <OrderAddressCard order={order} />
         </div>
 
-        <OrderItemsList items={order.items} />
+        <OrderItemsList items={order.items} costoEnvio={order.costo_envio} total={order.total} />
 
         <OrderTimeline history={history || []} />
       </div>

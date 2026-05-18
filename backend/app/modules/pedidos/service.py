@@ -16,7 +16,7 @@ from app.core.database import SessionLocal
 from app.core.exceptions import ForbiddenError, NotFoundError, ValidationError
 from app.core.uow import UnitOfWork
 from app.modules.direcciones.model import UserAddress
-from app.modules.pedidos.fsm import check_cancel_permission, validate_transition
+from app.modules.pedidos.fsm import check_advance_permission, check_cancel_permission, validate_transition
 from app.modules.pedidos.model import (
     ActorTipo,
     DetallePedido,
@@ -251,8 +251,8 @@ class PedidosService:
             if estado_destino == "CANCELADO":
                 check_cancel_permission(estado_actual, rol)
 
-                # Restaurar stock si venía de CONFIRMADO (RN-FS05)
-                if estado_actual == "CONFIRMADO":
+                # Restaurar stock si venía de CONFIRMADO o EN_PREP (RN-FS05)
+                if estado_actual in ("CONFIRMADO", "EN_PREP"):
                     detalle_repo = DetallePedidoRepository(session)
                     items = detalle_repo.get_by_pedido(pedido_id)
                     for item in items:
@@ -265,6 +265,9 @@ class PedidosService:
                         if producto:
                             producto.stock += item.cantidad
                             session.add(producto)
+            else:
+                # Transición de avance — solo ADMIN/PEDIDOS
+                check_advance_permission(estado_actual, rol)
 
             # (c) Actualizar estado del pedido
             pedido.estado_codigo = estado_destino

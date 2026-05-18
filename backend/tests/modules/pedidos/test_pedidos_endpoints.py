@@ -372,6 +372,15 @@ def test_confirmado_manual_422(setup):
     """9.5: PATCH con nuevo_estado=CONFIRMADO retorna 422 (reservado para webhook)."""
     ac = AuthClient(setup["client"], setup["access_token"])
 
+    # Crear admin para PATCH (requiere ADMIN/PEDIDOS)
+    admin_data = _register_and_login(setup["session"], "admin_confirmado_422@test.com")
+    from app.modules.auth.model import Usuario
+    admin_user = setup["session"].get(Usuario, admin_data["user_id"])
+    admin_user.rol = "ADMIN"
+    setup["session"].add(admin_user)
+    setup["session"].flush()
+    admin_ac = AuthClient(setup["client"], admin_data["access_token"])
+
     # Crear pedido en PENDIENTE
     resp = ac.post("/api/v1/pedidos/", json={
         "direccion_id": setup["addr_id"],
@@ -380,8 +389,8 @@ def test_confirmado_manual_422(setup):
     assert resp.status_code == 201
     pedido_id = resp.json()["id"]
 
-    # Intentar transicionar manualmente a CONFIRMADO
-    resp2 = ac.patch(f"/api/v1/pedidos/{pedido_id}/estado", json={
+    # Intentar transicionar manualmente a CONFIRMADO (con rol ADMIN)
+    resp2 = admin_ac.patch(f"/api/v1/pedidos/{pedido_id}/estado", json={
         "nuevo_estado": "CONFIRMADO",
     })
 

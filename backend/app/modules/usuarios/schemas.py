@@ -7,7 +7,7 @@ from __future__ import annotations
 from datetime import datetime
 from typing import Optional
 
-from pydantic import BaseModel, EmailStr, Field, field_validator
+from pydantic import BaseModel, ConfigDict, EmailStr, Field, field_validator
 
 
 class UserRead(BaseModel):
@@ -22,7 +22,7 @@ class UserRead(BaseModel):
     activo: bool = Field(..., description="Si el usuario está activo")
     created_at: Optional[datetime] = Field(None, description="Fecha de creación")
 
-    model_config = {"str_strip_whitespace": True}
+    model_config = ConfigDict(from_attributes=True, str_strip_whitespace=True)
 
 
 class UserUpdate(BaseModel):
@@ -91,4 +91,4 @@ class UserListResponse(BaseModel):
     activo: bool = Field(..., description="Si el usuario está activo")
     created_at: Optional[str] = Field(None, description="Fecha de creación (ISO)")
 
-    model_config = {"str_strip_whitespace": True}
+    model_config = ConfigDict(from_attributes=True, str_strip_whitespace=True)

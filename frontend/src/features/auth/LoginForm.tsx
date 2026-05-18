@@ -1,9 +1,10 @@
 import { useState } from 'react'
-import { useNavigate, Link } from 'react-router-dom'
+import { useNavigate, useLocation, Link } from 'react-router-dom'
 import { useAuthStore } from '../../stores/authStore'
 
 export function LoginForm() {
   const navigate = useNavigate()
+  const location = useLocation()
   const login = useAuthStore((state) => state.login)
   const isLoading = useAuthStore((state) => state.isLoading)
   const error = useAuthStore((state) => state.error)
@@ -38,7 +39,7 @@ export function LoginForm() {
     try {
       await login({ email, password })
       clearError()
-      navigate('/')
+      navigate((location.state as any)?.from || '/')
     } catch {
       // Error ya manejado en el store
     }

@@ -36,6 +36,7 @@ class AdminService:
         Maneja resultados vacíos: si no hay pedidos, retorna ceros.
         """
         data = self.repo.get_general_metrics(desde=desde, hasta=hasta)
+        data["total_usuarios"] = self.repo.get_total_usuarios_registrados()
         return GeneralMetricsResponse(**data)
 
     def get_sales_chart(

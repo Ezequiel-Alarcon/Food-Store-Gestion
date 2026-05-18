@@ -126,6 +126,13 @@ export function CartSummary() {
         </div>
 
         <div className="flex gap-2">
+          <Link
+            to="/carrito"
+            onClick={closeCart}
+            className="flex-1 py-1.5 text-xs font-medium text-center text-white bg-indigo-600 rounded-md hover:bg-indigo-700 transition-colors"
+          >
+            Ver carrito
+          </Link>
           <button
             onClick={handleClearCart}
             className="flex-1 py-1.5 text-xs font-medium text-gray-500 hover:text-red-600 hover:bg-red-50 rounded-md transition-colors"

@@ -2,7 +2,6 @@
  * Página principal del dashboard de métricas administrativas.
  * Muestra KPIs, gráficos y rankings para ADMIN y GESTOR.
  */
-import { ProtectedRoute } from '../../auth/ProtectedRoute'
 import { useMetrics } from './hooks/useMetrics'
 import { MetricCard } from './components/MetricCard'
 import { SalesChart } from './components/SalesChart'
@@ -152,9 +151,5 @@ function DashboardContent() {
 }
 
 export function DashboardPage() {
-  return (
-    <ProtectedRoute allowedRoles={['ADMIN', 'GESTOR']}>
-      <DashboardContent />
-    </ProtectedRoute>
-  )
+  return <DashboardContent />
 }

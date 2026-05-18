@@ -1,5 +1,5 @@
 import { useState, useEffect, useCallback } from 'react'
-import { pedidoApi, type PedidoListItem, type PedidoDetalle } from '../entities/pedido'
+import { pedidoApi, type PedidoListItem, type PedidoDetalle } from '../../entities/pedido'
 
 const ESTADOS = ['PENDIENTE', 'CONFIRMADO', 'EN_PREP', 'EN_CAMINO', 'ENTREGADO', 'CANCELADO']
 

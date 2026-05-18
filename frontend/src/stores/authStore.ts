@@ -85,6 +85,7 @@ export const useAuthStore = create<AuthState>()(
           isLoading: false,
           error: null,
         })
+        // FIXME: Use React Router navigate instead of hard-refresh for SPA routing
         window.location.href = '/'
       },
 

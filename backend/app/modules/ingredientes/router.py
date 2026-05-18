@@ -61,7 +61,7 @@ def list_ingredientes(
 ) -> list[IngredienteResponse]:
     """Lista todos los ingredientes activos."""
     service = IngredienteService(session)
-    ingredientes, _ = service.list(skip=skip, limit=limit, es_alergeno=es_alergeno)
+    ingredientes, _ = service.list_all(skip=skip, limit=limit, es_alergeno=es_alergeno)
     return [
         IngredienteResponse(
             id=ing.id,
