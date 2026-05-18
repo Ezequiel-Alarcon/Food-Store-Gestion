@@ -52,8 +52,10 @@ export function CategoriesPage() {
       setModalOpen(false)
       addToast('success', 'Categoría creada correctamente')
     },
-    onError: () => {
-      addToast('error', 'Error al crear la categoría')
+    onError: (err: unknown) => {
+      const detail =
+        (err as { response?: { data?: { detail?: string } } })?.response?.data?.detail
+      addToast('error', detail || 'Error al crear la categoría')
     },
   })
 
@@ -71,8 +73,10 @@ export function CategoriesPage() {
       setEditingCat(null)
       addToast('success', 'Categoría actualizada correctamente')
     },
-    onError: () => {
-      addToast('error', 'Error al actualizar la categoría')
+    onError: (err: unknown) => {
+      const detail =
+        (err as { response?: { data?: { detail?: string } } })?.response?.data?.detail
+      addToast('error', detail || 'Error al actualizar la categoría')
     },
   })
 
@@ -221,6 +225,7 @@ export function CategoriesPage() {
           }}
           onSave={handleSave}
           categorias={categorias || []}
+          editingId={editingCat?.id ?? null}
           initialData={
             editingCat
               ? { nombre: editingCat.nombre, categoria_padre_id: editingCat.categoria_padre_id }

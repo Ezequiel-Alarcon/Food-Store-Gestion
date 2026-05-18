@@ -115,7 +115,7 @@ export function ProfilePage() {
 
           {updateMut.error && (
             <p className="text-red-600 text-sm mb-4">
-              {updateMut.error instanceof Error ? updateMut.error.message : 'Error al actualizar el perfil'}
+              {(updateMut.error as { response?: { data?: { detail?: string } } })?.response?.data?.detail || 'Error al actualizar el perfil'}
             </p>
           )}
 
@@ -177,10 +177,15 @@ export function ProfilePage() {
               <div>
                 <label className="block text-sm font-medium text-gray-700 mb-1">Teléfono</label>
                 <input
+                  type="tel"
                   value={form.telefono}
                   onChange={(e) => setForm((p) => ({ ...p, telefono: e.target.value }))}
                   className="w-full border rounded px-3 py-2"
+                  placeholder="+54 11 1234-5678"
+                  inputMode="tel"
+                  maxLength={20}
                 />
+                <p className="text-xs text-gray-400 mt-1">Formato: +54 11 1234-5678. Mínimo 8 dígitos.</p>
               </div>
               <div>
                 <label className="block text-sm font-medium text-gray-700 mb-1">Rol</label>
@@ -223,9 +228,7 @@ export function ProfilePage() {
 
           {passwordMut.error && (
             <p className="text-red-600 text-sm mb-4">
-              {passwordMut.error instanceof Error
-                ? passwordMut.error.message
-                : 'Error al cambiar la contraseña'}
+              {(passwordMut.error as { response?: { data?: { detail?: string } } })?.response?.data?.detail || 'Error al cambiar la contraseña'}
             </p>
           )}
 

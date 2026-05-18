@@ -96,9 +96,11 @@ export default function CheckoutPage() {
     }, []);
 
     const totalInCents = useMemo(() => {
-        if (pedido?.total) return Math.round(pedido.total * 100);
+        if (pedido?.total && pedido.total > 0) return Math.round(pedido.total * 100);
         return 0;
     }, [pedido]);
+
+    const hasValidAmount = totalInCents > 0;
 
     const progressPercent = ((currentStep - 1) / (STEPS.length - 1)) * 100;
 
@@ -204,6 +206,8 @@ export default function CheckoutPage() {
                                     startCheckout(pedidoId);
                                     setCurrentStep(3);
                                 }}
+                                pedidoItems={pedido?.items}
+                                pedidoTotal={pedido?.total}
                             />
                         </div>
                     )}
@@ -211,12 +215,19 @@ export default function CheckoutPage() {
                     {currentStep === 3 && (
                         <div>
                             <h2 className="text-xl font-semibold text-gray-900 mb-4">Pago con tarjeta</h2>
-                            <CardPaymentForm
-                                pedidoId={pedidoId}
-                                amount={totalInCents}
-                                onSuccess={handlePaymentSuccess}
-                                onError={handlePaymentError}
-                            />
+                            {!hasValidAmount ? (
+                                <div className="bg-red-50 border border-red-200 text-red-700 px-4 py-3 rounded-lg">
+                                    <p className="font-medium">No se puede procesar el pago</p>
+                                    <p className="text-sm mt-1">El pedido no tiene un total válido. Volvé al carrito y reintentá.</p>
+                                </div>
+                            ) : (
+                                <CardPaymentForm
+                                    pedidoId={pedidoId}
+                                    amount={totalInCents}
+                                    onSuccess={handlePaymentSuccess}
+                                    onError={handlePaymentError}
+                                />
+                            )}
                         </div>
                     )}
 

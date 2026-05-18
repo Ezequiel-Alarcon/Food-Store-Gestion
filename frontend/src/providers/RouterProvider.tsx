@@ -22,6 +22,7 @@ import { DashboardPage } from '../features/admin/dashboard'
 import { StockManagementPage } from '../features/admin/stock'
 import { CategoriesPage } from '../features/admin/categories'
 import { ProductsPage } from '../features/admin/products'
+import { ProductDetailPage } from '../pages/ProductDetailPage'
 
 interface RouterProviderProps {
   children: ReactNode
@@ -39,6 +40,7 @@ export function RouterProvider({ children }: RouterProviderProps) {
         <Route path="/register" element={<RegisterForm />} />
 
         <Route path="/productos" element={<CatalogPage />} />
+        <Route path="/productos/:id" element={<ProductDetailPage />} />
         <Route path="/carrito" element={<CartPage />} />
 
         {/* Rutas protegidas - Cliente */}

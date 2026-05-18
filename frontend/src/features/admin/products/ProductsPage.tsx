@@ -53,8 +53,8 @@ export function ProductsPage() {
   const { data: allProducts, isLoading: productsLoading, isError: productsError, refetch: refetchProducts } = useQuery({
     queryKey: ['admin-productos'],
     queryFn: async () => {
-      const res = await api.get('/productos')
-      return res.data as ProductoAdmin[]
+      const res = await api.get<{ items: ProductoAdmin[] }>('/productos')
+      return res.data.items as ProductoAdmin[]
     },
   })
 
@@ -83,8 +83,10 @@ export function ProductsPage() {
       setModalOpen(false)
       addToast('success', 'Producto creado correctamente')
     },
-    onError: () => {
-      addToast('error', 'Error al crear el producto')
+    onError: (err: unknown) => {
+      const detail =
+        (err as { response?: { data?: { detail?: string } } })?.response?.data?.detail
+      addToast('error', detail || 'Error al crear el producto')
     },
   })
 
@@ -97,8 +99,10 @@ export function ProductsPage() {
       setEditingProduct(null)
       addToast('success', 'Producto actualizado correctamente')
     },
-    onError: () => {
-      addToast('error', 'Error al actualizar el producto')
+    onError: (err: unknown) => {
+      const detail =
+        (err as { response?: { data?: { detail?: string } } })?.response?.data?.detail
+      addToast('error', detail || 'Error al actualizar el producto')
     },
   })
 
@@ -108,8 +112,10 @@ export function ProductsPage() {
       queryClient.invalidateQueries({ queryKey: ['admin-productos'] })
       addToast('success', 'Producto eliminado correctamente')
     },
-    onError: () => {
-      addToast('error', 'Error al eliminar el producto. Puede estar en pedidos activos.')
+    onError: (err: unknown) => {
+      const detail =
+        (err as { response?: { data?: { detail?: string } } })?.response?.data?.detail
+      addToast('error', detail || 'Error al eliminar el producto. Puede estar en pedidos activos.')
     },
   })
 
@@ -153,8 +159,8 @@ export function ProductsPage() {
       descripcion: '',
       precio: editingProduct.precio,
       imagen_url: '',
-      categoria_ids: editingProduct.categorias.map((c) => c.id),
-      ingrediente_ids: editingProduct.ingredientes.map((i) => i.id),
+      categoria_ids: editingProduct.categorias?.map((c) => c.id) ?? [],
+      ingrediente_ids: editingProduct.ingredientes?.map((i) => i.id) ?? [],
     }
   }
 

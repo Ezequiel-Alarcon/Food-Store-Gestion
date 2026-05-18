@@ -1,10 +1,9 @@
 import { useState, useEffect } from 'react'
 import { useQuery } from '@tanstack/react-query'
-import { productoApi, type ProductoCatalogo } from '../entities/producto'
+import { type ProductoCatalogo } from '../entities/producto'
 import { api } from '../lib/api'
 import type { PaginatedResponse } from '../entities/producto/types'
 import { ProductCard } from '../features/cart/ProductCard'
-import { IngredientsModal } from '../features/cart/IngredientsModal'
 import { useCartStore, type Producto } from '../stores/cartStore'
 import { useUIStore } from '../stores/uiStore'
 
@@ -39,13 +38,6 @@ export function CatalogPage() {
   const total = data?.total ?? 0
   const totalPages = Math.ceil(total / PAGE_SIZE)
 
-  const [ingredientsModal, setIngredientsModal] = useState<{
-    open: boolean
-    productId: number
-    productName: string
-    ingredients: Array<{ id: number; nombre: string }>
-  } | null>(null)
-
   const addItem = useCartStore((s) => s.addItem)
   const addToast = useUIStore((s) => s.addToast)
 
@@ -56,34 +48,9 @@ export function CatalogPage() {
     imagenUrl: p.imagen_url || '',
   })
 
-  const handleAddToCart = async (product: ProductoCatalogo) => {
-    try {
-      const detalle = await productoApi.getById(product.id)
-      if (detalle.ingredientes && detalle.ingredientes.length > 0) {
-        setIngredientsModal({
-          open: true,
-          productId: product.id,
-          productName: product.nombre,
-          ingredients: detalle.ingredientes,
-        })
-      } else {
-        addItem(mapToCartProduct(product), 1)
-        addToast('success', `${product.nombre} agregado al carrito`)
-      }
-    } catch {
-      addItem(mapToCartProduct(product), 1)
-      addToast('success', `${product.nombre} agregado al carrito`)
-    }
-  }
-
-  const handleIngredientsConfirm = (excludedIds: number[]) => {
-    if (!ingredientsModal) return
-    const product = products.find((p) => p.id === ingredientsModal.productId)
-    if (product) {
-      addItem(mapToCartProduct(product), 1, excludedIds)
-      addToast('success', `${product.nombre} agregado al carrito`)
-    }
-    setIngredientsModal(null)
+  const handleAddToCart = (product: ProductoCatalogo) => {
+    addItem(mapToCartProduct(product), 1)
+    addToast('success', `${product.nombre} agregado al carrito`)
   }
 
   const isSearchPending = searchTerm !== debouncedSearch
@@ -176,16 +143,6 @@ export function CatalogPage() {
             </div>
           )}
         </>
-      )}
-
-      {/* Modal de ingredientes */}
-      {ingredientsModal && (
-        <IngredientsModal
-          productName={ingredientsModal.productName}
-          ingredients={ingredientsModal.ingredients}
-          onConfirm={handleIngredientsConfirm}
-          onClose={() => setIngredientsModal(null)}
-        />
       )}
     </div>
   )

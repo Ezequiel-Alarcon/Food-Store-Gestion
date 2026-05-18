@@ -3,12 +3,30 @@ import { useUserAddresses } from '../../entities/addresses/queries';
 import type { UserAddress } from '../../entities/addresses/types';
 import type { CheckoutSummaryProps } from './types';
 
-export function CheckoutSummary({ pedidoId: _pedidoId, selectedAddressId, onConfirm }: CheckoutSummaryProps) {
-    const items = useCartStore((s) => s.items);
+export function CheckoutSummary({ pedidoId: _pedidoId, selectedAddressId, onConfirm, pedidoItems, pedidoTotal }: CheckoutSummaryProps) {
+    const cartItems = useCartStore((s) => s.items);
     const { data: addresses } = useUserAddresses();
     const address = addresses?.find((a: UserAddress) => a.id === selectedAddressId);
 
-    if (items.length === 0) {
+    // Si el carrito está vacío pero tenemos datos del pedido, usar esos
+    const useCartItems = cartItems.length > 0;
+    const itemsToShow = useCartItems
+        ? cartItems.map(item => ({
+            producto_id: item.productoId,
+            nombre: item.producto.nombre,
+            cantidad: item.cantidad,
+            precio_unitario: item.producto.precio,
+        }))
+        : (pedidoItems || []).map(item => ({
+            producto_id: item.producto_id,
+            nombre: `Producto #${item.producto_id}`,
+            cantidad: item.cantidad,
+            precio_unitario: item.precio_unitario,
+        }));
+
+    const total = useCartItems ? totalPrice() : (pedidoTotal || 0);
+
+    if (itemsToShow.length === 0) {
         return (
             <div className="text-center py-8">
                 <p className="text-gray-500">Tu carrito está vacío</p>
@@ -16,22 +34,20 @@ export function CheckoutSummary({ pedidoId: _pedidoId, selectedAddressId, onConf
         );
     }
 
-    const total = totalPrice();
-
     return (
         <div className="space-y-6">
             {/* Order Items */}
             <div className="bg-white rounded-lg shadow-sm p-4">
                 <h3 className="text-lg font-semibold text-gray-900 mb-4">Resumen del pedido</h3>
                 <div className="divide-y divide-gray-100">
-                    {items.map((item) => (
-                        <div key={item.productoId} className="flex justify-between py-3">
+                    {itemsToShow.map((item) => (
+                        <div key={item.producto_id} className="flex justify-between py-3">
                             <div className="flex-1 min-w-0">
-                                <p className="text-sm font-medium text-gray-900 truncate">{item.producto.nombre}</p>
+                                <p className="text-sm font-medium text-gray-900 truncate">{item.nombre}</p>
                                 <p className="text-xs text-gray-500">Cantidad: {item.cantidad}</p>
                             </div>
                             <p className="text-sm font-medium text-gray-900 ml-4">
-                                ${(item.producto.precio * item.cantidad).toLocaleString('es-AR')}
+                                ${(item.precio_unitario * item.cantidad).toLocaleString('es-AR')}
                             </p>
                         </div>
                     ))}

@@ -14,6 +14,7 @@ interface CategoriesModalProps {
   onSave: (data: { nombre: string; categoria_padre_id: number | null }) => void
   categorias: Categoria[]
   initialData?: { nombre: string; categoria_padre_id: number | null }
+  editingId?: number | null
   isPending?: boolean
 }
 
@@ -23,6 +24,7 @@ export function CategoriesModal({
   onSave,
   categorias,
   initialData,
+  editingId,
   isPending = false,
 }: CategoriesModalProps) {
   const [nombre, setNombre] = useState('')
@@ -45,7 +47,9 @@ export function CategoriesModal({
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault()
     if (!nombre.trim()) return
-    onSave({ nombre: nombre.trim(), categoria_padre_id: parentId })
+    // Si es edición y se selecciona "Ninguna (raíz)", enviar 0 para que el backend lo interprete como "set to root"
+    const parentValue = isEdit && parentId === null ? 0 : parentId
+    onSave({ nombre: nombre.trim(), categoria_padre_id: parentValue })
   }
 
   return (
@@ -83,19 +87,31 @@ export function CategoriesModal({
                 value={parentId ?? ''}
                 onChange={(e) => {
                   const val = e.target.value
-                  setParentId(val ? Number(val) : null)
+                  const newId = val ? Number(val) : null
+                  if (newId === editingId) {
+                    // No permitir seleccionarse a sí misma
+                    return
+                  }
+                  setParentId(newId)
                 }}
                 className="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
               >
                 <option value="">Ninguna (raíz)</option>
                 {categorias
-                  .filter((c) => !initialData || c.id !== (initialData as any).id)
+                  .filter((c) => editingId == null || c.id !== editingId)
                   .map((cat) => (
                     <option key={cat.id} value={cat.id}>
                       {'\u00A0'.repeat((cat.nivel ?? 0) * 2)}{cat.nombre}
                     </option>
                   ))}
               </select>
+              {editingId != null && parentId === editingId ? (
+                <p className="text-red-500 text-xs mt-1">Una categoría no puede ser padre de sí misma</p>
+              ) : (
+                <p className="text-gray-400 text-xs mt-1">
+                  {editingId != null ? 'No puede seleccionar la misma categoría como padre' : ''}
+                </p>
+              )}
             </div>
           </div>
 
