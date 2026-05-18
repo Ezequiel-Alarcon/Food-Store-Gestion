@@ -58,4 +58,4 @@
 
 ---
 
-> **Deuda técnica documentada:** Las 12 desviaciones spec vs código (D1-D12) fueron movidas al change [`intentional-bug-recommendations`](../intentional-bug-recommendations/tasks.md).
+> **Deuda técnica documentada:** Las 12 desviaciones spec vs código (D1-D12) fueron movidas al change [`intentional-bug-recommendations`](../../changes/intentional-bug-recommendations/tasks.md).
